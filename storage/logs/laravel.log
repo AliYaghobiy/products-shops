@@ -11592,3 +11592,43 @@
 #15 /var/www/products-shops/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
 #16 {main}
 "} 
+[2025-06-02 15:31:21] local.ERROR: Validation Error: Out of stock button configuration is required. {"exception":"[object] (Exception(code: 0): Validation Error: Out of stock button configuration is required. at /opt/homebrew/var/www/Github/products-shops/app/Http/Controllers/ConfigValidator.php:83)
+[stacktrace]
+#0 /opt/homebrew/var/www/Github/products-shops/app/Http/Controllers/StartController.php(135): App\\Http\\Controllers\\ConfigValidator->validateConfig(Array)
+#1 /opt/homebrew/var/www/Github/products-shops/app/Console/Commands/StartCommand.php(48): App\\Http\\Controllers\\StartController->scrapeMultiple()
+#2 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\StartCommand->handle()
+#3 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#4 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#5 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#6 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/Container.php(754): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#7 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#8 /opt/homebrew/var/www/Github/products-shops/vendor/symfony/console/Command/Command.php(279): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#9 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#10 /opt/homebrew/var/www/Github/products-shops/vendor/symfony/console/Application.php(1094): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#11 /opt/homebrew/var/www/Github/products-shops/vendor/symfony/console/Application.php(342): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\StartCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#12 /opt/homebrew/var/www/Github/products-shops/vendor/symfony/console/Application.php(193): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#13 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(197): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1234): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 /opt/homebrew/var/www/Github/products-shops/artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
+#16 {main}
+"} 
+[2025-06-02 15:31:38] local.ERROR: Validation Error: Out of stock button configuration is required. {"exception":"[object] (Exception(code: 0): Validation Error: Out of stock button configuration is required. at /opt/homebrew/var/www/Github/products-shops/app/Http/Controllers/ConfigValidator.php:83)
+[stacktrace]
+#0 /opt/homebrew/var/www/Github/products-shops/app/Http/Controllers/StartController.php(135): App\\Http\\Controllers\\ConfigValidator->validateConfig(Array)
+#1 /opt/homebrew/var/www/Github/products-shops/app/Console/Commands/StartCommand.php(48): App\\Http\\Controllers\\StartController->scrapeMultiple()
+#2 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\StartCommand->handle()
+#3 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::{closure:Illuminate\\Container\\BoundMethod::call():35}()
+#4 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#5 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#6 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Container/Container.php(754): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#7 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate\\Container\\Container->call(Array)
+#8 /opt/homebrew/var/www/Github/products-shops/vendor/symfony/console/Command/Command.php(279): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#9 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#10 /opt/homebrew/var/www/Github/products-shops/vendor/symfony/console/Application.php(1094): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#11 /opt/homebrew/var/www/Github/products-shops/vendor/symfony/console/Application.php(342): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\StartCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#12 /opt/homebrew/var/www/Github/products-shops/vendor/symfony/console/Application.php(193): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#13 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(197): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#14 /opt/homebrew/var/www/Github/products-shops/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1234): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#15 /opt/homebrew/var/www/Github/products-shops/artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
+#16 {main}
+"} 

@@ -1,0 +1,1403 @@
+[2025-06-02 15:27:38] Inside scrapeMultiple method
+[2025-06-02 15:27:38] Starting scraper with start_id: not set
+[2025-06-02 15:27:38] Config contents: {
+    "method": 1,
+    "processing_method": 1,
+    "base_urls": [
+        "https:\/\/yaradarman.com"
+    ],
+    "products_urls": [
+        "https:\/\/yaradarman.com\/shop"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "selector",
+    "product_id_source": "product_page",
+    "availability_mode": "priority_based",
+    "out_of_stock_button": true,
+    "run_method": "new",
+    "database": "clear",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\\\"(\\d+)\\\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "موجود",
+            "افزودن به سبد خرید"
+        ],
+        "negative": [
+            "ناموجود",
+            "در حال حاضر این محصول در انبار موجود نیست و در دسترس نمی باشد."
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.wd-product > div > div > a",
+                "attribute": "href"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": ".elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)"
+            },
+            "category": {
+                "type": "css",
+                "selector": [
+                    ".posted_in > a:nth-child(2)",
+                    ".posted_in > a:nth-child(4)"
+                ],
+                "attribute": null
+            },
+            "availability": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > div > div > button"
+                ]
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": [
+                    "p.price > span:nth-child(1) > bdi:nth-child(1)",
+                    "p.price > del:nth-child(1) > span:nth-child(1) > bdi:nth-child(1)"
+                ]
+            },
+            "image": {
+                "type": "css",
+                "selector": ".woocommerce-product-gallery__image > a",
+                "attribute": "href"
+            },
+            "off": {
+                "type": "css",
+                "selector": null
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": null
+            },
+            "product_id": {
+                "type": "css",
+                "selector": ".wd-reset-side-lg",
+                "attribute": "data-product_id"
+            }
+        },
+        "data_transformers": {
+            "price": "cleanPrice",
+            "availability": "parseAvailability",
+            "off": "cleanOff",
+            "guarantee": "cleanGuarantee"
+        }
+    },
+    "method_settings": {
+        "method_1": {
+            "enabled": true,
+            "pagination": {
+                "type": "path",
+                "parameter": "page",
+                "separator": "\/",
+                "suffix": "",
+                "max_pages": 50,
+                "use_sample_url": true,
+                "sample_url": "https:\/\/yaradarman.com\/shop\/page\/1\/",
+                "use_webdriver": false,
+                "use_dynamic_pagination": false,
+                "force_trailing_slash": true,
+                "ignore_redirects": true
+            }
+        }
+    }
+}
+[2025-06-02 15:27:38] Generated database name: yaradarman_com
+[2025-06-02 15:27:38] Database mode: clear
+[2025-06-02 15:27:38] Creating database yaradarman_com...
+[2025-06-02 15:27:38] Switched to database: yaradarman_com
+[2025-06-02 15:27:38] Running specific migrations...
+[2025-06-02 15:27:38] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 15:27:38] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 15:27:38] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 15:27:38] Specific migrations completed
+[2025-06-02 15:27:38] Run method: new
+[2025-06-02 15:27:38] Fetching product links from web...
+[2025-06-02 15:28:29] Inside scrapeMultiple method
+[2025-06-02 15:28:29] Starting scraper with start_id: not set
+[2025-06-02 15:28:29] Config contents: {
+    "method": 1,
+    "processing_method": 1,
+    "base_urls": [
+        "https:\/\/yaradarman.com"
+    ],
+    "products_urls": [
+        "https:\/\/yaradarman.com\/shop"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "selector",
+    "product_id_source": "product_page",
+    "availability_mode": "priority_based",
+    "out_of_stock_button": true,
+    "run_method": "new",
+    "database": "clear",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\\\"(\\d+)\\\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "موجود",
+            "افزودن به سبد خرید"
+        ],
+        "negative": [
+            "ناموجود",
+            "در حال حاضر این محصول در انبار موجود نیست و در دسترس نمی باشد."
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.wd-product > div > div > a",
+                "attribute": "href"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": ".elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)"
+            },
+            "category": {
+                "type": "css",
+                "selector": [
+                    ".posted_in > a:nth-child(2)",
+                    ".posted_in > a:nth-child(4)"
+                ],
+                "attribute": null
+            },
+            "availability": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > div > div > button"
+                ]
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": [
+                    "p.price > span:nth-child(1) > bdi:nth-child(1)",
+                    "p.price > del:nth-child(1) > span:nth-child(1) > bdi:nth-child(1)"
+                ]
+            },
+            "image": {
+                "type": "css",
+                "selector": ".woocommerce-product-gallery__image > a",
+                "attribute": "href"
+            },
+            "off": {
+                "type": "css",
+                "selector": null
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": null
+            },
+            "product_id": {
+                "type": "css",
+                "selector": ".wd-reset-side-lg",
+                "attribute": "data-product_id"
+            }
+        },
+        "data_transformers": {
+            "price": "cleanPrice",
+            "availability": "parseAvailability",
+            "off": "cleanOff",
+            "guarantee": "cleanGuarantee"
+        }
+    },
+    "method_settings": {
+        "method_1": {
+            "enabled": true,
+            "pagination": {
+                "type": "path",
+                "parameter": "page",
+                "separator": "\/",
+                "suffix": "",
+                "max_pages": 1,
+                "use_sample_url": true,
+                "sample_url": "https:\/\/yaradarman.com\/shop\/page\/1\/",
+                "use_webdriver": false,
+                "use_dynamic_pagination": false,
+                "force_trailing_slash": true,
+                "ignore_redirects": true
+            }
+        }
+    }
+}
+[2025-06-02 15:28:29] Generated database name: yaradarman_com
+[2025-06-02 15:28:29] Database mode: clear
+[2025-06-02 15:28:29] Database yaradarman_com exists, dropping it...
+[2025-06-02 15:28:29] Creating database yaradarman_com...
+[2025-06-02 15:28:29] Switched to database: yaradarman_com
+[2025-06-02 15:28:29] Running specific migrations...
+[2025-06-02 15:28:29] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 15:28:29] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 15:28:29] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 15:28:29] Specific migrations completed
+[2025-06-02 15:28:29] Run method: new
+[2025-06-02 15:28:29] Fetching product links from web...
+[2025-06-02 15:28:30] Got 23 unique product links from web
+[2025-06-02 15:28:30] Links structure: [
+    {
+        "url": "https:\/\/yaradarman.com\/product\/eurosorb\/",
+        "sourceUrl": "https:\/\/yaradarman.com\/shop"
+    },
+    {
+        "url": "https:\/\/yaradarman.com\/product\/euroderm-foam\/",
+        "sourceUrl": "https:\/\/yaradarman.com\/shop"
+    },
+    {
+        "url": "https:\/\/yaradarman.com\/product\/silvermed-sb\/",
+        "sourceUrl": "https:\/\/yaradarman.com\/shop"
+    },
+    {
+        "url": "https:\/\/yaradarman.com\/product\/eurofix\/",
+        "sourceUrl": "https:\/\/yaradarman.com\/shop"
+    },
+    {
+        "url": "https:\/\/yaradarman.com\/product\/euroderm-incise\/",
+        "sourceUrl": "https:\/\/yaradarman.com\/shop"
+    }
+]...
+[2025-06-02 15:28:30] Saving 23 product links to database...
+[2025-06-02 15:28:30] Successfully saved 23 new links to database
+[2025-06-02 15:28:30] After deduplication, processing 23 unique links
+[2025-06-02 15:28:30] Processing links using method: 1
+[2025-06-02 15:28:30] Processing 23 product links in batches...
+[2025-06-02 15:28:30] Input links: [
+    "https:\/\/yaradarman.com\/product\/eurosorb\/",
+    "https:\/\/yaradarman.com\/product\/euroderm-foam\/",
+    "https:\/\/yaradarman.com\/product\/silvermed-sb\/",
+    "https:\/\/yaradarman.com\/product\/eurofix\/",
+    "https:\/\/yaradarman.com\/product\/euroderm-incise\/"
+]...
+[2025-06-02 15:28:30] Filtered to 23 valid product links
+[2025-06-02 15:28:30] Using processing method: 1
+[2025-06-02 15:28:40] Processing product 1/23: https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Raw title extracted: 'پانسمان نقره جاذب ساده یوروفارم | سیلورمد'
+[2025-06-02 15:28:40] Title after applying prefix: پانسمان نقره جاذب ساده یوروفارم | سیلورمد
+[2025-06-02 15:28:40] Extracted title: "پانسمان نقره جاذب ساده یوروفارم | سیلورمد" for https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Extracted categories from selectors: پانسمان جاذب, پانسمان نقره
+[2025-06-02 15:28:40] Extracted category: "پانسمان جاذب, پانسمان نقره" for https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:40] Availability fallback processing: 1
+[2025-06-02 15:28:40] Extracted availability: "1" for https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Raw price extracted with priority method: '54.000 تومان'
+[2025-06-02 15:28:40] Extracted price: "54000" for https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/silvermed-sb.jpg
+[2025-06-02 15:28:40] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/silvermed-sb.jpg" for https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Extracted product_id from updated method: 402
+[2025-06-02 15:28:40] Extracted product_id: "402" for https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Product data validated successfully for URL: https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Product data validated successfully for URL: https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] 🆕 محصول جدید اضافه شد: پانسمان نقره جاذب ساده یوروفارم | سیلورمد (ID: 402)
+[2025-06-02 15:28:40] +------------+---------------------------------------------+------------+----------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |          Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+----------------------------+--------------+------------+------------+------------+
+|    402     | پانسمان نقره جاذب ساده یوروفارم | سیلورم... |   54000    | پانسمان جاذب, پانسمان نقره |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+----------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:40] 
+[2025-06-02 15:28:40] 🎉 محصول جدید ایجاد شد: پانسمان نقره جاذب ساده یوروفارم | سیلورمد
+[2025-06-02 15:28:40] Successfully processed: https://yaradarman.com/product/silvermed-sb/
+[2025-06-02 15:28:40] Processing product 2/23: https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] Raw title extracted: 'پانسمان استریل درپ یوروفارم'
+[2025-06-02 15:28:40] Title after applying prefix: پانسمان استریل درپ یوروفارم
+[2025-06-02 15:28:40] Extracted title: "پانسمان استریل درپ یوروفارم" for https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] Extracted categories from selectors: محصولات پیشرفته درمان زخم, هیدروفیلم
+[2025-06-02 15:28:40] Extracted category: "محصولات پیشرفته درمان زخم, هیدروفیلم" for https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] Raw availability extracted: ''
+[2025-06-02 15:28:40] Availability fallback processing: 0
+[2025-06-02 15:28:40] Extracted availability: "0" for https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] Raw price extracted with priority method: ''
+[2025-06-02 15:28:40] No valid price found, setting default: '0'
+[2025-06-02 15:28:40] Extracted price: "0" for https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Euroderm-incise.jpg
+[2025-06-02 15:28:40] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Euroderm-incise.jpg" for https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] No product_id extracted, keeping mainPageProductId or empty
+[2025-06-02 15:28:40] Extracted product_id: "" for https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:40] 🆕 محصول جدید اضافه شد: پانسمان استریل درپ یوروفارم (ID: )
+[2025-06-02 15:28:40] +------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|            |       پانسمان استریل درپ یوروفارم        |     0      | محصولات پیشرفته درمان زخم, هید... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:40] 
+[2025-06-02 15:28:40] 🎉 محصول جدید ایجاد شد: پانسمان استریل درپ یوروفارم
+[2025-06-02 15:28:40] Successfully processed: https://yaradarman.com/product/euroderm-incise/
+[2025-06-02 15:28:41] Processing product 3/23: https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] Raw title extracted: 'چسب حصیری یوروفارم | یوروفیکس'
+[2025-06-02 15:28:41] Title after applying prefix: چسب حصیری یوروفارم | یوروفیکس
+[2025-06-02 15:28:41] Extracted title: "چسب حصیری یوروفارم | یوروفیکس" for https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] Extracted categories from selectors: چسب پزشکی, چسب حصیری
+[2025-06-02 15:28:41] Extracted category: "چسب پزشکی, چسب حصیری" for https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] Raw availability extracted: ''
+[2025-06-02 15:28:41] Availability fallback processing: 0
+[2025-06-02 15:28:41] Extracted availability: "0" for https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] Raw price extracted with priority method: '110.000 تومان'
+[2025-06-02 15:28:41] Extracted price: "110000" for https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Eurofix.jpg
+[2025-06-02 15:28:41] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Eurofix.jpg" for https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] No product_id extracted, keeping mainPageProductId or empty
+[2025-06-02 15:28:41] Extracted product_id: "" for https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] 🆕 محصول جدید اضافه شد: چسب حصیری یوروفارم | یوروفیکس (ID: )
+[2025-06-02 15:28:41] +------------+------------------------------------------+------------+----------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |       Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+----------------------+--------------+------------+------------+------------+
+|            |      چسب حصیری یوروفارم | یوروفیکس       |   110000   | چسب پزشکی, چسب حصیری |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+----------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:41] 
+[2025-06-02 15:28:41] 🎉 محصول جدید ایجاد شد: چسب حصیری یوروفارم | یوروفیکس
+[2025-06-02 15:28:41] Successfully processed: https://yaradarman.com/product/eurofix/
+[2025-06-02 15:28:41] Processing product 4/23: https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Raw title extracted: 'پانسمان کلسیم آلژینات یوروفارم | یوروزورب'
+[2025-06-02 15:28:41] Title after applying prefix: پانسمان کلسیم آلژینات یوروفارم | یوروزورب
+[2025-06-02 15:28:41] Extracted title: "پانسمان کلسیم آلژینات یوروفارم | یوروزورب" for https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Extracted categories from selectors: پانسمان آلژینات, محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:41] Extracted category: "پانسمان آلژینات, محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:41] Availability fallback processing: 1
+[2025-06-02 15:28:41] Extracted availability: "1" for https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Raw price extracted with priority method: '33.000 تومان'
+[2025-06-02 15:28:41] Extracted price: "33000" for https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/06/Calcium-Alginate-Eurosorb.jpg
+[2025-06-02 15:28:41] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/06/Calcium-Alginate-Eurosorb.jpg" for https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Extracted product_id from updated method: 137
+[2025-06-02 15:28:41] Extracted product_id: "137" for https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Product data validated successfully for URL: https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Product data validated successfully for URL: https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] 🆕 محصول جدید اضافه شد: پانسمان کلسیم آلژینات یوروفارم | یوروزورب (ID: 137)
+[2025-06-02 15:28:41] +------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    137     | پانسمان کلسیم آلژینات یوروفارم | یوروزور... |   33000    | پانسمان آلژینات, محصولات پیشرف... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:41] 
+[2025-06-02 15:28:41] 🎉 محصول جدید ایجاد شد: پانسمان کلسیم آلژینات یوروفارم | یوروزورب
+[2025-06-02 15:28:41] Successfully processed: https://yaradarman.com/product/eurosorb/
+[2025-06-02 15:28:41] Processing product 5/23: https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Raw title extracted: 'پانسمان فوق جاذب هارتمن | زتوویت ای'
+[2025-06-02 15:28:42] Title after applying prefix: پانسمان فوق جاذب هارتمن | زتوویت ای
+[2025-06-02 15:28:42] Extracted title: "پانسمان فوق جاذب هارتمن | زتوویت ای" for https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Extracted categories from selectors: پانسمان فوق جاذب, محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:42] Extracted category: "پانسمان فوق جاذب, محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:42] Availability fallback processing: 1
+[2025-06-02 15:28:42] Extracted availability: "1" for https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Raw price extracted with priority method: '5.000 تومان'
+[2025-06-02 15:28:42] Extracted price: "5000" for https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Hartmann-Zetuvit-E.jpg
+[2025-06-02 15:28:42] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Hartmann-Zetuvit-E.jpg" for https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Extracted product_id from updated method: 707
+[2025-06-02 15:28:42] Extracted product_id: "707" for https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Product data validated successfully for URL: https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Product data validated successfully for URL: https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] 🆕 محصول جدید اضافه شد: پانسمان فوق جاذب هارتمن | زتوویت ای (ID: 707)
+[2025-06-02 15:28:42] +------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    707     |   پانسمان فوق جاذب هارتمن | زتوویت ای    |    5000    | پانسمان فوق جاذب, محصولات پیشر... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:42] 
+[2025-06-02 15:28:42] 🎉 محصول جدید ایجاد شد: پانسمان فوق جاذب هارتمن | زتوویت ای
+[2025-06-02 15:28:42] Successfully processed: https://yaradarman.com/product/zetuvit-e-hartmann/
+[2025-06-02 15:28:42] Processing product 6/23: https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] Raw title extracted: 'پودر بند آورنده سریع خونریزی تریتا | طبااستاپ'
+[2025-06-02 15:28:42] Title after applying prefix: پودر بند آورنده سریع خونریزی تریتا | طبااستاپ
+[2025-06-02 15:28:42] Extracted title: "پودر بند آورنده سریع خونریزی تریتا | طبااستاپ" for https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] Extracted categories from selectors: بند آورنده خون, پانسمان پودری
+[2025-06-02 15:28:42] Extracted category: "بند آورنده خون, پانسمان پودری" for https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] Raw availability extracted: ''
+[2025-06-02 15:28:42] Availability fallback processing: 0
+[2025-06-02 15:28:42] Extracted availability: "0" for https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] Raw price extracted with priority method: ''
+[2025-06-02 15:28:42] No valid price found, setting default: '0'
+[2025-06-02 15:28:42] Extracted price: "0" for https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/tebastop.jpg
+[2025-06-02 15:28:42] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/tebastop.jpg" for https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] No product_id extracted, keeping mainPageProductId or empty
+[2025-06-02 15:28:42] Extracted product_id: "" for https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] 🆕 محصول جدید اضافه شد: پودر بند آورنده سریع خونریزی تریتا | طبااستاپ (ID: )
+[2025-06-02 15:28:42] +------------+---------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |           Category            | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+|            | پودر بند آورنده سریع خونریزی تریتا | طبا... |     0      | بند آورنده خون, پانسمان پودری |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:42] 
+[2025-06-02 15:28:42] 🎉 محصول جدید ایجاد شد: پودر بند آورنده سریع خونریزی تریتا | طبااستاپ
+[2025-06-02 15:28:42] Successfully processed: https://yaradarman.com/product/tebastop-treetta/
+[2025-06-02 15:28:42] Processing product 7/23: https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Raw title extracted: 'محلول آنتی سپتیک زخم تریتا | طباسپت'
+[2025-06-02 15:28:42] Title after applying prefix: محلول آنتی سپتیک زخم تریتا | طباسپت
+[2025-06-02 15:28:42] Extracted title: "محلول آنتی سپتیک زخم تریتا | طباسپت" for https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Extracted categories from selectors: اسپری و محلول ها, پانسمان PHMB
+[2025-06-02 15:28:42] Extracted category: "اسپری و محلول ها, پانسمان PHMB" for https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:42] Availability fallback processing: 1
+[2025-06-02 15:28:42] Extracted availability: "1" for https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Raw price extracted with priority method: '220.000 تومان'
+[2025-06-02 15:28:42] Extracted price: "220000" for https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/tebasept.jpg
+[2025-06-02 15:28:42] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/tebasept.jpg" for https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Extracted product_id from updated method: 770
+[2025-06-02 15:28:42] Extracted product_id: "770" for https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Product data validated successfully for URL: https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Product data validated successfully for URL: https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] 🆕 محصول جدید اضافه شد: محلول آنتی سپتیک زخم تریتا | طباسپت (ID: 770)
+[2025-06-02 15:28:42] +------------+------------------------------------------+------------+--------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |            Category            | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------------+--------------+------------+------------+------------+
+|    770     |   محلول آنتی سپتیک زخم تریتا | طباسپت    |   220000   | اسپری و محلول ها, پانسمان PHMB |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:42] 
+[2025-06-02 15:28:42] 🎉 محصول جدید ایجاد شد: محلول آنتی سپتیک زخم تریتا | طباسپت
+[2025-06-02 15:28:42] Successfully processed: https://yaradarman.com/product/tebasept/
+[2025-06-02 15:28:42] Processing product 8/23: https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Raw title extracted: 'پانسمان فوم چسبدار ضد‌آب مونلیکه | مپی‌لکس چسبدار'
+[2025-06-02 15:28:42] Title after applying prefix: پانسمان فوم چسبدار ضد‌آب مونلیکه | مپی‌لکس چسبدار
+[2025-06-02 15:28:42] Extracted title: "پانسمان فوم چسبدار ضد‌آب مونلیکه | مپی‌لکس چسبدار" for https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Extracted categories from selectors: پانسمان فوم, محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:42] Extracted category: "پانسمان فوم, محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:42] Availability fallback processing: 1
+[2025-06-02 15:28:42] Extracted availability: "1" for https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Raw price extracted with priority method: '128.000 تومان'
+[2025-06-02 15:28:42] Extracted price: "128000" for https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Mepilex-Border.jpg
+[2025-06-02 15:28:42] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Mepilex-Border.jpg" for https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Extracted product_id from updated method: 843
+[2025-06-02 15:28:42] Extracted product_id: "843" for https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Product data validated successfully for URL: https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Product data validated successfully for URL: https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] 🆕 محصول جدید اضافه شد: پانسمان فوم چسبدار ضد‌آب مونلیکه | مپی‌لکس چسبدار (ID: 843)
+[2025-06-02 15:28:42] +------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    843     | پانسمان فوم چسبدار ضد‌آب مونلیکه | مپی‌ل... |   128000   | پانسمان فوم, محصولات پیشرفته د... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:42] 
+[2025-06-02 15:28:42] 🎉 محصول جدید ایجاد شد: پانسمان فوم چسبدار ضد‌آب مونلیکه | مپی‌لکس چسبدار
+[2025-06-02 15:28:42] Successfully processed: https://yaradarman.com/product/mepilex-border/
+[2025-06-02 15:28:42] Processing product 9/23: https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Raw title extracted: 'پانسمان فوم ساده یوروفارم | یورودرم'
+[2025-06-02 15:28:42] Title after applying prefix: پانسمان فوم ساده یوروفارم | یورودرم
+[2025-06-02 15:28:42] Extracted title: "پانسمان فوم ساده یوروفارم | یورودرم" for https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Extracted categories from selectors: پانسمان فوم, محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:42] Extracted category: "پانسمان فوم, محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:42] Availability fallback processing: 1
+[2025-06-02 15:28:42] Extracted availability: "1" for https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Raw price extracted with priority method: '50.000 تومان'
+[2025-06-02 15:28:42] Extracted price: "50000" for https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/06/Euroderm-foam.jpg
+[2025-06-02 15:28:42] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/06/Euroderm-foam.jpg" for https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Extracted product_id from updated method: 149
+[2025-06-02 15:28:42] Extracted product_id: "149" for https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Product data validated successfully for URL: https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Product data validated successfully for URL: https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] 🆕 محصول جدید اضافه شد: پانسمان فوم ساده یوروفارم | یورودرم (ID: 149)
+[2025-06-02 15:28:42] +------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    149     |   پانسمان فوم ساده یوروفارم | یورودرم    |   50000    | پانسمان فوم, محصولات پیشرفته د... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:42] 
+[2025-06-02 15:28:42] 🎉 محصول جدید ایجاد شد: پانسمان فوم ساده یوروفارم | یورودرم
+[2025-06-02 15:28:42] Successfully processed: https://yaradarman.com/product/euroderm-foam/
+[2025-06-02 15:28:42] Processing product 10/23: https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] Raw title extracted: 'پانسمان ماتریکس کلاژن طلا تریتا | طبابرن'
+[2025-06-02 15:28:42] Title after applying prefix: پانسمان ماتریکس کلاژن طلا تریتا | طبابرن
+[2025-06-02 15:28:42] Extracted title: "پانسمان ماتریکس کلاژن طلا تریتا | طبابرن" for https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] Extracted categories from selectors: پانسمان کلاژن, محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:42] Extracted category: "پانسمان کلاژن, محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] Raw availability extracted: ''
+[2025-06-02 15:28:42] Availability fallback processing: 0
+[2025-06-02 15:28:42] Extracted availability: "0" for https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] Raw price extracted with priority method: ''
+[2025-06-02 15:28:42] No valid price found, setting default: '0'
+[2025-06-02 15:28:42] Extracted price: "0" for https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/tebaburn.jpg
+[2025-06-02 15:28:42] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/tebaburn.jpg" for https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] Extracted product_id from updated method: 763
+[2025-06-02 15:28:42] Extracted product_id: "763" for https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:42] 🆕 محصول جدید اضافه شد: پانسمان ماتریکس کلاژن طلا تریتا | طبابرن (ID: 763)
+[2025-06-02 15:28:42] +------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    763     | پانسمان ماتریکس کلاژن طلا تریتا | طبابرن |     0      | پانسمان کلاژن, محصولات پیشرفته... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:42] 
+[2025-06-02 15:28:42] 🎉 محصول جدید ایجاد شد: پانسمان ماتریکس کلاژن طلا تریتا | طبابرن
+[2025-06-02 15:28:42] Successfully processed: https://yaradarman.com/product/tebaburn/
+[2025-06-02 15:28:50] Processing product 11/23: https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Raw title extracted: 'پانسمان هیدروفایبر ساده مونلیکه | اگزوفایبر'
+[2025-06-02 15:28:50] Title after applying prefix: پانسمان هیدروفایبر ساده مونلیکه | اگزوفایبر
+[2025-06-02 15:28:50] Extracted title: "پانسمان هیدروفایبر ساده مونلیکه | اگزوفایبر" for https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Extracted categories from selectors: پانسمان هیدروفایبر, محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:50] Extracted category: "پانسمان هیدروفایبر, محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Raw availability extracted: ''
+[2025-06-02 15:28:50] Availability fallback processing: 0
+[2025-06-02 15:28:50] Extracted availability: "0" for https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Raw price extracted with priority method: ''
+[2025-06-02 15:28:50] No valid price found, setting default: '0'
+[2025-06-02 15:28:50] Extracted price: "0" for https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Exufiber.jpg
+[2025-06-02 15:28:50] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Exufiber.jpg" for https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Extracted product_id from updated method: 865
+[2025-06-02 15:28:50] Extracted product_id: "865" for https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] 🆕 محصول جدید اضافه شد: پانسمان هیدروفایبر ساده مونلیکه | اگزوفایبر (ID: 865)
+[2025-06-02 15:28:50] +------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    865     | پانسمان هیدروفایبر ساده مونلیکه | اگزوفا... |     0      | پانسمان هیدروفایبر, محصولات پی... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:50] 
+[2025-06-02 15:28:50] 🎉 محصول جدید ایجاد شد: پانسمان هیدروفایبر ساده مونلیکه | اگزوفایبر
+[2025-06-02 15:28:50] Successfully processed: https://yaradarman.com/product/exufiber/
+[2025-06-02 15:28:50] Processing product 12/23: https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] Raw title extracted: 'گاز کلر سدیم مونلیکه | میسالت'
+[2025-06-02 15:28:50] Title after applying prefix: گاز کلر سدیم مونلیکه | میسالت
+[2025-06-02 15:28:50] Extracted title: "گاز کلر سدیم مونلیکه | میسالت" for https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] Extracted categories from selectors: محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:50] Extracted category: "محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] Raw availability extracted: ''
+[2025-06-02 15:28:50] Availability fallback processing: 0
+[2025-06-02 15:28:50] Extracted availability: "0" for https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] Raw price extracted with priority method: ''
+[2025-06-02 15:28:50] No valid price found, setting default: '0'
+[2025-06-02 15:28:50] Extracted price: "0" for https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Mesalt.jpg
+[2025-06-02 15:28:50] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Mesalt.jpg" for https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] No product_id extracted, keeping mainPageProductId or empty
+[2025-06-02 15:28:50] Extracted product_id: "" for https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:50] 🆕 محصول جدید اضافه شد: گاز کلر سدیم مونلیکه | میسالت (ID: )
+[2025-06-02 15:28:50] +------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|            |      گاز کلر سدیم مونلیکه | میسالت       |     0      | محصولات پیشرفته درمان زخم |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:50] 
+[2025-06-02 15:28:50] 🎉 محصول جدید ایجاد شد: گاز کلر سدیم مونلیکه | میسالت
+[2025-06-02 15:28:50] Successfully processed: https://yaradarman.com/product/mesalt/
+[2025-06-02 15:28:51] Processing product 13/23: https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Raw title extracted: 'خمیر نقره بی بران | کالگیترول نقره'
+[2025-06-02 15:28:51] Title after applying prefix: خمیر نقره بی بران | کالگیترول نقره
+[2025-06-02 15:28:51] Extracted title: "خمیر نقره بی بران | کالگیترول نقره" for https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Extracted categories from selectors: پانسمان نقره, محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:51] Extracted category: "پانسمان نقره, محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Raw availability extracted: ''
+[2025-06-02 15:28:51] Availability fallback processing: 0
+[2025-06-02 15:28:51] Extracted availability: "0" for https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Raw price extracted with priority method: ''
+[2025-06-02 15:28:51] No valid price found, setting default: '0'
+[2025-06-02 15:28:51] Extracted price: "0" for https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/08/Askina-Calgitrol-Paste.jpg
+[2025-06-02 15:28:51] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/08/Askina-Calgitrol-Paste.jpg" for https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Extracted product_id from updated method: 1002
+[2025-06-02 15:28:51] Extracted product_id: "1002" for https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] 🆕 محصول جدید اضافه شد: خمیر نقره بی بران | کالگیترول نقره (ID: 1002)
+[2025-06-02 15:28:51] +------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    1002    |    خمیر نقره بی بران | کالگیترول نقره    |     0      | پانسمان نقره, محصولات پیشرفته ... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:51] 
+[2025-06-02 15:28:51] 🎉 محصول جدید ایجاد شد: خمیر نقره بی بران | کالگیترول نقره
+[2025-06-02 15:28:51] Successfully processed: https://yaradarman.com/product/askina-calgitrol-paste/
+[2025-06-02 15:28:51] Processing product 14/23: https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] Raw title extracted: 'پانسمان آلژینات کلسیم نقره روزین'
+[2025-06-02 15:28:51] Title after applying prefix: پانسمان آلژینات کلسیم نقره روزین
+[2025-06-02 15:28:51] Extracted title: "پانسمان آلژینات کلسیم نقره روزین" for https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] Extracted categories from selectors: پانسمان آلژینات, پانسمان نقره
+[2025-06-02 15:28:51] Extracted category: "پانسمان آلژینات, پانسمان نقره" for https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] Raw availability extracted: ''
+[2025-06-02 15:28:51] Availability fallback processing: 0
+[2025-06-02 15:28:51] Extracted availability: "0" for https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] Raw price extracted with priority method: ''
+[2025-06-02 15:28:51] No valid price found, setting default: '0'
+[2025-06-02 15:28:51] Extracted price: "0" for https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/08/Silver-Calcium-Alginate-Roosin.jpg
+[2025-06-02 15:28:51] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/08/Silver-Calcium-Alginate-Roosin.jpg" for https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] Extracted product_id from updated method: 915
+[2025-06-02 15:28:51] Extracted product_id: "915" for https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:51] 🆕 محصول جدید اضافه شد: پانسمان آلژینات کلسیم نقره روزین (ID: 915)
+[2025-06-02 15:28:51] +------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |           Category            | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+|    915     |     پانسمان آلژینات کلسیم نقره روزین     |     0      | پانسمان آلژینات, پانسمان نقره |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:51] 
+[2025-06-02 15:28:51] 🎉 محصول جدید ایجاد شد: پانسمان آلژینات کلسیم نقره روزین
+[2025-06-02 15:28:51] Successfully processed: https://yaradarman.com/product/silver-alginate-roosin/
+[2025-06-02 15:28:52] Processing product 15/23: https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] Raw title extracted: 'اسپری نقره ضدعفونی کننده زخم نیواشا'
+[2025-06-02 15:28:52] Title after applying prefix: اسپری نقره ضدعفونی کننده زخم نیواشا
+[2025-06-02 15:28:52] Extracted title: "اسپری نقره ضدعفونی کننده زخم نیواشا" for https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] Extracted categories from selectors: اسپری و محلول ها, پانسمان نقره
+[2025-06-02 15:28:52] Extracted category: "اسپری و محلول ها, پانسمان نقره" for https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] Raw availability extracted: ''
+[2025-06-02 15:28:52] Availability fallback processing: 0
+[2025-06-02 15:28:52] Extracted availability: "0" for https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] Raw price extracted with priority method: '445.000 تومان'
+[2025-06-02 15:28:52] Extracted price: "445000" for https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/09/Nivasha.jpg
+[2025-06-02 15:28:52] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/09/Nivasha.jpg" for https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] No product_id extracted, keeping mainPageProductId or empty
+[2025-06-02 15:28:52] Extracted product_id: "" for https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] 🆕 محصول جدید اضافه شد: اسپری نقره ضدعفونی کننده زخم نیواشا (ID: )
+[2025-06-02 15:28:52] +------------+------------------------------------------+------------+--------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |            Category            | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------------+--------------+------------+------------+------------+
+|            |   اسپری نقره ضدعفونی کننده زخم نیواشا    |   445000   | اسپری و محلول ها, پانسمان نقره |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:52] 
+[2025-06-02 15:28:52] 🎉 محصول جدید ایجاد شد: اسپری نقره ضدعفونی کننده زخم نیواشا
+[2025-06-02 15:28:52] Successfully processed: https://yaradarman.com/product/nivasha/
+[2025-06-02 15:28:52] Processing product 16/23: https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Raw title extracted: 'پانسمان نقره جاذب چسبدار یوروفارم | سیلورمد'
+[2025-06-02 15:28:52] Title after applying prefix: پانسمان نقره جاذب چسبدار یوروفارم | سیلورمد
+[2025-06-02 15:28:52] Extracted title: "پانسمان نقره جاذب چسبدار یوروفارم | سیلورمد" for https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Extracted categories from selectors: پانسمان جاذب, پانسمان نقره
+[2025-06-02 15:28:52] Extracted category: "پانسمان جاذب, پانسمان نقره" for https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:52] Availability fallback processing: 1
+[2025-06-02 15:28:52] Extracted availability: "1" for https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Raw price extracted with priority method: '37.800 تومان'
+[2025-06-02 15:28:52] Extracted price: "37800" for https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Silvermed.jpg
+[2025-06-02 15:28:52] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Silvermed.jpg" for https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Extracted product_id from updated method: 406
+[2025-06-02 15:28:52] Extracted product_id: "406" for https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Product data validated successfully for URL: https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Product data validated successfully for URL: https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] 🆕 محصول جدید اضافه شد: پانسمان نقره جاذب چسبدار یوروفارم | سیلورمد (ID: 406)
+[2025-06-02 15:28:52] +------------+---------------------------------------------+------------+----------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |          Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+----------------------------+--------------+------------+------------+------------+
+|    406     | پانسمان نقره جاذب چسبدار یوروفارم | سیلو... |   37800    | پانسمان جاذب, پانسمان نقره |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+----------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:52] 
+[2025-06-02 15:28:52] 🎉 محصول جدید ایجاد شد: پانسمان نقره جاذب چسبدار یوروفارم | سیلورمد
+[2025-06-02 15:28:52] Successfully processed: https://yaradarman.com/product/silvermed/
+[2025-06-02 15:28:52] Processing product 17/23: https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] Raw title extracted: 'پانسمان فوم نقره کلوپلاست | بیاتین نقره'
+[2025-06-02 15:28:52] Title after applying prefix: پانسمان فوم نقره کلوپلاست | بیاتین نقره
+[2025-06-02 15:28:52] Extracted title: "پانسمان فوم نقره کلوپلاست | بیاتین نقره" for https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] Extracted categories from selectors: پانسمان فوم, پانسمان نقره
+[2025-06-02 15:28:52] Extracted category: "پانسمان فوم, پانسمان نقره" for https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:52] Availability fallback processing: 1
+[2025-06-02 15:28:52] Extracted availability: "1" for https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] Raw price extracted with priority method: '250.000 تومان'
+[2025-06-02 15:28:52] Extracted price: "250000" for https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/08/Biatain-Ag-Coloplast.jpg
+[2025-06-02 15:28:52] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/08/Biatain-Ag-Coloplast.jpg" for https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] Extracted product_id from updated method: 1038
+[2025-06-02 15:28:52] Extracted product_id: "1038" for https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] Product data validated successfully for URL: https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] Product data validated successfully for URL: https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:52] 🆕 محصول جدید اضافه شد: پانسمان فوم نقره کلوپلاست | بیاتین نقره (ID: 1038)
+[2025-06-02 15:28:52] +------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|    1038    | پانسمان فوم نقره کلوپلاست | بیاتین نقره  |   250000   | پانسمان فوم, پانسمان نقره |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:52] 
+[2025-06-02 15:28:52] 🎉 محصول جدید ایجاد شد: پانسمان فوم نقره کلوپلاست | بیاتین نقره
+[2025-06-02 15:28:52] Successfully processed: https://yaradarman.com/product/biatain-ag-non-adhesive/
+[2025-06-02 15:28:53] Processing product 18/23: https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Raw title extracted: 'پودر کلاژن نقره ترمیم زخم تریتا | طباگرن پلاس'
+[2025-06-02 15:28:53] Title after applying prefix: پودر کلاژن نقره ترمیم زخم تریتا | طباگرن پلاس
+[2025-06-02 15:28:53] Extracted title: "پودر کلاژن نقره ترمیم زخم تریتا | طباگرن پلاس" for https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Extracted categories from selectors: پانسمان پودری, پانسمان کلاژن
+[2025-06-02 15:28:53] Extracted category: "پانسمان پودری, پانسمان کلاژن" for https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:53] Availability fallback processing: 1
+[2025-06-02 15:28:53] Extracted availability: "1" for https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Raw price extracted with priority method: '496.000 تومان'
+[2025-06-02 15:28:53] Extracted price: "496000" for https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/tebagran-plus-ag.jpg
+[2025-06-02 15:28:53] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/tebagran-plus-ag.jpg" for https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Extracted product_id from updated method: 750
+[2025-06-02 15:28:53] Extracted product_id: "750" for https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Product data validated successfully for URL: https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Product data validated successfully for URL: https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] 🆕 محصول جدید اضافه شد: پودر کلاژن نقره ترمیم زخم تریتا | طباگرن پلاس (ID: 750)
+[2025-06-02 15:28:53] +------------+---------------------------------------------+------------+------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |           Category           | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------------------------+--------------+------------+------------+------------+
+|    750     | پودر کلاژن نقره ترمیم زخم تریتا | طباگرن... |   496000   | پانسمان پودری, پانسمان کلاژن |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:53] 
+[2025-06-02 15:28:53] 🎉 محصول جدید ایجاد شد: پودر کلاژن نقره ترمیم زخم تریتا | طباگرن پلاس
+[2025-06-02 15:28:53] Successfully processed: https://yaradarman.com/product/tebagran-plus-ag/
+[2025-06-02 15:28:53] Processing product 19/23: https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Raw title extracted: 'پانسمان اترومن نقره هارتمن'
+[2025-06-02 15:28:53] Title after applying prefix: پانسمان اترومن نقره هارتمن
+[2025-06-02 15:28:53] Extracted title: "پانسمان اترومن نقره هارتمن" for https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Extracted categories from selectors: پانسمان نقره, محصولات پیشرفته درمان زخم
+[2025-06-02 15:28:53] Extracted category: "پانسمان نقره, محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:53] Availability fallback processing: 1
+[2025-06-02 15:28:53] Extracted availability: "1" for https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Raw price extracted with priority method: '10.000 تومان'
+[2025-06-02 15:28:53] Extracted price: "10000" for https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/atrauman-ag-hartmann.jpg
+[2025-06-02 15:28:53] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/atrauman-ag-hartmann.jpg" for https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Extracted product_id from updated method: 716
+[2025-06-02 15:28:53] Extracted product_id: "716" for https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Product data validated successfully for URL: https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Product data validated successfully for URL: https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] 🆕 محصول جدید اضافه شد: پانسمان اترومن نقره هارتمن (ID: 716)
+[2025-06-02 15:28:53] +------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    716     |        پانسمان اترومن نقره هارتمن        |   10000    | پانسمان نقره, محصولات پیشرفته ... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:53] 
+[2025-06-02 15:28:53] 🎉 محصول جدید ایجاد شد: پانسمان اترومن نقره هارتمن
+[2025-06-02 15:28:53] Successfully processed: https://yaradarman.com/product/atrauman-ag-hartmann/
+[2025-06-02 15:28:53] Processing product 20/23: https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] Raw title extracted: 'آلژینات نقره نواری بیاتین کلوپلاست'
+[2025-06-02 15:28:53] Title after applying prefix: آلژینات نقره نواری بیاتین کلوپلاست
+[2025-06-02 15:28:53] Extracted title: "آلژینات نقره نواری بیاتین کلوپلاست" for https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] Extracted categories from selectors: پانسمان آلژینات, پانسمان نقره
+[2025-06-02 15:28:53] Extracted category: "پانسمان آلژینات, پانسمان نقره" for https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] Raw availability extracted: ''
+[2025-06-02 15:28:53] Availability fallback processing: 0
+[2025-06-02 15:28:53] Extracted availability: "0" for https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] Raw price extracted with priority method: ''
+[2025-06-02 15:28:53] No valid price found, setting default: '0'
+[2025-06-02 15:28:53] Extracted price: "0" for https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2024/11/hydro-clean-pluse-dressing.webp
+[2025-06-02 15:28:53] Extracted image: "https://yaradarman.com/wp-content/uploads/2024/11/hydro-clean-pluse-dressing.webp" for https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] No product_id extracted, keeping mainPageProductId or empty
+[2025-06-02 15:28:53] Extracted product_id: "" for https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:53] 🆕 محصول جدید اضافه شد: آلژینات نقره نواری بیاتین کلوپلاست (ID: )
+[2025-06-02 15:28:53] +------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |           Category            | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+|            |    آلژینات نقره نواری بیاتین کلوپلاست    |     0      | پانسمان آلژینات, پانسمان نقره |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:53] 
+[2025-06-02 15:28:53] 🎉 محصول جدید ایجاد شد: آلژینات نقره نواری بیاتین کلوپلاست
+[2025-06-02 15:28:53] Successfully processed: https://yaradarman.com/product/biatain-alginate/
+[2025-06-02 15:28:55] Processing product 21/23: https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Raw title extracted: 'پانسمان فوم سیلیکونی نقره ‌مونلیکه | مپی‌لکس نقره'
+[2025-06-02 15:28:55] Title after applying prefix: پانسمان فوم سیلیکونی نقره ‌مونلیکه | مپی‌لکس نقره
+[2025-06-02 15:28:55] Extracted title: "پانسمان فوم سیلیکونی نقره ‌مونلیکه | مپی‌لکس نقره" for https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Extracted categories from selectors: پانسمان فوم, پانسمان فوم سیلیکونی
+[2025-06-02 15:28:55] Extracted category: "پانسمان فوم, پانسمان فوم سیلیکونی" for https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:55] Availability fallback processing: 1
+[2025-06-02 15:28:55] Extracted availability: "1" for https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Raw price extracted with priority method: '181.000 تومان'
+[2025-06-02 15:28:55] Extracted price: "181000" for https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Mepilex-Ag.jpg
+[2025-06-02 15:28:55] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Mepilex-Ag.jpg" for https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Extracted product_id from updated method: 838
+[2025-06-02 15:28:55] Extracted product_id: "838" for https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Product data validated successfully for URL: https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Product data validated successfully for URL: https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] 🆕 محصول جدید اضافه شد: پانسمان فوم سیلیکونی نقره ‌مونلیکه | مپی‌لکس نقره (ID: 838)
+[2025-06-02 15:28:55] +------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    838     | پانسمان فوم سیلیکونی نقره ‌مونلیکه | مپی... |   181000   | پانسمان فوم, پانسمان فوم سیلیک... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:55] 
+[2025-06-02 15:28:55] 🎉 محصول جدید ایجاد شد: پانسمان فوم سیلیکونی نقره ‌مونلیکه | مپی‌لکس نقره
+[2025-06-02 15:28:55] Successfully processed: https://yaradarman.com/product/mepilex-ag/
+[2025-06-02 15:28:55] Processing product 22/23: https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] Raw title extracted: 'پانسمان هیدروفایبر نقره مونلیکه | اگزوفایبر'
+[2025-06-02 15:28:55] Title after applying prefix: پانسمان هیدروفایبر نقره مونلیکه | اگزوفایبر
+[2025-06-02 15:28:55] Extracted title: "پانسمان هیدروفایبر نقره مونلیکه | اگزوفایبر" for https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] Extracted categories from selectors: پانسمان نقره, پانسمان هیدروفایبر
+[2025-06-02 15:28:55] Extracted category: "پانسمان نقره, پانسمان هیدروفایبر" for https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-02 15:28:55] Availability fallback processing: 1
+[2025-06-02 15:28:55] Extracted availability: "1" for https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] Raw price extracted with priority method: '129.000 تومان'
+[2025-06-02 15:28:55] Extracted price: "129000" for https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Exufiber-Ag.jpg
+[2025-06-02 15:28:55] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Exufiber-Ag.jpg" for https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] Extracted product_id from updated method: 866
+[2025-06-02 15:28:55] Extracted product_id: "866" for https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] Product data validated successfully for URL: https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] Product data validated successfully for URL: https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:55] 🆕 محصول جدید اضافه شد: پانسمان هیدروفایبر نقره مونلیکه | اگزوفایبر (ID: 866)
+[2025-06-02 15:28:55] +------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    866     | پانسمان هیدروفایبر نقره مونلیکه | اگزوفا... |   129000   | پانسمان نقره, پانسمان هیدروفای... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:55] 
+[2025-06-02 15:28:55] 🎉 محصول جدید ایجاد شد: پانسمان هیدروفایبر نقره مونلیکه | اگزوفایبر
+[2025-06-02 15:28:55] Successfully processed: https://yaradarman.com/product/exufiber-ag/
+[2025-06-02 15:28:56] Processing product 23/23: https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] Raw title extracted: 'پانسمان هیدروفایبر نقره رولی مونلیکه | اگزوفایبر رولی'
+[2025-06-02 15:28:56] Title after applying prefix: پانسمان هیدروفایبر نقره رولی مونلیکه | اگزوفایبر رولی
+[2025-06-02 15:28:56] Extracted title: "پانسمان هیدروفایبر نقره رولی مونلیکه | اگزوفایبر رولی" for https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] Extracted categories from selectors: پانسمان نقره, پانسمان هیدروفایبر
+[2025-06-02 15:28:56] Extracted category: "پانسمان نقره, پانسمان هیدروفایبر" for https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] Raw availability extracted: ''
+[2025-06-02 15:28:56] Availability fallback processing: 0
+[2025-06-02 15:28:56] Extracted availability: "0" for https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] Raw price extracted with priority method: '150.000 تومان'
+[2025-06-02 15:28:56] Extracted price: "150000" for https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] Extracted image from product_page: https://yaradarman.com/wp-content/uploads/2023/07/Exufiber-Ag-Roll.jpg
+[2025-06-02 15:28:56] Extracted image: "https://yaradarman.com/wp-content/uploads/2023/07/Exufiber-Ag-Roll.jpg" for https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] No product_id extracted, keeping mainPageProductId or empty
+[2025-06-02 15:28:56] Extracted product_id: "" for https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] Product is unavailable, skipping price validation for URL: https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] 🆕 محصول جدید اضافه شد: پانسمان هیدروفایبر نقره رولی مونلیکه | اگزوفایبر رولی (ID: )
+[2025-06-02 15:28:56] +------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|            | پانسمان هیدروفایبر نقره رولی مونلیکه | ا... |   150000   | پانسمان نقره, پانسمان هیدروفای... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[2025-06-02 15:28:56] 
+[2025-06-02 15:28:56] 🎉 محصول جدید ایجاد شد: پانسمان هیدروفایبر نقره رولی مونلیکه | اگزوفایبر رولی
+[2025-06-02 15:28:56] Successfully processed: https://yaradarman.com/product/exufiber-ag-roll/
+[2025-06-02 15:28:56] Batch processing completed. Processed: 23, Failed: 0
+[2025-06-02 15:28:56] Scraping completed! Processed: 23, Failed: 0
+[2025-06-02 15:31:21] Inside scrapeMultiple method
+[2025-06-02 15:31:21] Starting scraper with start_id: not set
+[2025-06-02 15:31:21] Config contents: {
+    "method": 3,
+    "processing_method": 3,
+    "base_urls": [
+        "https:\/\/sinastyle.ir"
+    ],
+    "products_urls": [
+        "https:\/\/sinastyle.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "run_method": "new",
+    "database": "clear",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\\\"(\\d+)\\\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "موجود"
+        ],
+        "negative": [
+            "ناموجود"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.sc-195bc97-1 > a:nth-child(1)",
+                "attribute": "href"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": "h1.bWVCXB"
+            },
+            "category": {
+                "type": "css",
+                "selector": "div.cjdzNw:nth-child(2) > a:nth-child(1) > span:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.XxlIx"
+            },
+            "price": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.gVmreK"
+            },
+            "image": {
+                "type": "css",
+                "selector": ".dFxbiY > img:nth-child(1)",
+                "attribute": "src"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".eaqgCF"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": null
+            },
+            "product_id": {
+                "type": "css",
+                "selector": null,
+                "attribute": null
+            }
+        },
+        "data_transformers": {
+            "price": "cleanPrice",
+            "availability": "parseAvailability",
+            "off": "cleanOff",
+            "guarantee": "cleanGuarantee"
+        }
+    },
+    "container": "div.sc-195bc97-1",
+    "scrool": 10,
+    "method_settings": {
+        "method_3": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": ".aaaa"
+                    }
+                },
+                "max_iterations": 3,
+                "timing": {
+                    "scroll_delay": 5000
+                }
+            }
+        }
+    }
+}
+[2025-06-02 15:31:38] Inside scrapeMultiple method
+[2025-06-02 15:31:38] Starting scraper with start_id: not set
+[2025-06-02 15:31:38] Config contents: {
+    "method": 2,
+    "processing_method": 1,
+    "base_urls": [
+        "https:\/\/kandidabzar.ir\/"
+    ],
+    "products_urls": [
+        "https:\/\/kandidabzar.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 1,
+    "concurrency": 7,
+    "batch_size": 100,
+    "container": "div.col-xl-3",
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "product_id_selector": {
+        "type": "css",
+        "selector": "div.product-grid-item > div:nth-child(1) > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)",
+        "attribute": "data-product_id"
+    },
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\"(\\d+)\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی",
+        "ضمانت",
+        "گارانتی 18 ماه",
+        "گارانتی 12 ماهه",
+        "گارانتی تعويض",
+        "ضمانت نامه 24 ماهه"
+    ],
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.col-xl-3 > div > a:nth-child(2)",
+                "attribute": "href"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": "div.product-seller-row:nth-child(2) > div:nth-child(2) > div:nth-child(1)"
+            },
+            "image": {
+                "type": "css",
+                "selector": "div.col-xl-3 > div > a:nth-child(2) > img",
+                "attribute": "src"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "div.product-grid-item > div:nth-child(1) > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)",
+                "attribute": "data-product_id"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": ".product_name"
+            },
+            "category": {
+                "type": "css",
+                "selector": ".breadcrumb > nav:nth-child(1) > a:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": [
+                    "a.btn-primary-cm"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": [
+                    ".product_price"
+                ]
+            },
+            "image": {
+                "type": "css",
+                "selector": ".product-carousel .gallery-item",
+                "attribute": "href"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".discount-txt"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": "div.product_left_box:nth-child(2) > div:nth-child(2)"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "",
+                "attribute": ""
+            }
+        }
+    },
+    "data_transformers": {
+        "price": "cleanPrice",
+        "availability": "parseAvailability",
+        "off": "cleanOff",
+        "guarantee": "cleanGuarantee"
+    },
+    "availability_keywords": {
+        "positive": [
+            "در انبار موجود است",
+            "موجود",
+            "افزودن به سبد خرید",
+            "افزودن به سبد",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ],
+        "negative": [
+            "ناموجود",
+            "اتمام موجودی"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "قیمت‌گذاری نشده",
+            "قیمت تعیین نشده",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ]
+    },
+    "method_settings": {
+        "method_1": {
+            "enabled": true,
+            "pagination": {
+                "type": "path",
+                "parameter": "page",
+                "separator": "\/",
+                "suffix": "",
+                "max_pages": 2,
+                "use_sample_url": false,
+                "sample_url": "https:\/\/najmaartroom.ir\/product-category\/bag\/page\/2",
+                "use_webdriver": false
+            }
+        },
+        "method_2": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": "#moreProducts",
+                        "max_clicks": 10
+                    }
+                },
+                "max_pages": 10,
+                "scroll_delay": 5000
+            }
+        },
+        "method_3": {
+            "enabled": false,
+            "rendering": {
+                "use_deep_rendering": true,
+                "max_pages": 5
+            }
+        }
+    },
+    "output_dir": "scraped_data",
+    "output_format": "json",
+    "run_method": "new"
+}
+[2025-06-02 15:32:37] Inside scrapeMultiple method
+[2025-06-02 15:32:37] Starting scraper with start_id: not set
+[2025-06-02 15:32:37] Config contents: {
+    "method": 3,
+    "processing_method": 3,
+    "base_urls": [
+        "https:\/\/sinastyle.ir"
+    ],
+    "products_urls": [
+        "https:\/\/sinastyle.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "run_method": "new",
+    "database": "clear",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\\\"(\\d+)\\\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "موجود"
+        ],
+        "negative": [
+            "ناموجود"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.sc-195bc97-1 > a:nth-child(1)",
+                "attribute": "href"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": "h1.bWVCXB"
+            },
+            "category": {
+                "type": "css",
+                "selector": "div.cjdzNw:nth-child(2) > a:nth-child(1) > span:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.XxlIx"
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.gVmreK"
+            },
+            "image": {
+                "type": "css",
+                "selector": ".dFxbiY > img:nth-child(1)",
+                "attribute": "src"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".eaqgCF"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": null
+            },
+            "product_id": {
+                "type": "css",
+                "selector": null,
+                "attribute": null
+            }
+        },
+        "data_transformers": {
+            "price": "cleanPrice",
+            "availability": "parseAvailability",
+            "off": "cleanOff",
+            "guarantee": "cleanGuarantee"
+        }
+    },
+    "out_of_stock_button": false,
+    "container": "div.sc-195bc97-1",
+    "scrool": 10,
+    "method_settings": {
+        "method_3": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": ".aaaa"
+                    }
+                },
+                "max_iterations": 3,
+                "timing": {
+                    "scroll_delay": 5000
+                }
+            }
+        }
+    }
+}
+[2025-06-02 15:32:37] Generated database name: sinastyle_ir
+[2025-06-02 15:32:37] Database mode: clear
+[2025-06-02 15:32:37] Creating database sinastyle_ir...
+[2025-06-02 15:32:37] Switched to database: sinastyle_ir
+[2025-06-02 15:32:37] Running specific migrations...
+[2025-06-02 15:32:37] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 15:32:37] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 15:32:37] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 15:32:37] Specific migrations completed
+[2025-06-02 15:32:37] Run method: new
+[2025-06-02 15:32:37] Fetching product links from web...
+[2025-06-02 15:32:37] Got 0 unique product links from web
+[2025-06-02 15:32:37] Links structure: []...
+[2025-06-02 15:32:37] No links collected from web. Stopping scrape.
