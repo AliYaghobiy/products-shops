@@ -7,7 +7,6 @@ class ConfigValidator
     private const COLOR_GREEN = "\033[1;92m";
     private const COLOR_RED = "\033[1;91m";
     private const COLOR_YELLOW = "\033[1;93m";
-
     private $outputCallback = null;
 
     public function setOutputCallback(callable $callback): void
@@ -123,8 +122,10 @@ class ConfigValidator
 
     public function validateProductTestConfig(array $config): void
     {
+
         $this->log("Validating Product Test Mode configuration...", self::COLOR_GREEN);
 
+        // بررسی وجود product_urls
         if (!isset($config['product_urls']) || empty($config['product_urls'])) {
             throw new \InvalidArgumentException("product_urls is required for Product Test Mode");
         }
@@ -133,16 +134,19 @@ class ConfigValidator
             throw new \InvalidArgumentException("product_urls must be an array");
         }
 
+        // بررسی معتبر بودن URLs
         foreach ($config['product_urls'] as $index => $url) {
             if (!is_string($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
                 throw new \InvalidArgumentException("Invalid URL at index $index: $url");
             }
         }
 
+        // بررسی وجود selectors برای product_page
         if (!isset($config['selectors']['product_page'])) {
             throw new \InvalidArgumentException("product_page selectors are required for Product Test Mode");
         }
 
+        // بررسی حداقل selectors ضروری
         $requiredSelectors = ['title', 'price'];
         $productPageSelectors = $config['selectors']['product_page'];
 
@@ -150,6 +154,26 @@ class ConfigValidator
             if (!isset($productPageSelectors[$selector]) || empty($productPageSelectors[$selector]['selector'])) {
                 throw new \InvalidArgumentException("Required selector '$selector' is missing or empty in product_page");
             }
+        }
+
+        // اعتبارسنجی timeout
+        $timeout = $config['timeout'] ?? 60;
+        if (!is_numeric($timeout) || $timeout <= 0) {
+            $this->log("Invalid timeout value, using default: 60", self::COLOR_YELLOW);
+            // نمی‌توانیم مستقیماً $config را تغییر دهیم چون reference نیست
+            // این بررسی فقط برای اطمینان از صحت مقدار است
+        }
+
+        // اعتبارسنجی delays
+        $delayMin = $config['request_delay_min'] ?? 1000;
+        $delayMax = $config['request_delay_max'] ?? 1000;
+
+        if (!is_numeric($delayMin) || $delayMin < 0) {
+            $this->log("Invalid request_delay_min, using default: 1000", self::COLOR_YELLOW);
+        }
+
+        if (!is_numeric($delayMax) || $delayMax < $delayMin) {
+            $this->log("Invalid request_delay_max, using default: 1000", self::COLOR_YELLOW);
         }
 
         $this->log("✅ Product Test Mode configuration is valid", self::COLOR_GREEN);
@@ -251,6 +275,7 @@ class ConfigValidator
 
     private function log(string $message, ?string $color = null): void
     {
+
         $colorReset = "\033[0m";
         $formattedMessage = $color ? $color . $message . $colorReset : $message;
 

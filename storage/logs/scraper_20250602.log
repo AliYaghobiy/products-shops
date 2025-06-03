@@ -1401,3 +1401,1325 @@
 [2025-06-02 15:32:37] Got 0 unique product links from web
 [2025-06-02 15:32:37] Links structure: []...
 [2025-06-02 15:32:37] No links collected from web. Stopping scrape.
+[2025-06-02 15:45:11] 🧪 Product Test Mode - Skipping standard config validation
+[2025-06-02 15:45:11] Inside scrapeMultiple method
+[2025-06-02 15:45:11] Starting scraper with start_id: not set
+[2025-06-02 15:45:11] 🧪 Product Test Mode Detected - Testing individual products
+[2025-06-02 15:45:11] 🚀 Starting Product Test Mode
+[2025-06-02 15:45:11] 📝 Found 1 product URLs to test
+[2025-06-02 15:45:11] 🔍 Testing product 1/1: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-02 15:45:11] 📡 Attempting to extract product data...
+[2025-06-02 15:45:11] Failed to process https://yaradarman.com/product/advanced-wound-healing-gel/: Body content is required for product data extraction. Adding to failed links.
+[2025-06-02 15:45:11] ❌ Failed to extract data - productData is null
+[2025-06-02 15:45:11] ⏱️ Applying delay...
+[2025-06-02 15:45:12] ✅ Delay completed, continuing...
+[2025-06-02 15:45:12] 
+[2025-06-02 15:45:12] 📊 Test Results Summary:
+[2025-06-02 15:45:12]   ✅ Successful: 0
+[2025-06-02 15:45:12]   ❌ Failed: 1
+[2025-06-02 15:45:12]   📈 Success Rate: 0%
+[2025-06-02 15:45:12] 
+[2025-06-02 15:45:12] 💀 Failed URLs:
+[2025-06-02 15:45:12]   - https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-02 15:45:12] 🏁 Product Test Mode completed!
+[2025-06-02 15:45:27] Inside scrapeMultiple method
+[2025-06-02 15:45:27] Starting scraper with start_id: not set
+[2025-06-02 15:45:27] Config contents: {
+    "method": 1,
+    "base_urls": [
+        "https:\/\/yaradarman.com\/"
+    ],
+    "products_urls": [
+        "https:\/\/yaradarman.com\/shop\/"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "selector",
+    "product_id_source": "product_page",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\"(\\d+)\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی",
+        "ضمانت",
+        "گارانتی 12 ماهه"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "در انبار موجود است",
+            "موجود",
+            "افزودن به سبد خرید",
+            "افزودن به سبد"
+        ],
+        "negative": [
+            "ناموجود",
+            "اتمام موجودی"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "قیمت‌گذاری نشده",
+            "قیمت تعیین نشده",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.wd-product > div > div > a",
+                "attribute": "href",
+                "product_id": "data-product_id"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "div.wd-product > div > div > div > div > div > a",
+                "attribute": "data-product_id"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": ".elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)"
+            },
+            "category": {
+                "type": "css",
+                "selector": ".breadcrumb_last > strong:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > div > div > button"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": [
+                    "p.price > span:nth-child(1) > bdi:nth-child(1)",
+                    "p.price > del:nth-child(1) > span:nth-child(1) > bdi:nth-child(1)"
+                ]
+            },
+            "image": {
+                "type": "css",
+                "selector": ".woocommerce-product-gallery__image > a",
+                "attribute": "href"
+            },
+            "off": {
+                "type": "css",
+                "selector": ""
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": ""
+            },
+            "product_id": {
+                "type": "css",
+                "selector": ".wd-reset-side-lg > div:nth-child(2) > div:nth-child(2) > input:nth-child(4)",
+                "attribute": "value"
+            }
+        }
+    },
+    "data_transformers": {
+        "price": "cleanPrice",
+        "availability": "parseAvailability",
+        "off": "cleanOff",
+        "guarantee": "cleanGuarantee"
+    },
+    "method_settings": {
+        "method_1": {
+            "enabled": true,
+            "pagination": {
+                "type": "path",
+                "parameter": "page",
+                "separator": "\/",
+                "suffix": "",
+                "max_pages": 50,
+                "use_sample_url": true,
+                "sample_url": "https:\/\/yaradarman.com\/shop\/page\/2\/",
+                "use_webdriver": false,
+                "use_dynamic_pagination": false,
+                "force_trailing_slash": true,
+                "ignore_redirects": true
+            }
+        },
+        "method_2": {
+            "enabled": false,
+            "navigation": {
+                "type": "load_more",
+                "next_button": {
+                    "type": "css",
+                    "selector": "#ctl00_mainBody_btnnext"
+                },
+                "max_iterations": 1000,
+                "use_webdriver": true
+            }
+        },
+        "method_3": {
+            "enabled": false,
+            "rendering": {
+                "use_deep_rendering": true,
+                "max_pages": 5
+            }
+        }
+    },
+    "output_dir": "scraped_data",
+    "output_format": "json",
+    "run_method": "new"
+}
+[2025-06-02 15:47:02] Inside scrapeMultiple method
+[2025-06-02 15:47:02] Starting scraper with start_id: not set
+[2025-06-02 15:47:02] Config contents: {
+    "method": 1,
+    "processing_method": 1,
+    "base_urls": [
+        "https:\/\/yaradarman.com"
+    ],
+    "products_urls": [
+        "https:\/\/yaradarman.com\/shop"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "selector",
+    "product_id_source": "product_page",
+    "availability_mode": "priority_based",
+    "out_of_stock_button": true,
+    "run_method": "new",
+    "database": "clear",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\\\"(\\d+)\\\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "موجود",
+            "افزودن به سبد خرید"
+        ],
+        "negative": [
+            "ناموجود",
+            "در حال حاضر این محصول در انبار موجود نیست و در دسترس نمی باشد."
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.wd-product > div > div > a",
+                "attribute": "href"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": ".elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)"
+            },
+            "category": {
+                "type": "css",
+                "selector": [
+                    ".posted_in > a:nth-child(2)",
+                    ".posted_in > a:nth-child(4)"
+                ],
+                "attribute": null
+            },
+            "availability": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > div > div > button"
+                ]
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": [
+                    "p.price > span:nth-child(1) > bdi:nth-child(1)",
+                    "p.price > del:nth-child(1) > span:nth-child(1) > bdi:nth-child(1)"
+                ]
+            },
+            "image": {
+                "type": "css",
+                "selector": ".woocommerce-product-gallery__image > a",
+                "attribute": "href"
+            },
+            "off": {
+                "type": "css",
+                "selector": null
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": null
+            },
+            "product_id": {
+                "type": "css",
+                "selector": ".wd-reset-side-lg",
+                "attribute": "data-product_id"
+            }
+        },
+        "data_transformers": {
+            "price": "cleanPrice",
+            "availability": "parseAvailability",
+            "off": "cleanOff",
+            "guarantee": "cleanGuarantee"
+        }
+    },
+    "method_settings": {
+        "method_1": {
+            "enabled": true,
+            "pagination": {
+                "type": "path",
+                "parameter": "page",
+                "separator": "\/",
+                "suffix": "",
+                "max_pages": 50,
+                "use_sample_url": true,
+                "sample_url": "https:\/\/yaradarman.com\/shop\/page\/1\/",
+                "use_webdriver": false,
+                "use_dynamic_pagination": false,
+                "force_trailing_slash": true,
+                "ignore_redirects": true
+            }
+        }
+    }
+}
+[2025-06-02 15:47:02] Generated database name: yaradarman_com
+[2025-06-02 15:47:02] Database mode: clear
+[2025-06-02 15:47:02] Database yaradarman_com exists, dropping it...
+[2025-06-02 15:47:02] Creating database yaradarman_com...
+[2025-06-02 15:47:02] Switched to database: yaradarman_com
+[2025-06-02 15:47:02] Running specific migrations...
+[2025-06-02 15:47:02] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 15:47:02] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 15:47:02] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 15:47:02] Specific migrations completed
+[2025-06-02 15:47:02] Run method: new
+[2025-06-02 15:47:02] Fetching product links from web...
+[2025-06-02 15:47:55] Inside scrapeMultiple method
+[2025-06-02 15:47:55] Starting scraper with start_id: not set
+[2025-06-02 15:47:55] Config contents: {
+    "method": 2,
+    "processing_method": 1,
+    "base_urls": [
+        "https:\/\/kandidabzar.ir\/"
+    ],
+    "products_urls": [
+        "https:\/\/kandidabzar.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 1,
+    "concurrency": 7,
+    "batch_size": 100,
+    "container": "div.col-xl-3",
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "product_id_selector": {
+        "type": "css",
+        "selector": "div.product-grid-item > div:nth-child(1) > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)",
+        "attribute": "data-product_id"
+    },
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\"(\\d+)\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی",
+        "ضمانت",
+        "گارانتی 18 ماه",
+        "گارانتی 12 ماهه",
+        "گارانتی تعويض",
+        "ضمانت نامه 24 ماهه"
+    ],
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.col-xl-3 > div > a:nth-child(2)",
+                "attribute": "href"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": "div.product-seller-row:nth-child(2) > div:nth-child(2) > div:nth-child(1)"
+            },
+            "image": {
+                "type": "css",
+                "selector": "div.col-xl-3 > div > a:nth-child(2) > img",
+                "attribute": "src"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "div.product-grid-item > div:nth-child(1) > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)",
+                "attribute": "data-product_id"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": ".product_name"
+            },
+            "category": {
+                "type": "css",
+                "selector": ".breadcrumb > nav:nth-child(1) > a:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": [
+                    "a.btn-primary-cm"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": [
+                    ".product_price"
+                ]
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "image": {
+                "type": "css",
+                "selector": ".product-carousel .gallery-item",
+                "attribute": "href"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".discount-txt"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": "div.product_left_box:nth-child(2) > div:nth-child(2)"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "",
+                "attribute": ""
+            }
+        }
+    },
+    "out_of_stock_button": true,
+    "data_transformers": {
+        "price": "cleanPrice",
+        "availability": "parseAvailability",
+        "off": "cleanOff",
+        "guarantee": "cleanGuarantee"
+    },
+    "availability_keywords": {
+        "positive": [
+            "در انبار موجود است",
+            "موجود",
+            "افزودن به سبد خرید",
+            "افزودن به سبد",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ],
+        "negative": [
+            "ناموجود",
+            "اتمام موجودی"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "قیمت‌گذاری نشده",
+            "قیمت تعیین نشده",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ]
+    },
+    "method_settings": {
+        "method_1": {
+            "enabled": true,
+            "pagination": {
+                "type": "path",
+                "parameter": "page",
+                "separator": "\/",
+                "suffix": "",
+                "max_pages": 2,
+                "use_sample_url": false,
+                "sample_url": "https:\/\/najmaartroom.ir\/product-category\/bag\/page\/2",
+                "use_webdriver": false
+            }
+        },
+        "method_2": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": "#moreProducts",
+                        "max_clicks": 10
+                    }
+                },
+                "max_pages": 10,
+                "scroll_delay": 5000
+            }
+        },
+        "method_3": {
+            "enabled": false,
+            "rendering": {
+                "use_deep_rendering": true,
+                "max_pages": 5
+            }
+        }
+    },
+    "output_dir": "scraped_data",
+    "output_format": "json",
+    "run_method": "new"
+}
+[2025-06-02 15:47:55] Generated database name: kandidabzar_ir
+[2025-06-02 15:47:55] Database mode: clear
+[2025-06-02 15:47:55] Database kandidabzar_ir exists, dropping it...
+[2025-06-02 15:47:55] Creating database kandidabzar_ir...
+[2025-06-02 15:47:55] Switched to database: kandidabzar_ir
+[2025-06-02 15:47:55] Running specific migrations...
+[2025-06-02 15:47:55] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 15:47:55] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 15:47:55] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 15:47:55] Specific migrations completed
+[2025-06-02 15:47:55] Run method: new
+[2025-06-02 15:47:55] Fetching product links from web...
+[2025-06-02 15:47:57] Got 0 unique product links from web
+[2025-06-02 15:47:57] Links structure: []...
+[2025-06-02 15:47:57] No links collected from web. Stopping scrape.
+[2025-06-02 15:49:27] Inside scrapeMultiple method
+[2025-06-02 15:49:27] Starting scraper with start_id: not set
+[2025-06-02 15:49:27] Config contents: {
+    "method": 2,
+    "processing_method": 1,
+    "base_urls": [
+        "https:\/\/kandidabzar.ir\/"
+    ],
+    "products_urls": [
+        "https:\/\/kandidabzar.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 1,
+    "concurrency": 7,
+    "batch_size": 100,
+    "container": "div.col-xl-3",
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "product_id_selector": {
+        "type": "css",
+        "selector": "div.product-grid-item > div:nth-child(1) > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)",
+        "attribute": "data-product_id"
+    },
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\"(\\d+)\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی",
+        "ضمانت",
+        "گارانتی 18 ماه",
+        "گارانتی 12 ماهه",
+        "گارانتی تعويض",
+        "ضمانت نامه 24 ماهه"
+    ],
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.col-xl-3 > div > a:nth-child(2)",
+                "attribute": "href"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": "div.product-seller-row:nth-child(2) > div:nth-child(2) > div:nth-child(1)"
+            },
+            "image": {
+                "type": "css",
+                "selector": "div.col-xl-3 > div > a:nth-child(2) > img",
+                "attribute": "src"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "div.product-grid-item > div:nth-child(1) > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)",
+                "attribute": "data-product_id"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": ".product_name"
+            },
+            "category": {
+                "type": "css",
+                "selector": ".breadcrumb > nav:nth-child(1) > a:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": [
+                    "a.btn-primary-cm"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": [
+                    ".product_price"
+                ]
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "image": {
+                "type": "css",
+                "selector": ".product-carousel .gallery-item",
+                "attribute": "href"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".discount-txt"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": "div.product_left_box:nth-child(2) > div:nth-child(2)"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "",
+                "attribute": ""
+            }
+        }
+    },
+    "out_of_stock_button": true,
+    "data_transformers": {
+        "price": "cleanPrice",
+        "availability": "parseAvailability",
+        "off": "cleanOff",
+        "guarantee": "cleanGuarantee"
+    },
+    "availability_keywords": {
+        "positive": [
+            "در انبار موجود است",
+            "موجود",
+            "افزودن به سبد خرید",
+            "افزودن به سبد",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ],
+        "negative": [
+            "ناموجود",
+            "اتمام موجودی"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "قیمت‌گذاری نشده",
+            "قیمت تعیین نشده",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ]
+    },
+    "method_settings": {
+        "method_1": {
+            "enabled": true,
+            "pagination": {
+                "type": "path",
+                "parameter": "page",
+                "separator": "\/",
+                "suffix": "",
+                "max_pages": 2,
+                "use_sample_url": false,
+                "sample_url": "https:\/\/najmaartroom.ir\/product-category\/bag\/page\/2",
+                "use_webdriver": false
+            }
+        },
+        "method_2": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": "#moreProducts",
+                        "max_clicks": 10
+                    }
+                },
+                "max_pages": 10,
+                "scroll_delay": 5000
+            }
+        },
+        "method_3": {
+            "enabled": false,
+            "rendering": {
+                "use_deep_rendering": true,
+                "max_pages": 5
+            }
+        }
+    },
+    "output_dir": "scraped_data",
+    "output_format": "json",
+    "run_method": "new"
+}
+[2025-06-02 15:49:27] Generated database name: kandidabzar_ir
+[2025-06-02 15:49:27] Database mode: clear
+[2025-06-02 15:49:27] Database kandidabzar_ir exists, dropping it...
+[2025-06-02 15:49:27] Creating database kandidabzar_ir...
+[2025-06-02 15:49:27] Switched to database: kandidabzar_ir
+[2025-06-02 15:49:27] Running specific migrations...
+[2025-06-02 15:49:27] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 15:49:27] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 15:49:27] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 15:49:27] Specific migrations completed
+[2025-06-02 15:49:27] Run method: new
+[2025-06-02 15:49:27] Fetching product links from web...
+[2025-06-02 15:49:28] Got 0 unique product links from web
+[2025-06-02 15:49:28] Links structure: []...
+[2025-06-02 15:49:28] No links collected from web. Stopping scrape.
+[2025-06-02 15:54:02] Inside scrapeMultiple method
+[2025-06-02 15:54:02] Starting scraper with start_id: not set
+[2025-06-02 15:54:02] Config contents: {
+    "method": 2,
+    "processing_method": 1,
+    "base_urls": [
+        "https:\/\/kandidabzar.ir\/"
+    ],
+    "products_urls": [
+        "https:\/\/kandidabzar.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 1,
+    "concurrency": 7,
+    "batch_size": 100,
+    "container": "div.col-xl-3",
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "product_id_selector": {
+        "type": "css",
+        "selector": "div.product-grid-item > div:nth-child(1) > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)",
+        "attribute": "data-product_id"
+    },
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\"(\\d+)\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی",
+        "ضمانت",
+        "گارانتی 18 ماه",
+        "گارانتی 12 ماهه",
+        "گارانتی تعويض",
+        "ضمانت نامه 24 ماهه"
+    ],
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.col-xl-3 > div > a:nth-child(2)",
+                "attribute": "href"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": "div.product-seller-row:nth-child(2) > div:nth-child(2) > div:nth-child(1)"
+            },
+            "image": {
+                "type": "css",
+                "selector": "div.col-xl-3 > div > a:nth-child(2) > img",
+                "attribute": "src"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "div.product-grid-item > div:nth-child(1) > div:nth-child(3) > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > a:nth-child(1)",
+                "attribute": "data-product_id"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": ".product_name"
+            },
+            "category": {
+                "type": "css",
+                "selector": ".breadcrumb > nav:nth-child(1) > a:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": [
+                    "a.btn-primary-cm"
+                ]
+            },
+            "price": {
+                "type": "css",
+                "selector": [
+                    ".product_price"
+                ]
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "image": {
+                "type": "css",
+                "selector": ".product-carousel .gallery-item",
+                "attribute": "href"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".discount-txt"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": "div.product_left_box:nth-child(2) > div:nth-child(2)"
+            },
+            "product_id": {
+                "type": "css",
+                "selector": "",
+                "attribute": ""
+            }
+        }
+    },
+    "out_of_stock_button": true,
+    "data_transformers": {
+        "price": "cleanPrice",
+        "availability": "parseAvailability",
+        "off": "cleanOff",
+        "guarantee": "cleanGuarantee"
+    },
+    "availability_keywords": {
+        "positive": [
+            "در انبار موجود است",
+            "موجود",
+            "افزودن به سبد خرید",
+            "افزودن به سبد",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ],
+        "negative": [
+            "ناموجود",
+            "اتمام موجودی"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "قیمت‌گذاری نشده",
+            "قیمت تعیین نشده",
+            "تماس بگیرید",
+            "برای استعلام قیمت تماس بگیرید"
+        ]
+    },
+    "method_settings": {
+        "method_1": {
+            "enabled": true,
+            "pagination": {
+                "type": "path",
+                "parameter": "page",
+                "separator": "\/",
+                "suffix": "",
+                "max_pages": 2,
+                "use_sample_url": false,
+                "sample_url": "https:\/\/najmaartroom.ir\/product-category\/bag\/page\/2",
+                "use_webdriver": false
+            }
+        },
+        "method_2": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": "#moreProducts",
+                        "max_clicks": 10
+                    }
+                },
+                "max_pages": 10,
+                "scroll_delay": 5000
+            }
+        },
+        "method_3": {
+            "enabled": false,
+            "rendering": {
+                "use_deep_rendering": true,
+                "max_pages": 5
+            }
+        }
+    },
+    "output_dir": "scraped_data",
+    "output_format": "json",
+    "run_method": "new"
+}
+[2025-06-02 15:54:02] Generated database name: kandidabzar_ir
+[2025-06-02 15:54:02] Database mode: clear
+[2025-06-02 15:54:02] Database kandidabzar_ir exists, dropping it...
+[2025-06-02 15:54:02] Creating database kandidabzar_ir...
+[2025-06-02 15:54:02] Switched to database: kandidabzar_ir
+[2025-06-02 15:54:02] Running specific migrations...
+[2025-06-02 15:54:02] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 15:54:02] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 15:54:02] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 15:54:02] Specific migrations completed
+[2025-06-02 15:54:02] Run method: new
+[2025-06-02 15:54:02] Fetching product links from web...
+[2025-06-02 15:54:04] Got 0 unique product links from web
+[2025-06-02 15:54:04] Links structure: []...
+[2025-06-02 15:54:04] No links collected from web. Stopping scrape.
+[2025-06-02 15:56:32] Inside scrapeMultiple method
+[2025-06-02 15:56:32] Starting scraper with start_id: not set
+[2025-06-02 15:56:32] Config contents: {
+    "method": 3,
+    "processing_method": 3,
+    "base_urls": [
+        "https:\/\/sinastyle.ir"
+    ],
+    "products_urls": [
+        "https:\/\/sinastyle.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "run_method": "new",
+    "database": "clear",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\\\"(\\d+)\\\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "موجود"
+        ],
+        "negative": [
+            "ناموجود"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.sc-195bc97-1 > a:nth-child(1)",
+                "attribute": "href"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": "h1.bWVCXB"
+            },
+            "category": {
+                "type": "css",
+                "selector": "div.cjdzNw:nth-child(2) > a:nth-child(1) > span:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.XxlIx"
+            },
+            "price": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.gVmreK"
+            },
+            "image": {
+                "type": "css",
+                "selector": ".dFxbiY > img:nth-child(1)",
+                "attribute": "src"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".eaqgCF"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": null
+            },
+            "product_id": {
+                "type": "css",
+                "selector": null,
+                "attribute": null
+            }
+        },
+        "data_transformers": {
+            "price": "cleanPrice",
+            "availability": "parseAvailability",
+            "off": "cleanOff",
+            "guarantee": "cleanGuarantee"
+        }
+    },
+    "container": "div.sc-195bc97-1",
+    "scrool": 10,
+    "method_settings": {
+        "method_3": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": ".aaaa"
+                    }
+                },
+                "max_iterations": 3,
+                "timing": {
+                    "scroll_delay": 5000
+                }
+            }
+        }
+    }
+}
+[2025-06-02 15:57:32] Inside scrapeMultiple method
+[2025-06-02 15:57:32] Starting scraper with start_id: not set
+[2025-06-02 15:57:32] Config contents: {
+    "method": 3,
+    "processing_method": 3,
+    "base_urls": [
+        "https:\/\/sinastyle.ir"
+    ],
+    "products_urls": [
+        "https:\/\/sinastyle.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "run_method": "new",
+    "database": "clear",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\\\"(\\d+)\\\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "موجود"
+        ],
+        "negative": [
+            "ناموجود"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.sc-195bc97-1 > a:nth-child(1)",
+                "attribute": "href"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": "h1.bWVCXB"
+            },
+            "category": {
+                "type": "css",
+                "selector": "div.cjdzNw:nth-child(2) > a:nth-child(1) > span:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.XxlIx"
+            },
+            "price": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.gVmreK"
+            },
+            "image": {
+                "type": "css",
+                "selector": ".dFxbiY > img:nth-child(1)",
+                "attribute": "src"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".eaqgCF"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": null
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "product_id": {
+                "type": "css",
+                "selector": null,
+                "attribute": null
+            }
+        },
+        "data_transformers": {
+            "price": "cleanPrice",
+            "availability": "parseAvailability",
+            "off": "cleanOff",
+            "guarantee": "cleanGuarantee"
+        }
+    },
+    "container": "div.sc-195bc97-1",
+    "out_of_stock_button": false,
+    "scrool": 10,
+    "method_settings": {
+        "method_3": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": ".aaaa"
+                    }
+                },
+                "max_iterations": 3,
+                "timing": {
+                    "scroll_delay": 5000
+                }
+            }
+        }
+    }
+}
+[2025-06-02 15:57:32] Generated database name: sinastyle_ir
+[2025-06-02 15:57:32] Database mode: clear
+[2025-06-02 15:57:32] Database sinastyle_ir exists, dropping it...
+[2025-06-02 15:57:32] Creating database sinastyle_ir...
+[2025-06-02 15:57:32] Switched to database: sinastyle_ir
+[2025-06-02 15:57:32] Running specific migrations...
+[2025-06-02 15:57:32] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 15:57:32] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 15:57:32] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 15:57:32] Specific migrations completed
+[2025-06-02 15:57:32] Run method: new
+[2025-06-02 15:57:32] Fetching product links from web...
+[2025-06-02 15:58:55] Got 0 unique product links from web
+[2025-06-02 15:58:55] Links structure: []...
+[2025-06-02 15:58:55] No links collected from web. Stopping scrape.
+[2025-06-02 16:00:27] Inside scrapeMultiple method
+[2025-06-02 16:00:27] Starting scraper with start_id: not set
+[2025-06-02 16:00:27] Config contents: {
+    "method": 3,
+    "processing_method": 3,
+    "base_urls": [
+        "https:\/\/sinastyle.ir"
+    ],
+    "products_urls": [
+        "https:\/\/sinastyle.ir\/products"
+    ],
+    "request_delay_min": 500000,
+    "request_delay_max": 500000,
+    "timeout": 60,
+    "max_retries": 2,
+    "concurrency": 10,
+    "batch_size": 100,
+    "user_agent": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) Chrome\/91.0.4472.124",
+    "verify_ssl": false,
+    "keep_price_format": false,
+    "image_method": "product_page",
+    "product_id_method": "url",
+    "product_id_source": "url",
+    "run_method": "new",
+    "database": "clear",
+    "product_id_fallback_script_patterns": [
+        "product_id:\\s*\\\"(\\d+)\\\"",
+        "product_id:\\s*(\\d+)"
+    ],
+    "category_method": "selector",
+    "category_word_count": 1,
+    "guarantee_method": "selector",
+    "guarantee_keywords": [
+        "گارانتی"
+    ],
+    "availability_keywords": {
+        "positive": [
+            "موجود"
+        ],
+        "negative": [
+            "ناموجود"
+        ]
+    },
+    "price_keywords": {
+        "unpriced": [
+            "تماس بگیرید"
+        ]
+    },
+    "selectors": {
+        "main_page": {
+            "product_links": {
+                "type": "css",
+                "selector": "div.sc-e8c2a00d-1 > a:nth-child(1)",
+                "attribute": "href"
+            }
+        },
+        "product_page": {
+            "title": {
+                "type": "css",
+                "selector": "h1.bWVCXB"
+            },
+            "category": {
+                "type": "css",
+                "selector": "div.cjdzNw:nth-child(2) > a:nth-child(1) > span:nth-child(1)"
+            },
+            "availability": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.XxlIx"
+            },
+            "price": {
+                "type": "css",
+                "selector": "span.sc-hLQSwg.gVmreK"
+            },
+            "image": {
+                "type": "css",
+                "selector": ".dFxbiY > img:nth-child(1)",
+                "attribute": "src"
+            },
+            "off": {
+                "type": "css",
+                "selector": ".eaqgCF"
+            },
+            "guarantee": {
+                "type": "css",
+                "selector": null
+            },
+            "out_of_stock": {
+                "type": "css",
+                "selector": [
+                    ".wd-reset-side-lg > p:nth-child(1)",
+                    ".wd-gallery-images > div:nth-child(1) > div:nth-child(1) > span:nth-child(1)"
+                ]
+            },
+            "product_id": {
+                "type": "css",
+                "selector": null,
+                "attribute": null
+            }
+        },
+        "data_transformers": {
+            "price": "cleanPrice",
+            "availability": "parseAvailability",
+            "off": "cleanOff",
+            "guarantee": "cleanGuarantee"
+        }
+    },
+    "container": "div.sc-e8c2a00d-1",
+    "out_of_stock_button": false,
+    "scrool": 3,
+    "method_settings": {
+        "method_3": {
+            "enabled": true,
+            "navigation": {
+                "use_webdriver": true,
+                "pagination": {
+                    "method": "next_button",
+                    "next_button": {
+                        "selector": ".aaaa"
+                    }
+                },
+                "max_iterations": 3,
+                "timing": {
+                    "scroll_delay": 5000
+                }
+            }
+        }
+    }
+}
+[2025-06-02 16:00:27] Generated database name: sinastyle_ir
+[2025-06-02 16:00:27] Database mode: clear
+[2025-06-02 16:00:27] Database sinastyle_ir exists, dropping it...
+[2025-06-02 16:00:27] Creating database sinastyle_ir...
+[2025-06-02 16:00:27] Switched to database: sinastyle_ir
+[2025-06-02 16:00:27] Running specific migrations...
+[2025-06-02 16:00:27] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-02 16:00:27] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-02 16:00:27] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-02 16:00:27] Specific migrations completed
+[2025-06-02 16:00:27] Run method: new
+[2025-06-02 16:00:27] Fetching product links from web...

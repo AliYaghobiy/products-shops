@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\FailedLink;
 use App\Models\Link;
 use App\Models\Product;
-use App\Models\FailedLink;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseManager
 {
@@ -157,7 +157,7 @@ class DatabaseManager
 
     public function getProductLinksFromDatabase(?int $start_id = null): array
     {
-        $this->log("Fetching product links from database" . ($start_id ? " starting from ID $start_id" : ""), self::COLOR_GREEN);
+        $this->log("📋 Fetching product links from database" . ($start_id ? " starting from ID $start_id" : ""), self::COLOR_GREEN);
 
         try {
             $query = DB::table('links')
@@ -178,11 +178,18 @@ class DatabaseManager
                 ];
             })->toArray();
 
-            $this->log("Retrieved " . count($links) . " unprocessed links from database" . ($start_id ? " with ID >= $start_id" : ""), self::COLOR_GREEN);
+            $totalLinksInDb = DB::table('links')->count();
+            $processedLinksCount = DB::table('links')->where('is_processed', 1)->count();
+            $unprocessedLinksCount = count($links);
+
+            $this->log("📊 Database status:", self::COLOR_BLUE);
+            $this->log("  • Total links in DB: $totalLinksInDb", self::COLOR_BLUE);
+            $this->log("  • Processed links: $processedLinksCount", self::COLOR_BLUE);
+            $this->log("  • Unprocessed links: $unprocessedLinksCount", self::COLOR_BLUE);
 
             if (!empty($links)) {
                 $ids = array_column($links, 'id');
-                $this->log("Link ID range: " . min($ids) . " to " . max($ids), self::COLOR_YELLOW);
+                $this->log("🔢 Link ID range: " . min($ids) . " to " . max($ids), self::COLOR_YELLOW);
             }
 
             $pagesProcessed = DB::table('links')
@@ -195,7 +202,7 @@ class DatabaseManager
             ];
 
         } catch (\Exception $e) {
-            $this->log("Failed to fetch links from database: {$e->getMessage()}", self::COLOR_RED);
+            $this->log("❌ Failed to fetch links from database: {$e->getMessage()}", self::COLOR_RED);
             return [
                 'links' => [],
                 'pages_processed' => 0
@@ -234,8 +241,9 @@ class DatabaseManager
 
     public function resetProductsAndLinks(): void
     {
-        $this->log("Reset mode activated - clearing products and marking all links as unprocessed...", self::COLOR_YELLOW);
+        $this->log("🔄 Reset mode activated - clearing products and marking all links as unprocessed...", self::COLOR_YELLOW);
 
+        // بررسی و بستن تراکنش‌های باز
         while (DB::transactionLevel() > 0) {
             try {
                 DB::rollBack();
@@ -247,27 +255,43 @@ class DatabaseManager
         try {
             DB::beginTransaction();
 
+            // پاک کردن جدول products
             $productsCount = Product::count();
             if ($productsCount > 0) {
                 Product::truncate();
-                $this->log("Cleared $productsCount products from database", self::COLOR_GREEN);
+                $this->log("✅ Cleared $productsCount products from database", self::COLOR_GREEN);
             } else {
-                $this->log("No products found to clear", self::COLOR_YELLOW);
+                $this->log("ℹ️ No products found to clear", self::COLOR_YELLOW);
             }
 
-            $linksUpdated = Link::where('is_processed', 1)->update(['is_processed' => 0]);
-            $this->log("Reset $linksUpdated links to unprocessed state", self::COLOR_GREEN);
+            // ریست کردن وضعیت پردازش لینک‌ها
+            $linksUpdated = Link::where('is_processed', 1)->update([
+                'is_processed' => 0,
+                'updated_at' => now()
+            ]);
+            $this->log("🔄 Reset $linksUpdated links to unprocessed state", self::COLOR_GREEN);
 
+            // پاک کردن لینک‌های ناموفق
             $failedLinksCount = FailedLink::count();
             if ($failedLinksCount > 0) {
                 FailedLink::truncate();
-                $this->log("Cleared $failedLinksCount failed links from database", self::COLOR_GREEN);
+                $this->log("🗑️ Cleared $failedLinksCount failed links from database", self::COLOR_GREEN);
             } else {
-                $this->log("No failed links found to clear", self::COLOR_YELLOW);
+                $this->log("ℹ️ No failed links found to clear", self::COLOR_YELLOW);
             }
 
             DB::commit();
-            $this->log("Database reset completed successfully", self::COLOR_GREEN);
+            $this->log("✅ Database reset completed successfully", self::COLOR_GREEN);
+
+            // نمایش آمار نهایی
+            $totalLinksInDb = Link::count();
+            $unprocessedLinks = Link::where('is_processed', 0)->count();
+
+            $this->log("📊 Database status after reset:", self::COLOR_BLUE);
+            $this->log("  • Total links: $totalLinksInDb", self::COLOR_BLUE);
+            $this->log("  • Unprocessed links: $unprocessedLinks", self::COLOR_BLUE);
+            $this->log("  • Products: 0", self::COLOR_BLUE);
+            $this->log("  • Failed links: 0", self::COLOR_BLUE);
 
         } catch (\Exception $e) {
             try {
@@ -275,10 +299,10 @@ class DatabaseManager
                     DB::rollBack();
                 }
             } catch (\Exception $rollbackException) {
-                $this->log("Failed to rollback transaction: " . $rollbackException->getMessage(), self::COLOR_RED);
+                $this->log("❌ Failed to rollback transaction: " . $rollbackException->getMessage(), self::COLOR_RED);
             }
 
-            $this->log("Failed to reset database: " . $e->getMessage(), self::COLOR_RED);
+            $this->log("❌ Failed to reset database: " . $e->getMessage(), self::COLOR_RED);
             throw $e;
         }
     }
@@ -357,6 +381,34 @@ class DatabaseManager
             call_user_func($this->outputCallback, $formattedMessage);
         } else {
             echo $formattedMessage . PHP_EOL;
+        }
+    }
+
+    public function getDatabaseStatus(): array
+    {
+        try {
+            $totalLinks = Link::count();
+            $processedLinks = Link::where('is_processed', 1)->count();
+            $unprocessedLinks = Link::where('is_processed', 0)->count();
+            $totalProducts = Product::count();
+            $failedLinks = FailedLink::count();
+
+            return [
+                'total_links' => $totalLinks,
+                'processed_links' => $processedLinks,
+                'unprocessed_links' => $unprocessedLinks,
+                'total_products' => $totalProducts,
+                'failed_links' => $failedLinks
+            ];
+        } catch (\Exception $e) {
+            $this->log("❌ Error getting database status: " . $e->getMessage(), self::COLOR_RED);
+            return [
+                'total_links' => 0,
+                'processed_links' => 0,
+                'unprocessed_links' => 0,
+                'total_products' => 0,
+                'failed_links' => 0
+            ];
         }
     }
 }

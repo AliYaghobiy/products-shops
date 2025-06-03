@@ -1,0 +1,44 @@
+اجرای اسکرپر اپدیت برای کانفیگ ashja در تاریخ 2025-06-03 07:37:47 شروع شد...
+Starting flexible scraper...
+Loading configuration from /var/www/products-shops/storage/app/private/private/ashja.json
+Update mode activated - will reset products and reprocess all links
+[1;92mValidating configuration...[0m
+[1;92mFound set_category in config: 'صنایع دستی'. Will use this value for all products.[0m
+[1;92mConfig validated. Using run_method: continue[0m
+Request delay set to 500 ms.
+Starting scrape operation...
+[1;95m🔄 Update mode detected[0m
+[1;92mConfiguration validated successfully.[0m
+[1;92mGenerated database name: ashja_com[0m
+[1;92mDatabase mode: continue[0m
+[1;92mUsing existing database ashja_com[0m
+[1;92mSwitched to database: ashja_com[0m
+[1;93m🔄 Reset mode activated - clearing products and marking all links as unprocessed...[0m
+[1;92m✅ Cleared 255 products from database[0m
+[1;92m🔄 Reset 255 links to unprocessed state[0m
+[1;93mℹ️ No failed links found to clear[0m
+[1;91m❌ Failed to reset database: There is no active transaction[0m
+
+   PDOException 
+
+  There is no active transaction
+
+  at /var/www/products-shops/vendor/laravel/framework/src/Illuminate/Database/Concerns/ManagesTransactions.php:204
+    200▕     public function commit()
+    201▕     {
+    202▕         if ($this->transactionLevel() == 1) {
+    203▕             $this->fireConnectionEvent('committing');
+  ➜ 204▕             $this->getPdo()->commit();
+    205▕         }
+    206▕ 
+    207▕         [$levelBeingCommitted, $this->transactions] = [
+    208▕             $this->transactions,
+
+      [2m+3 vendor frames [22m
+
+  4   /var/www/products-shops/app/Http/Controllers/DatabaseManager.php:283
+      Illuminate\Support\Facades\Facade::__callStatic()
+
+  5   /var/www/products-shops/app/Http/Controllers/StartController.php:138
+      App\Http\Controllers\DatabaseManager::resetProductsAndLinks()
+

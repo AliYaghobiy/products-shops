@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\FailedLink;
-use App\Models\Link;
 use App\Models\Product;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\DB;
@@ -125,11 +123,8 @@ class StartController
         // بررسی حالت update
         $isUpdateMode = $this->config['update_mode'] ?? false;
         if ($isUpdateMode) {
-            $this->log("Update mode detected", self::COLOR_PURPLE);
+            $this->log("🔄 Update mode detected", self::COLOR_PURPLE);
         }
-
-        // لاگ محتوای کانفیگ برای دیباگ
-        $this->log("Config contents: " . json_encode($this->config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), self::COLOR_YELLOW);
 
         // اعتبارسنجی کانفیگ
         $this->configValidator->validateConfig($this->config);
@@ -139,6 +134,7 @@ class StartController
 
         // اگر در حالت update هستیم، ابتدا reset انجام میدهیم
         if ($isUpdateMode) {
+            $this->log("🧹 Resetting products and links for update mode...", self::COLOR_YELLOW);
             $this->databaseManager->resetProductsAndLinks();
         }
 
@@ -151,75 +147,53 @@ class StartController
             $start_id = null;
         }
 
-        // بررسی run_method
-        $runMethod = $this->config['run_method'] ?? 'new';
+        // تعیین نحوه اجرا بر اساس حالت update
+        $runMethod = $isUpdateMode ? 'continue' : ($this->config['run_method'] ?? 'new');
         $this->log("Run method: $runMethod", self::COLOR_GREEN);
 
         $links = [];
         $pagesProcessed = 0;
 
         if ($runMethod === 'continue' || $isUpdateMode) {
-            $this->log("Continuing with links from database" . ($start_id ? " starting from ID $start_id" : "") . "...", self::COLOR_GREEN);
+            $this->log("📋 Getting links from database" . ($start_id ? " starting from ID $start_id" : "") . "...", self::COLOR_GREEN);
 
-            if ($isUpdateMode) {
-                $totalLinksInDb = Link::count();
-                $this->log("Total links in database: $totalLinksInDb", self::COLOR_BLUE);
-
-                if ($totalLinksInDb == 0) {
-                    $this->log("No links found in database for update mode. Need to fetch from web first.", self::COLOR_YELLOW);
-
-                    $this->log("Fetching product links from web for update mode...", self::COLOR_GREEN);
-                    $result = $this->linkScraper->fetchProductLinks();
-                    $links = $result['links'] ?? [];
-                    $pagesProcessed = $result['pages_processed'] ?? 0;
-
-                    $this->log("Got " . count($links) . " unique product links from web", self::COLOR_GREEN);
-
-                    if (!empty($links)) {
-                        $this->databaseManager->saveProductLinksToDatabase($links);
-                        $result = $this->databaseManager->getProductLinksFromDatabase($start_id);
-                        $links = $result['links'] ?? [];
-                        $pagesProcessed = $result['pages_processed'] ?? 0;
-                    } else {
-                        $this->log("No links collected from web. Stopping scrape.", self::COLOR_YELLOW);
-                        return [
-                            'status' => 'success',
-                            'total_products' => 0,
-                            'failed_links' => 0,
-                            'total_pages_count' => $pagesProcessed,
-                            'products' => []
-                        ];
-                    }
-                } else {
-                    $result = $this->databaseManager->getProductLinksFromDatabase($start_id);
-                    $links = $result['links'] ?? [];
-                    $pagesProcessed = $result['pages_processed'] ?? 0;
-                }
-            } else {
-                $result = $this->databaseManager->getProductLinksFromDatabase($start_id);
-                $links = $result['links'] ?? [];
-                $pagesProcessed = $result['pages_processed'] ?? 0;
-            }
+            // در حالت update، مستقیماً از دیتابیس لینک‌ها را بگیر
+            $result = $this->databaseManager->getProductLinksFromDatabase($start_id);
+            $links = $result['links'] ?? [];
+            $pagesProcessed = $result['pages_processed'] ?? 0;
 
             $this->log("Got " . count($links) . " links from database", self::COLOR_GREEN);
+
             if (empty($links)) {
-                $this->log("No links found in database" . ($start_id ? " for ID >= $start_id" : "") . ". Stopping scrape.", self::COLOR_YELLOW);
-                return [
-                    'status' => 'success',
-                    'total_products' => 0,
-                    'failed_links' => 0,
-                    'total_pages_count' => $pagesProcessed,
-                    'products' => []
-                ];
+                if ($isUpdateMode) {
+                    $this->log("⚠️ No links found in database for update mode. This suggests the database is empty or corrupted.", self::COLOR_YELLOW);
+                    return [
+                        'status' => 'error',
+                        'message' => 'No links found in database for update mode',
+                        'total_products' => 0,
+                        'failed_links' => 0,
+                        'total_pages_count' => 0,
+                        'products' => []
+                    ];
+                } else {
+                    $this->log("No links found in database" . ($start_id ? " for ID >= $start_id" : "") . ". Stopping scrape.", self::COLOR_YELLOW);
+                    return [
+                        'status' => 'success',
+                        'total_products' => 0,
+                        'failed_links' => 0,
+                        'total_pages_count' => $pagesProcessed,
+                        'products' => []
+                    ];
+                }
             }
         } else {
-            $this->log("Fetching product links from web...", self::COLOR_GREEN);
+            // حالت معمولی - دریافت لینک‌ها از وب
+            $this->log("🌐 Fetching product links from web...", self::COLOR_GREEN);
             $result = $this->linkScraper->fetchProductLinks();
             $links = $result['links'] ?? [];
             $pagesProcessed = $result['pages_processed'] ?? 0;
 
             $this->log("Got " . count($links) . " unique product links from web", self::COLOR_GREEN);
-            $this->log("Links structure: " . json_encode(array_slice($links, 0, 5), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "...", self::COLOR_YELLOW);
 
             if (!empty($links)) {
                 $this->databaseManager->saveProductLinksToDatabase($links);
@@ -377,8 +351,7 @@ class StartController
 
             $promise = $pool->promise();
             $promise->wait();
-        }
-        // Method 2 & 3: Sequential processing
+        } // Method 2 & 3: Sequential processing
         else {
             $batchSize = $this->config['batch_size'] ?? 75;
             $batches = array_chunk($filteredProducts, $batchSize);
@@ -482,60 +455,237 @@ class StartController
         $failedProducts = [];
 
         foreach ($productUrls as $index => $url) {
+            $this->log("", null); // خط خالی برای بهتر دیده شدن
+            $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_BLUE);
             $this->log("🔍 Testing product " . ($index + 1) . "/" . count($productUrls) . ": $url", self::COLOR_BLUE);
+            $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_BLUE);
 
             try {
-                $this->log("📡 Attempting to extract product data...", self::COLOR_YELLOW);
-                $productData = $this->productProcessor->extractProductData($url);
+                // مرحله ۱: دریافت محتوای HTML صفحه
+                $this->log("📡 Step 1: Fetching page content...", self::COLOR_YELLOW);
 
-                if ($productData !== null) {
-                    $successfulProducts[] = $productData;
+                $response = $this->httpClient->get($url, [
+                    'headers' => [
+                        'User-Agent' => $this->randomUserAgent(),
+                        'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                        'Accept-Language' => 'en-US,en;q=0.5',
+                        'Connection' => 'keep-alive',
+                    ]
+                ]);
+
+                $htmlContent = (string)$response->getBody();
+
+                if (empty($htmlContent)) {
+                    $failedProducts[] = $url;
+                    $this->log("❌ Empty HTML content received", self::COLOR_RED);
+                    continue;
+                }
+
+                $this->log("✅ Page content fetched successfully (" . strlen($htmlContent) . " bytes)", self::COLOR_GREEN);
+                $this->log("📄 Response status: " . $response->getStatusCode(), self::COLOR_CYAN);
+
+                // مرحله ۲: استخراج داده‌های محصول
+                $this->log("", null);
+                $this->log("🔍 Step 2: Attempting to extract product data...", self::COLOR_YELLOW);
+
+                // نمایش تنظیمات selector های استفاده شده
+                if (isset($this->config['selectors']['product_page'])) {
+                    $this->log("🎯 Available selectors for extraction:", self::COLOR_CYAN);
+                    $selectors = $this->config['selectors']['product_page'];
+
+                    foreach ($selectors as $field => $config) {
+                        if (is_array($config) && isset($config['selector'])) {
+                            $selector = is_array($config['selector']) ? implode(', ', $config['selector']) : $config['selector'];
+                            $this->log("  └─ {$field}: {$selector}", self::COLOR_GRAY);
+                        }
+                    }
+                    $this->log("", null);
+                }
+
+                $productData = $this->productProcessor->extractProductData($url, $htmlContent);
+
+                if ($productData !== null && !empty($productData)) {
                     $this->log("✅ Product data extracted successfully!", self::COLOR_GREEN);
 
-                    $this->log("📦 Product: {$productData['title']}", self::COLOR_BLUE);
-                    $this->log("💰 Price: {$productData['price']}", self::COLOR_BLUE);
-                    $this->log("📊 Available: " . ($productData['availability'] ? 'Yes' : 'No'), self::COLOR_BLUE);
+                    // نمایش تمام داده‌های استخراج شده (RAW DATA)
+                    $this->log("", null);
+                    $this->log("📦 RAW EXTRACTED DATA:", self::COLOR_PURPLE);
+                    $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
 
+                    // نمایش هر فیلد به صورت جداگانه
+                    foreach ($productData as $key => $value) {
+                        if (is_array($value)) {
+                            $this->log("  {$key}: " . json_encode($value, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), self::COLOR_CYAN);
+                        } else {
+                            $displayValue = $value === null ? 'NULL' :
+                                ($value === '' ? 'EMPTY STRING' :
+                                    (is_bool($value) ? ($value ? 'TRUE' : 'FALSE') : $value));
+                            $this->log("  {$key}: {$displayValue}", self::COLOR_CYAN);
+                        }
+                    }
+                    $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                    $this->log("", null);
+
+                    // بررسی اعتبار داده‌های استخراج شده
+                    $this->log("🔍 Step 3: Validating extracted data...", self::COLOR_YELLOW);
+
+                    if ($this->productProcessor->validateProductData($productData)) {
+                        $successfulProducts[] = $productData;
+                        $this->log("✅ Product data validation PASSED!", self::COLOR_GREEN);
+
+                        // نمایش جزئیات محصول پس از validation
+                        $this->log("", null);
+                        $this->log("📦 VALIDATED PRODUCT DETAILS:", self::COLOR_BLUE);
+                        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                        $this->log("  └─ 🏷️  Title: " . ($productData['title'] ?? 'N/A'), self::COLOR_CYAN);
+                        $this->log("  └─ 🏷️  product_id: " . ($productData['product_id'] ?? 'N/A'), self::COLOR_CYAN);
+                        $this->log("  └─ 🏷️  image: " . ($productData['image'] ?? 'N/A'), self::COLOR_CYAN);
+                        $this->log("  └─ 🏷️  category: " . ($productData['category'] ?? 'N/A'), self::COLOR_CYAN);
+                        $this->log("  └─ 💰 Price: " . ($productData['price'] ?? 'N/A'), self::COLOR_CYAN);
+                        $this->log("  └─ 💰 off: " . ($productData['off'] ?? 'N/A'), self::COLOR_CYAN);
+                        $this->log("  └─ 📦 Available: " . (isset($productData['availability']) ? ($productData['availability'] ? '1' : '0') : 'N/A'), self::COLOR_CYAN);
+
+                        if (!empty($productData['product_id'])) {
+                            $this->log("  └─ 🆔 Product ID: " . $productData['product_id'], self::COLOR_CYAN);
+                        }
+                        if (!empty($productData['category'])) {
+                            $this->log("  └─ 📂 Category: " . $productData['category'], self::COLOR_CYAN);
+                        }
+                        if (!empty($productData['guarantee'])) {
+                            $this->log("  └─ 🛡️  Guarantee: " . $productData['guarantee'], self::COLOR_CYAN);
+                        }
+                        if (!empty($productData['image'])) {
+                            $this->log("  └─ 🖼️  Image URL: " . $productData['image'], self::COLOR_CYAN);
+                        }
+                        if (isset($productData['off']) && $productData['off'] > 0) {
+                            $this->log("  └─ 🏷️  Discount: " . $productData['off'] . "%", self::COLOR_CYAN);
+                        }
+                        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+
+                    } else {
+                        $failedProducts[] = $url;
+                        $this->log("❌ Product data validation FAILED", self::COLOR_RED);
+
+                        // تحلیل دقیق مشکلات validation
+                        $this->log("", null);
+                        $this->log("🔍 VALIDATION FAILURE ANALYSIS:", self::COLOR_RED);
+                        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+
+                        // بررسی فیلدهای اجباری
+                        $requiredFields = ['title', 'price'];
+                        foreach ($requiredFields as $field) {
+                            $status = isset($productData[$field]) && !empty($productData[$field]) ? "✅ PRESENT" : "❌ MISSING/EMPTY";
+                            $value = isset($productData[$field]) ? $productData[$field] : 'NOT SET';
+                            $this->log("  └─ {$field}: {$status} (Value: {$value})", $status === "✅ PRESENT" ? self::COLOR_GREEN : self::COLOR_RED);
+                        }
+                        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                    }
                 } else {
                     $failedProducts[] = $url;
-                    $this->log("❌ Failed to extract data - productData is null", self::COLOR_RED);
+                    $this->log("❌ Failed to extract product data - productData is null or empty", self::COLOR_RED);
+
+                    // دیباگ عمیق برای بررسی مشکل
+                    $this->log("", null);
+                    $this->log("🔍 DEEP DEBUG ANALYSIS:", self::COLOR_YELLOW);
+                    $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                    $this->log("  └─ HTML length: " . strlen($htmlContent) . " characters", self::COLOR_YELLOW);
+                    $this->log("  └─ HTML starts with: " . substr($htmlContent, 0, 100) . "...", self::COLOR_YELLOW);
+                    $this->log("  └─ Config selectors present: " . (isset($this->config['selectors']['product_page']) ? 'Yes' : 'No'), self::COLOR_YELLOW);
+
+                    if (isset($this->config['selectors']['product_page'])) {
+                        $selectors = $this->config['selectors']['product_page'];
+                        $this->log("  └─ Configured selectors:", self::COLOR_YELLOW);
+                        foreach (['title', 'price', 'availability'] as $key) {
+                            if (isset($selectors[$key])) {
+                                $selectorValue = is_array($selectors[$key]['selector']) ?
+                                    implode(', ', $selectors[$key]['selector']) :
+                                    $selectors[$key]['selector'];
+                                $this->log("    ├─ {$key}: {$selectorValue}", self::COLOR_GRAY);
+
+                                // تست سریع وجود selector در HTML
+                                if (str_contains($htmlContent, $selectorValue)) {
+                                    $this->log("      └─ ✅ Selector found in HTML", self::COLOR_GREEN);
+                                } else {
+                                    $this->log("      └─ ❌ Selector NOT found in HTML", self::COLOR_RED);
+                                }
+                            } else {
+                                $this->log("    ├─ {$key}: ❌ NOT CONFIGURED", self::COLOR_RED);
+                            }
+                        }
+                    }
+                    $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                }
+
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                $failedProducts[] = $url;
+                $this->log("💥 HTTP Request Exception occurred!", self::COLOR_RED);
+                $this->log("  └─ Error: " . $e->getMessage(), self::COLOR_RED);
+
+                if ($e->hasResponse()) {
+                    $statusCode = $e->getResponse()->getStatusCode();
+                    $this->log("  └─ HTTP Status: {$statusCode}", self::COLOR_RED);
                 }
 
             } catch (\Exception $e) {
                 $failedProducts[] = $url;
-                $this->log("💥 Exception occurred: " . $e->getMessage(), self::COLOR_RED);
-                $this->log("📍 File: " . $e->getFile() . " Line: " . $e->getLine(), self::COLOR_YELLOW);
+                $this->log("💥 General Exception occurred!", self::COLOR_RED);
+                $this->log("  └─ Error: " . $e->getMessage(), self::COLOR_RED);
+                $this->log("  └─ File: " . $e->getFile(), self::COLOR_YELLOW);
+                $this->log("  └─ Line: " . $e->getLine(), self::COLOR_YELLOW);
+                $this->log("  └─ Stack trace: " . $e->getTraceAsString(), self::COLOR_GRAY);
             }
 
-            $this->log("⏱️ Applying delay...", self::COLOR_YELLOW);
-            $delay = mt_rand(500, 1000);
-            usleep($delay * 1000);
-            $this->log("✅ Delay completed, continuing...", self::COLOR_GREEN);
+            // اعمال تاخیر بین درخواست‌ها
+            if ($index < count($productUrls) - 1) {
+                $delayTime = mt_rand(
+                    $this->config['request_delay_min'] ?? 500,
+                    $this->config['request_delay_max'] ?? 1000
+                );
+                $this->log("⏱️ Applying delay ({$delayTime}ms) before next request...", self::COLOR_YELLOW);
+                usleep($delayTime * 1000);
+            }
         }
 
-        // خلاصه نتایج
+        // خلاصه نتایج نهایی
         $this->log("", null);
-        $this->log("📊 Test Results Summary:", self::COLOR_PURPLE);
+        $this->log("", null);
+        $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_PURPLE);
+        $this->log("📊 FINAL TEST RESULTS SUMMARY", self::COLOR_PURPLE);
+        $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_PURPLE);
+
         $successCount = count($successfulProducts);
         $failCount = count($failedProducts);
         $totalCount = count($productUrls);
 
-        $this->log("  ✅ Successful: $successCount", self::COLOR_GREEN);
-        $this->log("  ❌ Failed: $failCount", self::COLOR_RED);
+        $this->log("  ✅ Successful extractions: {$successCount}", self::COLOR_GREEN);
+        $this->log("  ❌ Failed extractions: {$failCount}", self::COLOR_RED);
+        $this->log("  📊 Total tested: {$totalCount}", self::COLOR_BLUE);
 
         if ($totalCount > 0) {
             $successRate = round(($successCount / $totalCount) * 100, 2);
-            $this->log("  📈 Success Rate: {$successRate}%", self::COLOR_BLUE);
+            $this->log("  📈 Success Rate: {$successRate}%", $successRate > 80 ? self::COLOR_GREEN : ($successRate > 50 ? self::COLOR_YELLOW : self::COLOR_RED));
         }
 
         if (!empty($failedProducts)) {
             $this->log("", null);
             $this->log("💀 Failed URLs:", self::COLOR_RED);
             foreach ($failedProducts as $failedUrl) {
-                $this->log("  - $failedUrl", self::COLOR_YELLOW);
+                $this->log("  - {$failedUrl}", self::COLOR_YELLOW);
             }
         }
 
+        if (!empty($successfulProducts)) {
+            $this->log("", null);
+            $this->log("🎉 Successfully Extracted Products:", self::COLOR_GREEN);
+            foreach ($successfulProducts as $idx => $product) {
+                $this->log("  Product " . ($idx + 1) . ":", self::COLOR_CYAN);
+                $this->log("    - Title: " . ($product['title'] ?? 'N/A'), self::COLOR_GRAY);
+                $this->log("    - Price: " . ($product['price'] ?? 'N/A'), self::COLOR_GRAY);
+                $this->log("    - Available: " . (isset($product['availability']) ? ($product['availability'] ? '0' : '1') : 'N/A'), self::COLOR_GRAY);
+            }
+        }
+
+        $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_PURPLE);
         $this->log("🏁 Product Test Mode completed!", self::COLOR_GREEN);
 
         return [
@@ -645,7 +795,7 @@ class StartController
         }
     }
 
-    private function log(string $message, ?string $color = null): void
+    public function log(string $message, ?string $color = null): void
     {
         $colorReset = "\033[0m";
         $formattedMessage = $color ? $color . $message . $colorReset : $message;
@@ -671,25 +821,94 @@ class StartController
 
     private function shouldDisplayLog(string $cleanMessage): bool
     {
-        $displayConditions = [
+        // شرایط نمایش لاگ‌های عمومی
+        $generalDisplayConditions = [
+            // لاگ‌های با ایموجی‌های مهم
             str_contains($cleanMessage, '🆕') || str_contains($cleanMessage, '🔄') ||
-            str_contains($cleanMessage, '✅') || str_contains($cleanMessage, '❌'),
+            str_contains($cleanMessage, '✅') || str_contains($cleanMessage, '❌') ||
+            str_contains($cleanMessage, '🧪') || str_contains($cleanMessage, '🚀') ||
+            str_contains($cleanMessage, '📝') || str_contains($cleanMessage, '🔍') ||
+            str_contains($cleanMessage, '📡') || str_contains($cleanMessage, '📦') ||
+            str_contains($cleanMessage, '💰') || str_contains($cleanMessage, '🏷️') ||
+            str_contains($cleanMessage, '📂') || str_contains($cleanMessage, '🛡️') ||
+            str_contains($cleanMessage, '🖼️') || str_contains($cleanMessage, '💥') ||
+            str_contains($cleanMessage, '📊') || str_contains($cleanMessage, '📈') ||
+            str_contains($cleanMessage, '🎉') || str_contains($cleanMessage, '🏁') ||
+            str_contains($cleanMessage, '⏱️') || str_contains($cleanMessage, '🆔'),
+
+            // لاگ‌های با فرمت خاص
             str_starts_with($cleanMessage, '+') && str_contains($cleanMessage, '|'),
+
+            // لاگ‌های مهم عمومی
             str_starts_with($cleanMessage, 'Fetching page') ||
             str_starts_with($cleanMessage, 'Completed processing page') ||
             str_contains($cleanMessage, 'Extracted product_id') ||
             str_contains($cleanMessage, 'failed_links') ||
             str_contains($cleanMessage, 'Failed to fetch') ||
-            str_contains($cleanMessage, 'Invalid link') ||
-            str_contains($cleanMessage, '═══') || str_contains($cleanMessage, '───') ||
+            str_contains($cleanMessage, 'Invalid link'),
+
+            // خطوط جداکننده
+            str_contains($cleanMessage, '═══') || str_contains($cleanMessage, '───'),
+
+            // لاگ‌های Playwright
             str_contains($cleanMessage, 'Playwright') ||
             str_contains($cleanMessage, 'Starting Playwright') ||
             str_contains($cleanMessage, 'Temporary script file') ||
             str_contains($cleanMessage, 'Playwright console log')
         ];
 
-        return array_reduce($displayConditions, function ($carry, $condition) {
+        // شرایط خاص Product Test Mode
+        $productTestModeConditions = [
+            // مراحل اصلی تست
+            str_contains($cleanMessage, 'Product Test Mode') ||
+            str_contains($cleanMessage, 'Testing product') ||
+            str_contains($cleanMessage, 'Step 1:') || str_contains($cleanMessage, 'Step 2:') || str_contains($cleanMessage, 'Step 3:'),
+
+            // نتایج استخراج
+            str_contains($cleanMessage, 'RAW EXTRACTED DATA:') ||
+            str_contains($cleanMessage, 'VALIDATED PRODUCT DETAILS:') ||
+            str_contains($cleanMessage, 'VALIDATION FAILURE ANALYSIS:') ||
+            str_contains($cleanMessage, 'DEEP DEBUG ANALYSIS:') ||
+            str_contains($cleanMessage, 'FINAL TEST RESULTS SUMMARY'),
+
+            // جزئیات محصول
+            str_contains($cleanMessage, 'Title:') || str_contains($cleanMessage, 'Price:') ||
+            str_contains($cleanMessage, 'Available:') || str_contains($cleanMessage, 'Product ID:') ||
+            str_contains($cleanMessage, 'Category:') || str_contains($cleanMessage, 'Guarantee:') ||
+            str_contains($cleanMessage, 'Image URL:') || str_contains($cleanMessage, 'Discount:'),
+
+            // نتایج و آمار
+            str_contains($cleanMessage, 'Successful extractions:') ||
+            str_contains($cleanMessage, 'Failed extractions:') ||
+            str_contains($cleanMessage, 'Total tested:') ||
+            str_contains($cleanMessage, 'Success Rate:') ||
+            str_contains($cleanMessage, 'Successfully Extracted Products:') ||
+            str_contains($cleanMessage, 'Failed URLs:'),
+
+            // وضعیت‌ها و خطاها
+            str_contains($cleanMessage, 'Page content fetched successfully') ||
+            str_contains($cleanMessage, 'Product data extracted successfully') ||
+            str_contains($cleanMessage, 'Product data validation') ||
+            str_contains($cleanMessage, 'HTTP Request Exception') ||
+            str_contains($cleanMessage, 'General Exception') ||
+            str_contains($cleanMessage, 'Available selectors') ||
+            str_contains($cleanMessage, 'Configured selectors') ||
+            str_contains($cleanMessage, 'Selector found in HTML') ||
+            str_contains($cleanMessage, 'Selector NOT found in HTML'),
+
+            // تحلیل عملکرد
+            str_contains($cleanMessage, 'HTML length:') ||
+            str_contains($cleanMessage, 'Response status:') ||
+            str_contains($cleanMessage, 'Applying delay') ||
+            str_contains($cleanMessage, 'PRESENT') || str_contains($cleanMessage, 'MISSING/EMPTY')
+        ];
+
+        // ترکیب شرایط عمومی و Product Test Mode
+        $allConditions = array_merge($generalDisplayConditions, $productTestModeConditions);
+
+        return array_reduce($allConditions, function ($carry, $condition) {
             return $carry || $condition;
         }, false);
     }
+
 }

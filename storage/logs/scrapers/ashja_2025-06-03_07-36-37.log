@@ -1,0 +1,30 @@
+اجرای اسکرپر برای کانفیگ ashja در تاریخ 2025-06-03 07:36:37 شروع شد...
+Starting flexible scraper...
+Loading configuration from /var/www/products-shops/storage/app/private/private/ashja.json
+[1;92mValidating configuration...[0m
+[1;92mFound set_category in config: 'صنایع دستی'. Will use this value for all products.[0m
+[1;92mConfig validated. Using run_method: new[0m
+Request delay set to 500 ms.
+Starting scrape operation...
+
+   Exception 
+
+  Validation Error: Out of stock button configuration is required.
+
+  at /var/www/products-shops/app/Http/Controllers/ConfigValidator.php:82
+     78▕ 
+     79▕         foreach ($requiredFields as $field => $message) {
+     80▕             if ($field === 'out_of_stock_button') {
+     81▕                 if (!isset($config[$field])) {
+  ➜  82▕                     throw new \Exception("Validation Error: $message");
+     83▕                 }
+     84▕             } else {
+     85▕                 if (empty($config[$field])) {
+     86▕                     throw new \Exception("Validation Error: $message");
+
+  1   /var/www/products-shops/app/Http/Controllers/StartController.php:130
+      App\Http\Controllers\ConfigValidator::validateConfig()
+
+  2   /var/www/products-shops/app/Console/Commands/StartCommand.php:48
+      App\Http\Controllers\StartController::scrapeMultiple()
+
