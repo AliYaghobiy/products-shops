@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -1337,286 +1338,101 @@ class ConfigController extends Controller
         return $result === 0;
     }
 
-
-    public function createProductTest()
+    public function singleProduct(Request $request)
     {
-        return view('configs.product-test');
-    }
-
-    /**
-     * ذخیره کانفیگ تست محصول
-     */
-    public function storeProductTest(Request $request)
-    {
-        try {
-            // اعتبارسنجی حالت تست محصول
-            $validator = $this->getProductTestValidator($request);
-
-            if ($validator->fails()) {
-                return back()->withErrors($validator)->withInput();
-            }
-
-            $config = $this->buildProductTestConfig($request);
-            $filename = 'producttest_' . time();
-
-            // ذخیره کانفیگ
-            if (!Storage::exists('private/tests')) {
-                Storage::makeDirectory('private/tests', 0755);
-            }
-
-            $jsonConfig = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-            if (!Storage::put('private/tests' . $filename . '.json', $jsonConfig)) {
-                return back()->with('error', 'خطا در ذخیره فایل کانفیگ!')->withInput();
-            }
-
-            return redirect()->route('configs.product-test')->with([
-                'success' => 'کانفیگ تست محصول با موفقیت ذخیره شد!',
-                'config_filename' => $filename
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('خطا در ذخیره کانفیگ تست محصول: ' . $e->getMessage(), [
-                'request_data' => $request->all(),
-                'stack_trace' => $e->getTraceAsString()
-            ]);
-
-            return back()->with('error', 'خطای داخلی سرور رخ داده است. لطفاً دوباره تلاش کنید.')->withInput();
-        }
-    }
-
-    /**
-     * اجرای اسکرپر برای تست محصول
-     */
-    public function runProductTest($filename)
-    {
-        $configPath = $this->configPath . 'private/' . $filename . '.json';
-
-        if (!file_exists($configPath)) {
-            return redirect()->route('configs.product-test')->with('error', 'فایل کانفیگ یافت نشد!');
-        }
-
-        // بررسی اینکه آیا کانفیگ واقعاً تست محصول است
-        $configContent = json_decode(file_get_contents($configPath), true);
-        if (!isset($configContent['product_test']) || !$configContent['product_test']) {
-            return redirect()->route('configs.product-test')->with('error', 'این کانفیگ برای تست محصول نیست!');
-        }
-
-        $runFileName = $filename . '.json';
-        $runFilePath = 'private/runs/' . $runFileName;
-
-        // بررسی اجرای قبلی
-        if (Storage::exists($runFilePath)) {
-            $existingRun = json_decode(Storage::get($runFilePath), true);
-
-            if (isset($existingRun['status']) && $existingRun['status'] === 'running' && isset($existingRun['pid'])) {
-                if ($this->isProcessRunning($existingRun['pid'])) {
-                    return redirect()->route('configs.product-test')->with('error', 'تست محصول در حال حاضر در حال اجراست!');
-                }
-            }
-        }
-
-        $logDirectory = storage_path('logs/scrapers/product-tests');
-        if (!file_exists($logDirectory)) {
-            mkdir($logDirectory, 0755, true);
-        }
-
-        $logFileName = 'product_test_' . $filename . '_' . date('Y-m-d_H-i-s') . '.log';
-        $logFile = $logDirectory . '/' . $logFileName;
-
-        file_put_contents($logFile, "شروع تست محصول برای کانفیگ {$filename} در تاریخ " . date('Y-m-d H:i:s') . "\n");
-
-        // تنظیم متغیرهای محیطی
-        $envVars = [
-            'PLAYWRIGHT_BROWSERS_PATH=/var/www/.cache/ms-playwright',
-            'NODE_PATH=' . base_path('node_modules'),
-            'HOME=' . env('HOME', '/var/www'),
-            'USER=' . get_current_user(),
-        ];
-
-        $envString = implode(' ', $envVars);
-
-        // اجرای دستور
-        $cmd = sprintf(
-            'nohup bash -c "%s php %s scrape:start --config=%s" >> %s 2>&1 & echo $!',
-            $envString,
-            base_path('artisan'),
-            $configPath,
-            $logFile
-        );
-
-        $pid = exec($cmd);
-
-        if (empty($pid) || $pid == 0) {
-            file_put_contents($logFile, "\n[" . date('Y-m-d H:i:s') . "] خطا در اجرای تست محصول: PID نامعتبر\n", FILE_APPEND);
-            return redirect()->route('configs.product-test')->with('error', 'خطا در اجرای تست محصول.');
-        }
-
-        if (!Storage::exists('private/runs')) {
-            Storage::makeDirectory('private/runs', 0755);
-        }
-
-        $runInfo = [
-            'filename' => $filename,
-            'log_file' => $logFileName,
-            'started_at' => date('Y-m-d H:i:s'),
-            'pid' => (int)$pid,
-            'status' => 'running',
-            'type' => 'product_test'
-        ];
-
-        Storage::put($runFilePath, json_encode($runInfo, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-
-        return redirect()->route('configs.product-test')->with([
-            'success' => 'تست محصول با موفقیت شروع شد!',
-            'log_file' => $logFileName
+        Log::info('singleProduct method called', [
+            'method' => $request->method(),
+            'user' => auth()->user() ? auth()->user()->id : 'guest',
+            'input' => $request->all(),
         ]);
-    }
 
-    /**
-     * اعتبارسنجی کانفیگ تست محصول
-     */
-    private function getProductTestValidator(Request $request)
-    {
-        $rules = [
-            'product_urls' => 'required|array|min:1|max:10',
-            'product_urls.*' => 'required|url',
-            'request_delay_min' => 'required|integer|min:500|max:10000',
-            'request_delay_max' => 'required|integer|min:500|max:10000',
-            'timeout' => 'required|integer|min:10|max:300',
-            'max_retries' => 'required|integer|min:1|max:5',
-            'verify_ssl' => 'boolean',
-            'keep_price_format' => 'boolean',
-            'image_method' => 'required|in:product_page',
-            'product_id_method' => 'required|in:selector,url',
-            'product_id_source' => 'required|in:product_page,url',
-            'availability_mode' => 'required|in:priority_based,keyword_based',
-            'out_of_stock_button' => 'boolean',
-            'category_method' => 'required|in:selector,title',
-            'category_word_count' => 'nullable|integer|min:1|max:10',
-            'guarantee_method' => 'required|in:selector,title',
-            'guarantee_keywords' => 'required|array|min:1',
-            'guarantee_keywords.*' => 'required|string',
-            'availability_keywords.positive' => 'required|array|min:1',
-            'availability_keywords.positive.*' => 'required|string',
-            'availability_keywords.negative' => 'required|array|min:1',
-            'availability_keywords.negative.*' => 'required|string',
-            'price_keywords.unpriced' => 'required|array|min:1',
-            'price_keywords.unpriced.*' => 'required|string',
-
-            // سلکتورها
-            'selectors.product_page.title.type' => 'required|in:css,xpath',
-            'selectors.product_page.title.selector' => 'required|string',
-            'selectors.product_page.price.type' => 'required|in:css,xpath',
-            'selectors.product_page.price.selector' => 'required|array|min:1',
-            'selectors.product_page.price.selector.*' => 'required|string',
-            'selectors.product_page.availability.type' => 'required|in:css,xpath',
-            'selectors.product_page.availability.selector' => 'required|array|min:1',
-            'selectors.product_page.availability.selector.*' => 'required|string',
-            'selectors.product_page.image.type' => 'required|in:css,xpath',
-            'selectors.product_page.image.selector' => 'required|string',
-            'selectors.product_page.image.attribute' => 'nullable|string',
-
-            // سلکتورهای اختیاری
-            'selectors.product_page.category.type' => 'nullable|in:css,xpath',
-            'selectors.product_page.category.selector' => 'nullable|array',
-            'selectors.product_page.category.selector.*' => 'nullable|string',
-            'selectors.product_page.off.type' => 'nullable|in:css,xpath',
-            'selectors.product_page.off.selector' => 'nullable|string',
-            'selectors.product_page.guarantee.type' => 'nullable|in:css,xpath',
-            'selectors.product_page.guarantee.selector' => 'nullable|string',
-            'selectors.product_page.product_id.type' => 'nullable|in:css,xpath',
-            'selectors.product_page.product_id.selector' => 'nullable|string',
-            'selectors.product_page.product_id.attribute' => 'nullable|string',
-        ];
-
-        // اعتبارسنجی شرطی برای out_of_stock
-        if ($request->input('out_of_stock_button')) {
-            $rules['selectors.product_page.out_of_stock.type'] = 'required|in:css,xpath';
-            $rules['selectors.product_page.out_of_stock.selector'] = 'required|array|min:1';
-            $rules['selectors.product_page.out_of_stock.selector.*'] = 'required|string';
+        if ($request->isMethod('get')) {
+            // نمایش فرم برای درخواست GET
+            return view('configs.single_product');
         }
 
-        return Validator::make($request->all(), $rules);
-    }
+        // پردازش درخواست POST
+        $request->validate([
+            'product_url' => 'required|url',
+            'title_selector' => 'required|string',
+            'price_selector' => 'required|string',
+            'category_selector' => 'nullable|string',
+            'availability_selector' => 'nullable|string',
+            'image_selector' => 'nullable|string',
+            'product_id_selector' => 'nullable|string',
+        ]);
 
-    /**
-     * ساخت کانفیگ تست محصول
-     */
-    private function buildProductTestConfig(Request $request)
-    {
+        Log::info('Validation passed in singleProduct', ['input' => $request->all()]);
+
+        // ساخت کانفیگ برای اسکریپینگ
         $config = [
             'product_test' => true,
-            'product_urls' => $request->input('product_urls'),
-            'request_delay_min' => (int)$request->input('request_delay_min', 1000),
-            'request_delay_max' => (int)$request->input('request_delay_max', 1000),
-            'timeout' => (int)$request->input('timeout', 60),
-            'max_retries' => (int)$request->input('max_retries', 2),
-            'concurrency' => 10, // ثابت برای تست
-            'batch_size' => 10, // ثابت برای تست
-            'user_agent' => $request->input('user_agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/91.0.4472.124'),
-            'verify_ssl' => filter_var($request->input('verify_ssl', false), FILTER_VALIDATE_BOOLEAN),
-            'keep_price_format' => filter_var($request->input('keep_price_format', false), FILTER_VALIDATE_BOOLEAN),
+            'product_urls' => [$request->input('product_url')],
+            'request_delay_min' => 1000,
+            'request_delay_max' => 1000,
+            'timeout' => 60,
+            'max_retries' => 2,
+            'concurrency' => 1,
+            'batch_size' => 1,
+            'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/91.0.4472.124',
+            'verify_ssl' => false,
+            'keep_price_format' => false,
             'image_method' => 'product_page',
-            'product_id_method' => $request->input('product_id_method'),
-            'product_id_source' => $request->input('product_id_source'),
-            'availability_mode' => $request->input('availability_mode', 'priority_based'),
-            'out_of_stock_button' => filter_var($request->input('out_of_stock_button', false), FILTER_VALIDATE_BOOLEAN),
+            'product_id_method' => 'selector',
+            'product_id_source' => 'product_page',
+            'availability_mode' => 'priority_based',
+            'out_of_stock_button' => true,
             'product_id_fallback_script_patterns' => [
                 'product_id:\\s*\"(\\d+)\"',
                 'product_id:\\s*(\\d+)'
             ],
-            'category_method' => $request->input('category_method', 'selector'),
-            'category_word_count' => (int)$request->input('category_word_count', 1),
-            'guarantee_method' => $request->input('guarantee_method'),
-            'guarantee_keywords' => $request->input('guarantee_keywords'),
+            'category_method' => 'selector',
+            'category_word_count' => 1,
+            'guarantee_method' => 'selector',
+            'guarantee_keywords' => ['گارانتی'],
             'availability_keywords' => [
-                'positive' => $request->input('availability_keywords.positive'),
-                'negative' => $request->input('availability_keywords.negative'),
+                'positive' => ['موجود', 'افزودن به سبد خرید'],
+                'negative' => ['ناموجود', 'در حال حاضر این محصول در انبار موجود نیست و در دسترس نمی باشد.']
             ],
             'price_keywords' => [
-                'unpriced' => $request->input('price_keywords.unpriced'),
+                'unpriced' => ['تماس بگیرید']
             ],
             'selectors' => [
                 'product_page' => [
                     'title' => [
-                        'type' => $request->input('selectors.product_page.title.type'),
-                        'selector' => $request->input('selectors.product_page.title.selector'),
-                    ],
-                    'category' => [
-                        'type' => $request->input('selectors.product_page.category.type'),
-                        'selector' => $request->input('selectors.product_page.category.selector', []),
-                        'attribute' => $request->input('selectors.product_page.category.attribute'),
-                    ],
-                    'availability' => [
-                        'type' => $request->input('selectors.product_page.availability.type'),
-                        'selector' => $request->input('selectors.product_page.availability.selector'),
-                    ],
-                    'out_of_stock' => [
-                        'type' => $request->input('out_of_stock_button') ? $request->input('selectors.product_page.out_of_stock.type') : null,
-                        'selector' => $request->input('out_of_stock_button') ? $request->input('selectors.product_page.out_of_stock.selector', []) : [],
+                        'type' => 'css',
+                        'selector' => $request->input('title_selector'),
                     ],
                     'price' => [
-                        'type' => $request->input('selectors.product_page.price.type'),
-                        'selector' => $request->input('selectors.product_page.price.selector'),
+                        'type' => 'css',
+                        'selector' => [$request->input('price_selector')],
+                    ],
+                    'category' => [
+                        'type' => 'css',
+                        'selector' => $request->input('category_selector') ? [$request->input('category_selector')] : [],
+                        'attribute' => null,
+                    ],
+                    'availability' => [
+                        'type' => 'css',
+                        'selector' => $request->input('availability_selector') ? [$request->input('availability_selector')] : [],
+                    ],
+                    'out_of_stock' => [
+                        'type' => null,
+                        'selector' => [],
                     ],
                     'image' => [
-                        'type' => $request->input('selectors.product_page.image.type'),
-                        'selector' => $request->input('selectors.product_page.image.selector'),
-                        'attribute' => $request->input('selectors.product_page.image.attribute'),
-                    ],
-                    'off' => [
-                        'type' => $request->input('selectors.product_page.off.type'),
-                        'selector' => $request->input('selectors.product_page.off.selector'),
+                        'type' => 'css',
+                        'selector' => $request->input('image_selector') ? $request->input('image_selector') : null,
+                        'attribute' => 'href',
                     ],
                     'guarantee' => [
-                        'type' => $request->input('selectors.product_page.guarantee.type'),
-                        'selector' => $request->input('selectors.product_page.guarantee.selector'),
+                        'type' => 'css',
+                        'selector' => null,
                     ],
                     'product_id' => [
-                        'type' => $request->input('selectors.product_page.product_id.type'),
-                        'selector' => $request->input('selectors.product_page.product_id.selector'),
-                        'attribute' => $request->input('selectors.product_page.product_id.attribute'),
+                        'type' => 'css',
+                        'selector' => $request->input('product_id_selector') ? [$request->input('product_id_selector')] : [],
+                        'attribute' => ['value'],
                     ],
                 ],
                 'data_transformers' => [
@@ -1628,82 +1444,41 @@ class ConfigController extends Controller
             ],
         ];
 
-        return $config;
-    }
+        try {
+            Log::info('Starting scrapeMultiple in singleProduct', ['config' => $config]);
 
-    /**
-     * دریافت لیست تست‌های محصول
-     */
-    public function getProductTests()
-    {
-        $files = Storage::files('private');
-        $productTests = [];
+            // ایجاد نمونه StartController
+            $startController = new StartController($config);
 
-        foreach ($files as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) === 'json') {
-                $filename = pathinfo($file, PATHINFO_FILENAME);
+            // تنظیم callback برای جمع‌آوری لاگ‌ها
+            $logs = [];
+            $startController->setOutputCallback(function ($message) use (&$logs) {
+                $logs[] = $message;
+            });
 
-                // فقط فایل‌های تست محصول
-                if (!str_starts_with($filename, 'producttest_')) {
-                    continue;
-                }
+            // اجرای اسکریپینگ
+            $result = $startController->scrapeMultiple();
 
-                $configContent = json_decode(Storage::get($file), true);
+            Log::info('scrapeMultiple completed', ['result' => $result, 'logs_count' => count($logs)]);
 
-                // بررسی اینکه واقعاً تست محصول است
-                if (!isset($configContent['product_test']) || !$configContent['product_test']) {
-                    continue;
-                }
-
-                $testData = [
-                    'filename' => $filename,
-                    'content' => $configContent,
-                    'status' => 'stopped',
-                    'started_at' => null,
-                    'log_file' => null,
-                    'product_count' => count($configContent['product_urls'] ?? [])
-                ];
-
-                // بررسی وضعیت اجرا
-                $runFilePath = 'private/runs/' . $filename . '.json';
-                if (Storage::exists($runFilePath)) {
-                    $runInfo = json_decode(Storage::get($runFilePath), true);
-
-                    if (isset($runInfo['status'])) {
-                        $testData['status'] = $runInfo['status'];
-                    }
-
-                    if (isset($runInfo['started_at'])) {
-                        $testData['started_at'] = $runInfo['started_at'];
-                    }
-
-                    if (isset($runInfo['log_file'])) {
-                        $testData['log_file'] = $runInfo['log_file'];
-                    }
-
-                    // بررسی واقعی بودن وضعیت running
-                    if ($testData['status'] === 'running' && isset($runInfo['pid'])) {
-                        if (!$this->isProcessRunning($runInfo['pid'])) {
-                            $testData['status'] = 'crashed';
-
-                            // به‌روزرسانی فایل run
-                            $runInfo['status'] = 'crashed';
-                            $runInfo['stopped_at'] = date('Y-m-d H:i:s');
-                            Storage::put($runFilePath, json_encode($runInfo, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-                        }
-                    }
-                }
-
-                $productTests[] = $testData;
-            }
+            // ترکیب لاگ‌ها و نتیجه برای نمایش در ویو
+            return view('configs.single_product', [
+                'result' => $result,
+                'logs' => $logs,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error in singleProduct scrape: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return view('configs.single_product', [
+                'result' => [
+                    'status' => 'error',
+                    'message' => 'خطا در اجرای تست: ' . $e->getMessage(),
+                    'products' => [],
+                ],
+                'logs' => [],
+            ]);
         }
-
-        // مرتب‌سازی بر اساس تاریخ ایجاد (جدیدترین اول)
-        usort($productTests, function ($a, $b) {
-            return strcmp($b['filename'], $a['filename']);
-        });
-
-        return $productTests;
     }
 
 }

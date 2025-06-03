@@ -7,6 +7,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/configs/single-product', [ConfigController::class, 'singleProduct'])->name('configs.single_product');
+Route::post('/configs/single-product', [ConfigController::class, 'singleProduct'])->name('configs.single_product');
 // روت‌های عمومی (بدون نیاز به احراز هویت)
 Route::get('/', function () {
     return redirect()->route('login');
@@ -44,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/configs/{filename}', [ConfigController::class, 'destroy'])->name('configs.destroy');
     Route::get('/api', [ApiController::class, 'index'])->name('api.index');
     Route::get('/api/{store}', [ProductController::class, 'index'])->name('store.products');
+
 });
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 Route::post('/search', [SearchController::class, 'search'])->name('search.api');
