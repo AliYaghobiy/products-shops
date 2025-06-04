@@ -1,0 +1,30 @@
+اجرای اسکرپر اپدیت برای کانفیگ dfgdf در تاریخ 2025-06-04 07:23:08 شروع شد...
+Starting flexible scraper...
+Loading configuration from /opt/homebrew/var/www/Github/products-shops/storage/app/private/private/dfgdf.json
+Update mode activated - will reset products and reprocess all links
+[1;92mValidating configuration...[0m
+[1;92mConfig validated. Using run_method: continue[0m
+Request delay set to 500 ms.
+Starting scrape operation...
+[1;95m🔄 Update mode detected[0m
+[1;92mConfiguration validated successfully.[0m
+[1;92mGenerated database name: example_com[0m
+[1;92mDatabase mode: continue[0m
+[1;92mUsing existing database example_com[0m
+[1;92mSwitched to database: example_com[0m
+[1;93m🔄 Reset mode activated - clearing products and marking all links as unprocessed...[0m
+[1;93mℹ️ No products found to clear[0m
+[1;92m🔄 Reset 0 links to unprocessed state[0m
+[1;93mℹ️ No failed links found to clear[0m
+[1;92m✅ Database reset completed successfully[0m
+[1;94m📊 Database status after reset:[0m
+[1;94m  • Total links: 0[0m
+[1;94m  • Unprocessed links: 0[0m
+[1;94m  • Products: 0[0m
+[1;94m  • Failed links: 0[0m
+[1;92m📋 Fetching product links from database[0m
+[1;94m📊 Database status:[0m
+[1;94m  • Total links in DB: 0[0m
+[1;94m  • Processed links: 0[0m
+[1;94m  • Unprocessed links: 0[0m
+Scraping failed: No links found in database for update mode

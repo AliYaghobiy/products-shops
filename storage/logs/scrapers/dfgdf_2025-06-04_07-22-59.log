@@ -1,0 +1,36 @@
+اجرای اسکرپر  برای کانفیگ dfgdf در تاریخ 2025-06-04 07:22:59 شروع شد...
+Starting flexible scraper...
+Loading configuration from /opt/homebrew/var/www/Github/products-shops/storage/app/private/private/dfgdf.json
+[1;92mValidating configuration...[0m
+[1;92mConfig validated. Using run_method: new[0m
+Request delay set to 500 ms.
+Starting scrape operation...
+[1;92mConfiguration validated successfully.[0m
+[1;92mGenerated database name: example_com[0m
+[1;92mDatabase mode: clear[0m
+[1;92mCreating database example_com...[0m
+[1;92mSwitched to database: example_com[0m
+[1;92mRunning specific migrations...[0m
+[1;92mApplied migration: 2025_04_08_162133_create_products_table.php[0m
+[1;92mApplied migration: 2025_04_13_073528_create_failed_links_table.php[0m
+[1;92mApplied migration: 2025_05_19_162835_create_links_table.php[0m
+[1;92mSpecific migrations completed[0m
+[1;92m🔄 STARTING fetchProductLinks - Method: 1[0m
+[1;95m📄 Config check - products_urls count: 1[0m
+[1;95m📄 Config check - base_urls: ["https:\/\/example.com"][0m
+[1;92m✅ Product links selector found (array): {"type":"css","selector":"sfsdfd","attribute":"href"}[0m
+[1;95m🔄 Processing 1 product URLs...[0m
+[1;95m🌐 Processing URL 1/1: https://example.comshpo[0m
+[1;93mNormalized URL: https://example.comshpo -> https://example.comshpo/[0m
+[1;95m🔗 Testing connection to: https://example.comshpo[0m
+[1;95m🌐 FETCHING: https://example.comshpo[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0...[0m
+[1;95m🔍 Testing DNS for host: example.comshpo[0m
+[1;91m💥 Unexpected error: cURL error 6: Could not resolve host: example.comshpo (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://example.comshpo[0m
+[1;91m📍 Exception type: GuzzleHttp\Exception\ConnectException[0m
+[1;91m❌ CRITICAL: Cannot fetch content from https://example.comshpo[0m
+[1;92m🏁 FINAL RESULT - Total unique links: 0[0m
+[1;91m🚨 CRITICAL: NO LINKS FOUND AT ALL![0m
+Scraping completed successfully!
+Total products scraped: 0
+Failed links: 0

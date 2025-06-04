@@ -1,0 +1,664 @@
+[2025-06-04 06:53:36] 🧪 Product Test Mode - Skipping standard config validation
+[2025-06-04 06:53:36] Inside scrapeMultiple method
+[2025-06-04 06:53:36] Starting scraper with start_id: not set
+[2025-06-04 06:53:36] 🧪 Product Test Mode Detected - Testing individual products
+[2025-06-04 06:53:36] 🚀 Starting Product Test Mode
+[2025-06-04 06:53:36] 📝 Found 1 product URLs to test
+[2025-06-04 06:53:36] 
+[2025-06-04 06:53:36] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:36] 🔍 Testing product 1/1: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:36] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:36] 📡 Step 1: Fetching page content...
+[2025-06-04 06:53:37] ✅ Page content fetched successfully (303832 bytes)
+[2025-06-04 06:53:37] 📄 Response status: 200
+[2025-06-04 06:53:37] 
+[2025-06-04 06:53:37] 🔍 Step 2: Attempting to extract product data...
+[2025-06-04 06:53:37] 🎯 Available selectors for extraction:
+[2025-06-04 06:53:37]   └─ title: .elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)
+[2025-06-04 06:53:37]   └─ price: p.price > span:nth-child(1) > bdi:nth-child(1)
+[2025-06-04 06:53:37]   └─ category: .posted_in > a:nth-child(2), .posted_in > a:nth-child(4)
+[2025-06-04 06:53:37]   └─ availability: .elementor-element-a9a2f64 > div:nth-child(1) > p:nth-child(1), .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)
+[2025-06-04 06:53:37]   └─ out_of_stock: 
+[2025-06-04 06:53:37]   └─ image: .woocommerce-product-gallery__image > a
+[2025-06-04 06:53:37]   └─ product_id: .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2), .wd-reset-side-lg > div:nth-child(2) > div:nth-child(2) > input:nth-child(4)
+[2025-06-04 06:53:37] 
+[2025-06-04 06:53:38] Raw title extracted: 'هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا'
+[2025-06-04 06:53:38] Title after applying prefix: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:53:38] Extracted title: "هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38] Raw price extracted with priority method: '281.000 تومان'
+[2025-06-04 06:53:38] Extracted price: "281000" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38] Extracted categories from selectors: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:53:38] Extracted category: "محصولات پیشرفته درمان زخم, هیدروژل" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38] Raw availability extracted: 'موجود در انبار'
+[2025-06-04 06:53:38] Availability fallback processing: 1
+[2025-06-04 06:53:38] Extracted availability: "1" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38] Extracted image from product_page: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:53:38] Extracted image: "/wp-content/uploads/2024/11/advanced-wound-healing-gel.webp" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38] Extracted product_id from updated method: 8825
+[2025-06-04 06:53:38] Extracted product_id: "8825" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38] ✅ Product data extracted successfully!
+[2025-06-04 06:53:38] 
+[2025-06-04 06:53:38] 📦 RAW EXTRACTED DATA:
+[2025-06-04 06:53:38] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:53:38]   title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:53:38]   price: 281000
+[2025-06-04 06:53:38]   product_id: 8825
+[2025-06-04 06:53:38]   page_url: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38]   availability: 1
+[2025-06-04 06:53:38]   image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:53:38]   category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:53:38]   off: 0
+[2025-06-04 06:53:38]   guarantee: EMPTY STRING
+[2025-06-04 06:53:38] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:53:38] 
+[2025-06-04 06:53:38] 🔍 Step 3: Validating extracted data...
+[2025-06-04 06:53:38] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:38] ✅ Product data validation PASSED!
+[2025-06-04 06:53:38] 
+[2025-06-04 06:53:38] 📦 VALIDATED PRODUCT DETAILS:
+[2025-06-04 06:53:38] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:53:38]   └─ 🏷️  Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:53:38]   └─ 🏷️  product_id: 8825
+[2025-06-04 06:53:38]   └─ 🏷️  image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:53:38]   └─ 🏷️  category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:53:38]   └─ 💰 Price: 281000
+[2025-06-04 06:53:38]   └─ 💰 off: 0
+[2025-06-04 06:53:38]   └─ 📦 Available: 1
+[2025-06-04 06:53:38]   └─ 🆔 Product ID: 8825
+[2025-06-04 06:53:38]   └─ 📂 Category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:53:38]   └─ 🖼️  Image URL: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:53:38] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:53:38] 
+[2025-06-04 06:53:38] 
+[2025-06-04 06:53:38] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:38] 📊 FINAL TEST RESULTS SUMMARY
+[2025-06-04 06:53:38] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:38]   ✅ Successful extractions: 1
+[2025-06-04 06:53:38]   ❌ Failed extractions: 0
+[2025-06-04 06:53:38]   📊 Total tested: 1
+[2025-06-04 06:53:38]   📈 Success Rate: 100%
+[2025-06-04 06:53:38] 
+[2025-06-04 06:53:38] 🎉 Successfully Extracted Products:
+[2025-06-04 06:53:38]   Product 1:
+[2025-06-04 06:53:38]     - Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:53:38]     - Price: 281000
+[2025-06-04 06:53:38]     - Available: 0
+[2025-06-04 06:53:38] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:38] 🏁 Product Test Mode completed!
+[2025-06-04 06:53:56] 🧪 Product Test Mode - Skipping standard config validation
+[2025-06-04 06:53:56] Inside scrapeMultiple method
+[2025-06-04 06:53:56] Starting scraper with start_id: not set
+[2025-06-04 06:53:56] 🧪 Product Test Mode Detected - Testing individual products
+[2025-06-04 06:53:56] 🚀 Starting Product Test Mode
+[2025-06-04 06:53:56] 📝 Found 1 product URLs to test
+[2025-06-04 06:53:56] 
+[2025-06-04 06:53:56] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:56] 🔍 Testing product 1/1: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:56] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:56] 📡 Step 1: Fetching page content...
+[2025-06-04 06:53:57] ✅ Page content fetched successfully (303832 bytes)
+[2025-06-04 06:53:57] 📄 Response status: 200
+[2025-06-04 06:53:57] 
+[2025-06-04 06:53:57] 🔍 Step 2: Attempting to extract product data...
+[2025-06-04 06:53:57] 🎯 Available selectors for extraction:
+[2025-06-04 06:53:57]   └─ title: .elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)
+[2025-06-04 06:53:57]   └─ price: p.price > span:nth-child(1) > bdi:nth-child(1)
+[2025-06-04 06:53:57]   └─ category: .posted_in > a:nth-child(2), .posted_in > a:nth-child(4)
+[2025-06-04 06:53:57]   └─ availability: .elementor-element-a9a2f64 > div:nth-child(1) > p:nth-child(1), .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)
+[2025-06-04 06:53:57]   └─ out_of_stock: 
+[2025-06-04 06:53:57]   └─ image: .woocommerce-product-gallery__image > a
+[2025-06-04 06:53:57]   └─ product_id: .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2), .wd-reset-side-lg > div:nth-child(2) > div:nth-child(2) > input:nth-child(4)
+[2025-06-04 06:53:57] 
+[2025-06-04 06:53:57] Raw title extracted: 'هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا'
+[2025-06-04 06:53:57] Title after applying prefix: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:53:57] Extracted title: "هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57] Raw price extracted with priority method: '281.000 تومان'
+[2025-06-04 06:53:57] Extracted price: "281000" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57] Extracted categories from selectors: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:53:57] Extracted category: "محصولات پیشرفته درمان زخم, هیدروژل" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57] Raw availability extracted: 'موجود در انبار'
+[2025-06-04 06:53:57] Availability fallback processing: 1
+[2025-06-04 06:53:57] Extracted availability: "1" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57] Extracted image from product_page: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:53:57] Extracted image: "/wp-content/uploads/2024/11/advanced-wound-healing-gel.webp" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57] Extracted product_id from updated method: 8825
+[2025-06-04 06:53:57] Extracted product_id: "8825" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57] ✅ Product data extracted successfully!
+[2025-06-04 06:53:57] 
+[2025-06-04 06:53:57] 📦 RAW EXTRACTED DATA:
+[2025-06-04 06:53:57] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:53:57]   title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:53:57]   price: 281000
+[2025-06-04 06:53:57]   product_id: 8825
+[2025-06-04 06:53:57]   page_url: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57]   availability: 1
+[2025-06-04 06:53:57]   image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:53:57]   category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:53:57]   off: 0
+[2025-06-04 06:53:57]   guarantee: EMPTY STRING
+[2025-06-04 06:53:57] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:53:57] 
+[2025-06-04 06:53:57] 🔍 Step 3: Validating extracted data...
+[2025-06-04 06:53:57] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:53:57] ✅ Product data validation PASSED!
+[2025-06-04 06:53:57] 
+[2025-06-04 06:53:57] 📦 VALIDATED PRODUCT DETAILS:
+[2025-06-04 06:53:57] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:53:57]   └─ 🏷️  Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:53:57]   └─ 🏷️  product_id: 8825
+[2025-06-04 06:53:57]   └─ 🏷️  image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:53:57]   └─ 🏷️  category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:53:57]   └─ 💰 Price: 281000
+[2025-06-04 06:53:57]   └─ 💰 off: 0
+[2025-06-04 06:53:57]   └─ 📦 Available: 1
+[2025-06-04 06:53:57]   └─ 🆔 Product ID: 8825
+[2025-06-04 06:53:57]   └─ 📂 Category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:53:57]   └─ 🖼️  Image URL: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:53:57] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:53:57] 
+[2025-06-04 06:53:57] 
+[2025-06-04 06:53:57] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:57] 📊 FINAL TEST RESULTS SUMMARY
+[2025-06-04 06:53:57] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:57]   ✅ Successful extractions: 1
+[2025-06-04 06:53:57]   ❌ Failed extractions: 0
+[2025-06-04 06:53:57]   📊 Total tested: 1
+[2025-06-04 06:53:57]   📈 Success Rate: 100%
+[2025-06-04 06:53:57] 
+[2025-06-04 06:53:57] 🎉 Successfully Extracted Products:
+[2025-06-04 06:53:57]   Product 1:
+[2025-06-04 06:53:57]     - Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:53:57]     - Price: 281000
+[2025-06-04 06:53:57]     - Available: 0
+[2025-06-04 06:53:57] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:53:57] 🏁 Product Test Mode completed!
+[2025-06-04 06:54:12] 🧪 Product Test Mode - Skipping standard config validation
+[2025-06-04 06:54:12] Inside scrapeMultiple method
+[2025-06-04 06:54:12] Starting scraper with start_id: not set
+[2025-06-04 06:54:12] 🧪 Product Test Mode Detected - Testing individual products
+[2025-06-04 06:54:12] 🚀 Starting Product Test Mode
+[2025-06-04 06:54:12] 📝 Found 1 product URLs to test
+[2025-06-04 06:54:12] 
+[2025-06-04 06:54:12] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:12] 🔍 Testing product 1/1: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:12] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:12] 📡 Step 1: Fetching page content...
+[2025-06-04 06:54:13] ✅ Page content fetched successfully (303832 bytes)
+[2025-06-04 06:54:13] 📄 Response status: 200
+[2025-06-04 06:54:13] 
+[2025-06-04 06:54:13] 🔍 Step 2: Attempting to extract product data...
+[2025-06-04 06:54:13] 🎯 Available selectors for extraction:
+[2025-06-04 06:54:13]   └─ title: .elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)
+[2025-06-04 06:54:13]   └─ price: p.price > span:nth-child(1) > bdi:nth-child(1)
+[2025-06-04 06:54:13]   └─ category: .posted_in > a:nth-child(2), .posted_in > a:nth-child(4)
+[2025-06-04 06:54:13]   └─ availability: .elementor-element-a9a2f64 > div:nth-child(1) > p:nth-child(1), .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)
+[2025-06-04 06:54:13]   └─ out_of_stock: 
+[2025-06-04 06:54:13]   └─ image: .woocommerce-product-gallery__image > a
+[2025-06-04 06:54:13]   └─ product_id: .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2), .wd-reset-side-lg > div:nth-child(2) > div:nth-child(2) > input:nth-child(4)
+[2025-06-04 06:54:13] 
+[2025-06-04 06:54:13] Raw title extracted: 'هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا'
+[2025-06-04 06:54:13] Title after applying prefix: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:54:13] Extracted title: "هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13] Raw price extracted with priority method: '281.000 تومان'
+[2025-06-04 06:54:13] Extracted price: "281000" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13] Extracted categories from selectors: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:54:13] Extracted category: "محصولات پیشرفته درمان زخم, هیدروژل" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13] Raw availability extracted: 'موجود در انبار'
+[2025-06-04 06:54:13] Availability fallback processing: 1
+[2025-06-04 06:54:13] Extracted availability: "1" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13] Extracted image from product_page: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:54:13] Extracted image: "/wp-content/uploads/2024/11/advanced-wound-healing-gel.webp" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13] Extracted product_id from updated method: 8825
+[2025-06-04 06:54:13] Extracted product_id: "8825" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13] ✅ Product data extracted successfully!
+[2025-06-04 06:54:13] 
+[2025-06-04 06:54:13] 📦 RAW EXTRACTED DATA:
+[2025-06-04 06:54:13] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:54:13]   title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:54:13]   price: 281000
+[2025-06-04 06:54:13]   product_id: 8825
+[2025-06-04 06:54:13]   page_url: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13]   availability: 1
+[2025-06-04 06:54:13]   image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:54:13]   category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:54:13]   off: 0
+[2025-06-04 06:54:13]   guarantee: EMPTY STRING
+[2025-06-04 06:54:13] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:54:13] 
+[2025-06-04 06:54:13] 🔍 Step 3: Validating extracted data...
+[2025-06-04 06:54:13] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:13] ✅ Product data validation PASSED!
+[2025-06-04 06:54:13] 
+[2025-06-04 06:54:13] 📦 VALIDATED PRODUCT DETAILS:
+[2025-06-04 06:54:13] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:54:13]   └─ 🏷️  Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:54:13]   └─ 🏷️  product_id: 8825
+[2025-06-04 06:54:13]   └─ 🏷️  image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:54:13]   └─ 🏷️  category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:54:13]   └─ 💰 Price: 281000
+[2025-06-04 06:54:13]   └─ 💰 off: 0
+[2025-06-04 06:54:13]   └─ 📦 Available: 1
+[2025-06-04 06:54:13]   └─ 🆔 Product ID: 8825
+[2025-06-04 06:54:13]   └─ 📂 Category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:54:13]   └─ 🖼️  Image URL: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:54:13] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:54:13] 
+[2025-06-04 06:54:13] 
+[2025-06-04 06:54:13] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:13] 📊 FINAL TEST RESULTS SUMMARY
+[2025-06-04 06:54:13] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:13]   ✅ Successful extractions: 1
+[2025-06-04 06:54:13]   ❌ Failed extractions: 0
+[2025-06-04 06:54:13]   📊 Total tested: 1
+[2025-06-04 06:54:13]   📈 Success Rate: 100%
+[2025-06-04 06:54:13] 
+[2025-06-04 06:54:13] 🎉 Successfully Extracted Products:
+[2025-06-04 06:54:13]   Product 1:
+[2025-06-04 06:54:13]     - Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:54:13]     - Price: 281000
+[2025-06-04 06:54:13]     - Available: 0
+[2025-06-04 06:54:13] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:13] 🏁 Product Test Mode completed!
+[2025-06-04 06:54:53] 🧪 Product Test Mode - Skipping standard config validation
+[2025-06-04 06:54:53] Inside scrapeMultiple method
+[2025-06-04 06:54:53] Starting scraper with start_id: not set
+[2025-06-04 06:54:53] 🧪 Product Test Mode Detected - Testing individual products
+[2025-06-04 06:54:53] 🚀 Starting Product Test Mode
+[2025-06-04 06:54:53] 📝 Found 1 product URLs to test
+[2025-06-04 06:54:53] 
+[2025-06-04 06:54:53] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:53] 🔍 Testing product 1/1: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:53] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:53] 📡 Step 1: Fetching page content...
+[2025-06-04 06:54:54] ✅ Page content fetched successfully (303832 bytes)
+[2025-06-04 06:54:54] 📄 Response status: 200
+[2025-06-04 06:54:54] 
+[2025-06-04 06:54:54] 🔍 Step 2: Attempting to extract product data...
+[2025-06-04 06:54:54] 🎯 Available selectors for extraction:
+[2025-06-04 06:54:54]   └─ title: .elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)
+[2025-06-04 06:54:54]   └─ price: p.price > span:nth-child(1) > bdi:nth-child(1)
+[2025-06-04 06:54:54]   └─ category: .posted_in > a:nth-child(2), .posted_in > a:nth-child(4)
+[2025-06-04 06:54:54]   └─ availability: .elementor-element-a9a2f64 > div:nth-child(1) > p:nth-child(1), .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)
+[2025-06-04 06:54:54]   └─ out_of_stock: 
+[2025-06-04 06:54:54]   └─ image: .woocommerce-product-gallery__image > a
+[2025-06-04 06:54:54]   └─ product_id: .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2), .wd-reset-side-lg > div:nth-child(2) > div:nth-child(2) > input:nth-child(4)
+[2025-06-04 06:54:54] 
+[2025-06-04 06:54:54] Raw title extracted: 'هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا'
+[2025-06-04 06:54:54] Title after applying prefix: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:54:54] Extracted title: "هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54] Raw price extracted with priority method: '281.000 تومان'
+[2025-06-04 06:54:54] Extracted price: "281000" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54] Extracted categories from selectors: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:54:54] Extracted category: "محصولات پیشرفته درمان زخم, هیدروژل" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54] Raw availability extracted: 'موجود در انبار'
+[2025-06-04 06:54:54] Availability fallback processing: 1
+[2025-06-04 06:54:54] Extracted availability: "1" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54] Extracted image from product_page: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:54:54] Extracted image: "/wp-content/uploads/2024/11/advanced-wound-healing-gel.webp" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54] Extracted product_id from updated method: 8825
+[2025-06-04 06:54:54] Extracted product_id: "8825" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54] ✅ Product data extracted successfully!
+[2025-06-04 06:54:54] 
+[2025-06-04 06:54:54] 📦 RAW EXTRACTED DATA:
+[2025-06-04 06:54:54] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:54:54]   title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:54:54]   price: 281000
+[2025-06-04 06:54:54]   product_id: 8825
+[2025-06-04 06:54:54]   page_url: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54]   availability: 1
+[2025-06-04 06:54:54]   image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:54:54]   category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:54:54]   off: 0
+[2025-06-04 06:54:54]   guarantee: EMPTY STRING
+[2025-06-04 06:54:54] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:54:54] 
+[2025-06-04 06:54:54] 🔍 Step 3: Validating extracted data...
+[2025-06-04 06:54:54] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:54:54] ✅ Product data validation PASSED!
+[2025-06-04 06:54:54] 
+[2025-06-04 06:54:54] 📦 VALIDATED PRODUCT DETAILS:
+[2025-06-04 06:54:54] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:54:54]   └─ 🏷️  Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:54:54]   └─ 🏷️  product_id: 8825
+[2025-06-04 06:54:54]   └─ 🏷️  image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:54:54]   └─ 🏷️  category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:54:54]   └─ 💰 Price: 281000
+[2025-06-04 06:54:54]   └─ 💰 off: 0
+[2025-06-04 06:54:54]   └─ 📦 Available: 1
+[2025-06-04 06:54:54]   └─ 🆔 Product ID: 8825
+[2025-06-04 06:54:54]   └─ 📂 Category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:54:54]   └─ 🖼️  Image URL: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:54:54] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:54:54] 
+[2025-06-04 06:54:54] 
+[2025-06-04 06:54:54] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:54] 📊 FINAL TEST RESULTS SUMMARY
+[2025-06-04 06:54:54] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:54]   ✅ Successful extractions: 1
+[2025-06-04 06:54:54]   ❌ Failed extractions: 0
+[2025-06-04 06:54:54]   📊 Total tested: 1
+[2025-06-04 06:54:54]   📈 Success Rate: 100%
+[2025-06-04 06:54:54] 
+[2025-06-04 06:54:54] 🎉 Successfully Extracted Products:
+[2025-06-04 06:54:54]   Product 1:
+[2025-06-04 06:54:54]     - Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:54:54]     - Price: 281000
+[2025-06-04 06:54:54]     - Available: 0
+[2025-06-04 06:54:54] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:54:54] 🏁 Product Test Mode completed!
+[2025-06-04 06:57:04] 🧪 Product Test Mode - Skipping standard config validation
+[2025-06-04 06:57:04] Inside scrapeMultiple method
+[2025-06-04 06:57:04] Starting scraper with start_id: not set
+[2025-06-04 06:57:04] 🧪 Product Test Mode Detected - Testing individual products
+[2025-06-04 06:57:04] 🚀 Starting Product Test Mode
+[2025-06-04 06:57:04] 📝 Found 1 product URLs to test
+[2025-06-04 06:57:04] 
+[2025-06-04 06:57:04] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:04] 🔍 Testing product 1/1: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:04] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:04] 📡 Step 1: Fetching page content...
+[2025-06-04 06:57:06] ✅ Page content fetched successfully (303832 bytes)
+[2025-06-04 06:57:06] 📄 Response status: 200
+[2025-06-04 06:57:06] 
+[2025-06-04 06:57:06] 🔍 Step 2: Attempting to extract product data...
+[2025-06-04 06:57:06] 🎯 Available selectors for extraction:
+[2025-06-04 06:57:06]   └─ title: .elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)
+[2025-06-04 06:57:06]   └─ price: p.price > span:nth-child(1) > bdi:nth-child(1)
+[2025-06-04 06:57:06]   └─ category: .posted_in > a:nth-child(2), .posted_in > a:nth-child(4)
+[2025-06-04 06:57:06]   └─ availability: .elementor-element-a9a2f64 > div:nth-child(1) > p:nth-child(1), .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)
+[2025-06-04 06:57:06]   └─ out_of_stock: 
+[2025-06-04 06:57:06]   └─ image: .woocommerce-product-gallery__image > a
+[2025-06-04 06:57:06]   └─ product_id: .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2), .wd-reset-side-lg > div:nth-child(2) > div:nth-child(2) > input:nth-child(4)
+[2025-06-04 06:57:06] 
+[2025-06-04 06:57:06] Raw title extracted: 'هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا'
+[2025-06-04 06:57:06] Title after applying prefix: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:57:06] Extracted title: "هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06] Raw price extracted with priority method: '281.000 تومان'
+[2025-06-04 06:57:06] Extracted price: "281000" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06] Extracted categories from selectors: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:57:06] Extracted category: "محصولات پیشرفته درمان زخم, هیدروژل" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06] Raw availability extracted: 'موجود در انبار'
+[2025-06-04 06:57:06] Availability fallback processing: 1
+[2025-06-04 06:57:06] Extracted availability: "1" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06] Extracted image from product_page: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:57:06] Extracted image: "/wp-content/uploads/2024/11/advanced-wound-healing-gel.webp" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06] Extracted product_id from updated method: 8825
+[2025-06-04 06:57:06] Extracted product_id: "8825" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06] ✅ Product data extracted successfully!
+[2025-06-04 06:57:06] 
+[2025-06-04 06:57:06] 📦 RAW EXTRACTED DATA:
+[2025-06-04 06:57:06] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:57:06]   title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:57:06]   price: 281000
+[2025-06-04 06:57:06]   product_id: 8825
+[2025-06-04 06:57:06]   page_url: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06]   availability: 1
+[2025-06-04 06:57:06]   image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:57:06]   category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:57:06]   off: 0
+[2025-06-04 06:57:06]   guarantee: EMPTY STRING
+[2025-06-04 06:57:06] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:57:06] 
+[2025-06-04 06:57:06] 🔍 Step 3: Validating extracted data...
+[2025-06-04 06:57:06] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:06] ✅ Product data validation PASSED!
+[2025-06-04 06:57:06] 
+[2025-06-04 06:57:06] 📦 VALIDATED PRODUCT DETAILS:
+[2025-06-04 06:57:06] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:57:06]   └─ 🏷️  Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:57:06]   └─ 🏷️  product_id: 8825
+[2025-06-04 06:57:06]   └─ 🏷️  image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:57:06]   └─ 🏷️  category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:57:06]   └─ 💰 Price: 281000
+[2025-06-04 06:57:06]   └─ 💰 off: 0
+[2025-06-04 06:57:06]   └─ 📦 Available: 1
+[2025-06-04 06:57:06]   └─ 🆔 Product ID: 8825
+[2025-06-04 06:57:06]   └─ 📂 Category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:57:06]   └─ 🖼️  Image URL: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:57:06] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:57:06] 
+[2025-06-04 06:57:06] 
+[2025-06-04 06:57:06] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:06] 📊 FINAL TEST RESULTS SUMMARY
+[2025-06-04 06:57:06] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:06]   ✅ Successful extractions: 1
+[2025-06-04 06:57:06]   ❌ Failed extractions: 0
+[2025-06-04 06:57:06]   📊 Total tested: 1
+[2025-06-04 06:57:06]   📈 Success Rate: 100%
+[2025-06-04 06:57:06] 
+[2025-06-04 06:57:06] 🎉 Successfully Extracted Products:
+[2025-06-04 06:57:06]   Product 1:
+[2025-06-04 06:57:06]     - Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:57:06]     - Price: 281000
+[2025-06-04 06:57:06]     - Available: 0
+[2025-06-04 06:57:06] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:06] 🏁 Product Test Mode completed!
+[2025-06-04 06:57:10] 🧪 Product Test Mode - Skipping standard config validation
+[2025-06-04 06:57:10] Inside scrapeMultiple method
+[2025-06-04 06:57:10] Starting scraper with start_id: not set
+[2025-06-04 06:57:10] 🧪 Product Test Mode Detected - Testing individual products
+[2025-06-04 06:57:10] 🚀 Starting Product Test Mode
+[2025-06-04 06:57:10] 📝 Found 1 product URLs to test
+[2025-06-04 06:57:10] 
+[2025-06-04 06:57:10] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:10] 🔍 Testing product 1/1: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:10] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:10] 📡 Step 1: Fetching page content...
+[2025-06-04 06:57:11] ✅ Page content fetched successfully (303832 bytes)
+[2025-06-04 06:57:11] 📄 Response status: 200
+[2025-06-04 06:57:11] 
+[2025-06-04 06:57:11] 🔍 Step 2: Attempting to extract product data...
+[2025-06-04 06:57:11] 🎯 Available selectors for extraction:
+[2025-06-04 06:57:11]   └─ title: .elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)
+[2025-06-04 06:57:11]   └─ price: p.price > span:nth-child(1) > bdi:nth-child(1)
+[2025-06-04 06:57:11]   └─ category: .posted_in > a:nth-child(2), .posted_in > a:nth-child(4)
+[2025-06-04 06:57:11]   └─ availability: .elementor-element-a9a2f64 > div:nth-child(1) > p:nth-child(1), .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)
+[2025-06-04 06:57:11]   └─ out_of_stock: 
+[2025-06-04 06:57:11]   └─ image: .woocommerce-product-gallery__image > a
+[2025-06-04 06:57:11]   └─ product_id: .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2), .wd-reset-side-lg > div:nth-child(2) > div:nth-child(2) > input:nth-child(4)
+[2025-06-04 06:57:11] 
+[2025-06-04 06:57:11] Raw title extracted: 'هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا'
+[2025-06-04 06:57:11] Title after applying prefix: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:57:11] Extracted title: "هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11] Raw price extracted with priority method: '281.000 تومان'
+[2025-06-04 06:57:11] Extracted price: "281000" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11] Extracted categories from selectors: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:57:11] Extracted category: "محصولات پیشرفته درمان زخم, هیدروژل" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11] Raw availability extracted: 'موجود در انبار'
+[2025-06-04 06:57:11] Availability fallback processing: 1
+[2025-06-04 06:57:11] Extracted availability: "1" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11] Extracted image from product_page: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:57:11] Extracted image: "/wp-content/uploads/2024/11/advanced-wound-healing-gel.webp" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11] Extracted product_id from updated method: 8825
+[2025-06-04 06:57:11] Extracted product_id: "8825" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11] ✅ Product data extracted successfully!
+[2025-06-04 06:57:11] 
+[2025-06-04 06:57:11] 📦 RAW EXTRACTED DATA:
+[2025-06-04 06:57:11] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:57:11]   title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:57:11]   price: 281000
+[2025-06-04 06:57:11]   product_id: 8825
+[2025-06-04 06:57:11]   page_url: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11]   availability: 1
+[2025-06-04 06:57:11]   image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:57:11]   category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:57:11]   off: 0
+[2025-06-04 06:57:11]   guarantee: EMPTY STRING
+[2025-06-04 06:57:11] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:57:11] 
+[2025-06-04 06:57:11] 🔍 Step 3: Validating extracted data...
+[2025-06-04 06:57:11] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 06:57:11] ✅ Product data validation PASSED!
+[2025-06-04 06:57:11] 
+[2025-06-04 06:57:11] 📦 VALIDATED PRODUCT DETAILS:
+[2025-06-04 06:57:11] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:57:11]   └─ 🏷️  Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:57:11]   └─ 🏷️  product_id: 8825
+[2025-06-04 06:57:11]   └─ 🏷️  image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:57:11]   └─ 🏷️  category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:57:11]   └─ 💰 Price: 281000
+[2025-06-04 06:57:11]   └─ 💰 off: 0
+[2025-06-04 06:57:11]   └─ 📦 Available: 1
+[2025-06-04 06:57:11]   └─ 🆔 Product ID: 8825
+[2025-06-04 06:57:11]   └─ 📂 Category: محصولات پیشرفته درمان زخم, هیدروژل
+[2025-06-04 06:57:11]   └─ 🖼️  Image URL: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 06:57:11] ─────────────────────────────────────────────────────────────
+[2025-06-04 06:57:11] 
+[2025-06-04 06:57:11] 
+[2025-06-04 06:57:11] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:11] 📊 FINAL TEST RESULTS SUMMARY
+[2025-06-04 06:57:11] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:11]   ✅ Successful extractions: 1
+[2025-06-04 06:57:11]   ❌ Failed extractions: 0
+[2025-06-04 06:57:11]   📊 Total tested: 1
+[2025-06-04 06:57:11]   📈 Success Rate: 100%
+[2025-06-04 06:57:11] 
+[2025-06-04 06:57:11] 🎉 Successfully Extracted Products:
+[2025-06-04 06:57:11]   Product 1:
+[2025-06-04 06:57:11]     - Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 06:57:11]     - Price: 281000
+[2025-06-04 06:57:11]     - Available: 0
+[2025-06-04 06:57:11] ═══════════════════════════════════════════════════════════════
+[2025-06-04 06:57:11] 🏁 Product Test Mode completed!
+[2025-06-04 07:22:59] Inside scrapeMultiple method
+[2025-06-04 07:22:59] Starting scraper with start_id: not set
+[2025-06-04 07:22:59] Generated database name: example_com
+[2025-06-04 07:22:59] Database mode: clear
+[2025-06-04 07:22:59] Creating database example_com...
+[2025-06-04 07:22:59] Switched to database: example_com
+[2025-06-04 07:22:59] Running specific migrations...
+[2025-06-04 07:22:59] Applied migration: 2025_04_08_162133_create_products_table.php
+[2025-06-04 07:22:59] Applied migration: 2025_04_13_073528_create_failed_links_table.php
+[2025-06-04 07:22:59] Applied migration: 2025_05_19_162835_create_links_table.php
+[2025-06-04 07:22:59] Specific migrations completed
+[2025-06-04 07:22:59] Run method: new
+[2025-06-04 07:22:59] 🌐 Fetching product links from web...
+[2025-06-04 07:23:00] Got 0 unique product links from web
+[2025-06-04 07:23:00] No links collected from web. Stopping scrape.
+[2025-06-04 07:23:08] Inside scrapeMultiple method
+[2025-06-04 07:23:08] Starting scraper with start_id: not set
+[2025-06-04 07:23:08] 🔄 Update mode detected
+[2025-06-04 07:23:08] Generated database name: example_com
+[2025-06-04 07:23:08] Database mode: continue
+[2025-06-04 07:23:08] Using existing database example_com
+[2025-06-04 07:23:08] Switched to database: example_com
+[2025-06-04 07:23:08] 🧹 Resetting products and links for update mode...
+[2025-06-04 07:23:08] 🔄 Reset mode activated - clearing products and marking all links as unprocessed...
+[2025-06-04 07:23:08] ℹ️ No products found to clear
+[2025-06-04 07:23:08] 🔄 Reset 0 links to unprocessed state
+[2025-06-04 07:23:08] ℹ️ No failed links found to clear
+[2025-06-04 07:23:08] ✅ Database reset completed successfully
+[2025-06-04 07:23:08] 📊 Database status after reset:
+[2025-06-04 07:23:08]   • Total links: 0
+[2025-06-04 07:23:08]   • Unprocessed links: 0
+[2025-06-04 07:23:08]   • Products: 0
+[2025-06-04 07:23:08]   • Failed links: 0
+[2025-06-04 07:23:08] Run method: continue
+[2025-06-04 07:23:08] 📋 Getting links from database...
+[2025-06-04 07:23:08] 📋 Fetching product links from database
+[2025-06-04 07:23:08] 📊 Database status:
+[2025-06-04 07:23:08]   • Total links in DB: 0
+[2025-06-04 07:23:08]   • Processed links: 0
+[2025-06-04 07:23:08]   • Unprocessed links: 0
+[2025-06-04 07:23:08] Got 0 links from database
+[2025-06-04 07:23:08] ⚠️ No links found in database for update mode. This suggests the database is empty or corrupted.
+[2025-06-04 07:51:03] 🧪 Product Test Mode - Skipping standard config validation
+[2025-06-04 07:51:03] Inside scrapeMultiple method
+[2025-06-04 07:51:03] Starting scraper with start_id: not set
+[2025-06-04 07:51:03] 🧪 Product Test Mode Detected - Testing individual products
+[2025-06-04 07:51:03] 🚀 Starting Product Test Mode
+[2025-06-04 07:51:03] 📝 Found 1 product URLs to test
+[2025-06-04 07:51:03] 
+[2025-06-04 07:51:03] ═══════════════════════════════════════════════════════════════
+[2025-06-04 07:51:03] 🔍 Testing product 1/1: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:03] ═══════════════════════════════════════════════════════════════
+[2025-06-04 07:51:03] 📡 Step 1: Fetching page content...
+[2025-06-04 07:51:09] ✅ Page content fetched successfully (303353 bytes)
+[2025-06-04 07:51:09] 📄 Response status: 200
+[2025-06-04 07:51:09] 
+[2025-06-04 07:51:09] 🔍 Step 2: Attempting to extract product data...
+[2025-06-04 07:51:09] 🎯 Available selectors for extraction:
+[2025-06-04 07:51:09]   └─ title: .elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)
+[2025-06-04 07:51:09]   └─ price: p.price > span:nth-child(1) > bdi:nth-child(1)
+[2025-06-04 07:51:09]   └─ category: .posted_in > a:nth-child(2)
+[2025-06-04 07:51:09]   └─ availability: .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)
+[2025-06-04 07:51:09]   └─ out_of_stock: 
+[2025-06-04 07:51:09]   └─ image: .woocommerce-product-gallery__image > a
+[2025-06-04 07:51:09]   └─ off: .discount
+[2025-06-04 07:51:09]   └─ guarantee: .selector
+[2025-06-04 07:51:09]   └─ product_id: .elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)
+[2025-06-04 07:51:09] 
+[2025-06-04 07:51:09] Raw title extracted: 'هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا'
+[2025-06-04 07:51:09] Title after applying prefix: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 07:51:09] Extracted title: "هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] Raw price extracted with priority method: '281.000 تومان'
+[2025-06-04 07:51:09] Extracted price: "281000" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] Extracted categories from selectors: محصولات پیشرفته درمان زخم
+[2025-06-04 07:51:09] Extracted category: "محصولات پیشرفته درمان زخم" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] Raw availability extracted: 'افزودن به سبد خرید'
+[2025-06-04 07:51:09] Availability fallback processing: 1
+[2025-06-04 07:51:09] Extracted availability: "1" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] Extracted image from product_page: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 07:51:09] Extracted image: "/wp-content/uploads/2024/11/advanced-wound-healing-gel.webp" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] Raw off extracted: ''
+[2025-06-04 07:51:09] Off fallback processing: 0
+[2025-06-04 07:51:09] Extracted off: "0" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] Extracted guarantee: "" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] Extracted product_id from updated method: 8825
+[2025-06-04 07:51:09] Extracted product_id: "8825" for https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] ✅ Product data extracted successfully!
+[2025-06-04 07:51:09] 
+[2025-06-04 07:51:09] 📦 RAW EXTRACTED DATA:
+[2025-06-04 07:51:09] ─────────────────────────────────────────────────────────────
+[2025-06-04 07:51:09]   title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 07:51:09]   price: 281000
+[2025-06-04 07:51:09]   product_id: 8825
+[2025-06-04 07:51:09]   page_url: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09]   availability: 1
+[2025-06-04 07:51:09]   image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 07:51:09]   category: محصولات پیشرفته درمان زخم
+[2025-06-04 07:51:09]   off: 0
+[2025-06-04 07:51:09]   guarantee: EMPTY STRING
+[2025-06-04 07:51:09] ─────────────────────────────────────────────────────────────
+[2025-06-04 07:51:09] 
+[2025-06-04 07:51:09] 🔍 Step 3: Validating extracted data...
+[2025-06-04 07:51:09] Product data validated successfully for URL: https://yaradarman.com/product/advanced-wound-healing-gel/
+[2025-06-04 07:51:09] ✅ Product data validation PASSED!
+[2025-06-04 07:51:09] 
+[2025-06-04 07:51:09] 📦 VALIDATED PRODUCT DETAILS:
+[2025-06-04 07:51:09] ─────────────────────────────────────────────────────────────
+[2025-06-04 07:51:09]   └─ 🏷️  Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 07:51:09]   └─ 🏷️  product_id: 8825
+[2025-06-04 07:51:09]   └─ 🏷️  image: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 07:51:09]   └─ 🏷️  category: محصولات پیشرفته درمان زخم
+[2025-06-04 07:51:09]   └─ 💰 Price: 281000
+[2025-06-04 07:51:09]   └─ 💰 off: 0
+[2025-06-04 07:51:09]   └─ 📦 Available: 1
+[2025-06-04 07:51:09]   └─ 🆔 Product ID: 8825
+[2025-06-04 07:51:09]   └─ 📂 Category: محصولات پیشرفته درمان زخم
+[2025-06-04 07:51:09]   └─ 🖼️  Image URL: /wp-content/uploads/2024/11/advanced-wound-healing-gel.webp
+[2025-06-04 07:51:09] ─────────────────────────────────────────────────────────────
+[2025-06-04 07:51:09] 
+[2025-06-04 07:51:09] 
+[2025-06-04 07:51:09] ═══════════════════════════════════════════════════════════════
+[2025-06-04 07:51:09] 📊 FINAL TEST RESULTS SUMMARY
+[2025-06-04 07:51:09] ═══════════════════════════════════════════════════════════════
+[2025-06-04 07:51:09]   ✅ Successful extractions: 1
+[2025-06-04 07:51:09]   ❌ Failed extractions: 0
+[2025-06-04 07:51:09]   📊 Total tested: 1
+[2025-06-04 07:51:09]   📈 Success Rate: 100%
+[2025-06-04 07:51:09] 
+[2025-06-04 07:51:09] 🎉 Successfully Extracted Products:
+[2025-06-04 07:51:09]   Product 1:
+[2025-06-04 07:51:09]     - Title: هیدروژل پیشرفته درمان زخم هیلینگ ژل تریتا
+[2025-06-04 07:51:09]     - Price: 281000
+[2025-06-04 07:51:09]     - Available: 0
+[2025-06-04 07:51:09] ═══════════════════════════════════════════════════════════════
+[2025-06-04 07:51:09] 🏁 Product Test Mode completed!
