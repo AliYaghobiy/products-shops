@@ -57,7 +57,6 @@ class StartController
         $isProductTestMode = $this->config['product_test'] ?? false;
 
         if ($isProductTestMode) {
-            $this->log("🧪 Product Test Mode - Skipping standard config validation", self::COLOR_PURPLE);
             $this->configValidator->validateProductTestConfig($this->config);
         } else {
             $this->configValidator->validateAndFixConfig($this->config);

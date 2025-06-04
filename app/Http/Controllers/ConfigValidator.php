@@ -123,8 +123,6 @@ class ConfigValidator
     public function validateProductTestConfig(array $config): void
     {
 
-        $this->log("Validating Product Test Mode configuration...", self::COLOR_GREEN);
-
         // بررسی وجود product_urls
         if (!isset($config['product_urls']) || empty($config['product_urls'])) {
             throw new \InvalidArgumentException("product_urls is required for Product Test Mode");
@@ -176,8 +174,6 @@ class ConfigValidator
             $this->log("Invalid request_delay_max, using default: 1000", self::COLOR_YELLOW);
         }
 
-        $this->log("✅ Product Test Mode configuration is valid", self::COLOR_GREEN);
-        $this->log("📝 Testing " . count($config['product_urls']) . " product URLs", self::COLOR_GREEN);
     }
 
     private function validateMethodSpecificConfig(array $config): void
