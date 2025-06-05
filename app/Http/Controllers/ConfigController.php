@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\StartController;
+use App\Services\Config\ConfigBuilderService;
 use App\Services\Config\ConfigFileService;
 use App\Services\Config\ConfigValidationService;
-use App\Services\Config\ConfigBuilderService;
 use App\Services\Scraper\ScraperExecutionService;
 use App\Services\Scraper\ScraperLogService;
 use App\Services\Scraper\ScraperProcessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
 class ConfigController extends Controller
 {
@@ -24,13 +21,14 @@ class ConfigController extends Controller
     private ScraperProcessService $processService;
 
     public function __construct(
-        ConfigFileService $fileService,
+        ConfigFileService       $fileService,
         ConfigValidationService $validationService,
-        ConfigBuilderService $builderService,
+        ConfigBuilderService    $builderService,
         ScraperExecutionService $executionService,
-        ScraperLogService $logService,
-        ScraperProcessService $processService
-    ) {
+        ScraperLogService       $logService,
+        ScraperProcessService   $processService
+    )
+    {
         $this->fileService = $fileService;
         $this->validationService = $validationService;
         $this->builderService = $builderService;
@@ -265,21 +263,37 @@ class ConfigController extends Controller
             'input' => $request->all(),
         ]);
 
-        if ($request->isMethod('get')) {
+        // اگر درخواست AJAX باشد (یا هدر Accept: application/json داشته باشد)
+        $isAjax = $request->wantsJson() || $request->ajax();
+
+        if ($request->isMethod('get') && !$isAjax) {
             return view('configs.single_product');
         }
 
         // اعتبارسنجی درخواست
         $validator = $this->validationService->validateSingleProductRequest($request);
         if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            if ($isAjax) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'خطای اعتبارسنجی',
+                    'errors' => $validator->errors()->all(),
+                ], 422);
+            }
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         try {
             $config = $this->builderService->buildSingleProductConfig($request);
             $result = $this->executeSingleProductTest($config);
+
+            if ($isAjax) {
+                return response()->json([
+                    'status' => 'success',
+                    'result' => $result['result'],
+                    'logs' => $result['logs'],
+                ]);
+            }
 
             return view('configs.single_product', [
                 'result' => $result['result'],
@@ -287,6 +301,15 @@ class ConfigController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('خطا در تست محصول واحد: ' . $e->getMessage());
+            if ($isAjax) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'خطا در اجرای تست: ' . $e->getMessage(),
+                    'products' => [],
+                    'logs' => [],
+                ], 500);
+            }
+
             return view('configs.single_product', [
                 'result' => [
                     'status' => 'error',

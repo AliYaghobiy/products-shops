@@ -227,7 +227,8 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('configs.single_product') }}">
+        <!-- فرم -->
+        <form method="POST" action="{{ route('configs.single_product') }}" id="product-test-form">
             @csrf
 
             <!-- Tabs -->
@@ -640,24 +641,24 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Submit Button -->
-            <div class="flex justify-center mt-8">
-                <button type="submit"
-                        class="btn-primary text-lg font-bold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-brown-500 focus:ring-opacity-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline ml-2" fill="none" viewBox="0 0 24 24"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    تست محصول
-                </button>
-            </div>
         </form>
 
-        <!-- نمایش نتایج -->
-        @if (isset($result))
-            <div class="mt-8">
+        <!-- دکمه ارسال -->
+        <div class="flex justify-center mt-8">
+            <button type="submit" form="product-test-form"
+                    class="btn-primary text-lg font-bold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-brown-500 focus:ring-opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline ml-2" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                تست محصول
+            </button>
+        </div>
+
+        <!-- بخش نتایج -->
+        <div id="result-container" class="mt-8">
+            @if (isset($result))
                 <div class="card p-6 {{ $result['status'] === 'success' ? 'result-success' : 'result-error' }}">
                     <h3 class="text-xl font-bold mb-4 flex items-center">
                         @if($result['status'] === 'success')
@@ -786,9 +787,8 @@
                         </div>
                     @endif
                 </div>
-
-            </div>
-        @endif
+            @endif
+        </div>
     </div>
 </div>
 
@@ -826,18 +826,18 @@
             const div = document.createElement('div');
             div.className = 'flex mt-3';
             div.innerHTML = `
-                <input type="text" name="${inputName}"
-                       class="input-field flex-1 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
-                       placeholder="${placeholder}">
-                <button type="button" class="remove-${inputName.replace(/[\[\]]/g, '')} mr-2 btn-danger px-3 py-2 rounded-lg flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                         fill="currentColor">
-                        <path fill-rule="evenodd"
-                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            `;
+            <input type="text" name="${inputName}"
+                   class="input-field flex-1 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                   placeholder="${placeholder}">
+            <button type="button" class="remove-${inputName.replace(/[\[\]]/g, '')} mr-2 btn-danger px-3 py-2 rounded-lg flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                     fill="currentColor">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"/>
+                </svg>
+            </button>
+        `;
             return div;
         }
 
@@ -926,6 +926,193 @@
 
         // Initial sync
         syncProductIdFields();
+
+        // Handle form submission with AJAX
+        const form = document.querySelector('#product-test-form');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); // Prevent page refresh
+                console.log('Form submission intercepted');
+                console.log('Form action URL:', form.action);
+
+                // Collect form data
+                const formData = new FormData(form);
+                console.log('Form data:', Object.fromEntries(formData)); // Log form data for debugging
+
+                // Show loading state
+                const resultContainer = document.querySelector('#result-container');
+                if (resultContainer) {
+                    resultContainer.innerHTML = '<div class="loading">در حال پردازش...</div>';
+                }
+
+                // Send AJAX request
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        console.log('Response headers:', response.headers.get('content-type'));
+                        if (!response.ok) {
+                            if (response.status === 422) {
+                                return response.json().then(data => {
+                                    throw new Error(`خطای اعتبارسنجی: ${data.errors.join(', ')}`);
+                                });
+                            }
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        if (!response.headers.get('content-type').includes('application/json')) {
+                            return response.text().then(text => {
+                                throw new Error(`Response is not JSON. Raw response: ${text}`);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Parsed JSON:', data);
+                        displayResults(data);
+                    })
+                    .catch(error => {
+                        console.error('Error during fetch:', error);
+                        displayError(`خطایی رخ داد: ${error.message}`);
+                    })
+                    .finally(() => {
+                        // Hide loading state
+                        if (resultContainer) resultContainer.querySelector('.loading')?.remove();
+                    });
+            });
+        } else {
+            console.error('Form not found');
+        }
+
+        // Function to display results dynamically
+        function displayResults(data) {
+            const resultContainer = document.querySelector('#result-container');
+            if (!resultContainer) {
+                console.error('Result container not found');
+                return;
+            }
+
+            const card = document.createElement('div');
+            card.className = `card p-6 ${data.status === 'success' ? 'result-success' : 'result-error'}`;
+
+            let html = `
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    ${data.status === 'success' ? `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    ` : `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    `}
+                    نتیجه تست
+                </h3>
+            `;
+
+            if (data.status === 'success' && data.result.test_mode) {
+                html += `
+                    <div class="mb-6">
+                        <h4 class="text-lg font-semibold mb-3">آمار کلی</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-white p-4 rounded-lg border">
+                                <div class="text-2xl font-bold text-blue-600">${data.result.total_tested || 0}</div>
+                                <div class="text-sm text-gray-600">تعداد تست شده</div>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border">
+                                <div class="text-2xl font-bold text-green-600">${data.result.total_products || 0}</div>
+                                <div class="text-sm text-gray-600">موفقیت آمیز</div>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border">
+                                <div class="text-2xl font-bold text-red-600">${data.result.failed_links || 0}</div>
+                                <div class="text-sm text-gray-600">ناموفق</div>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border">
+                                <div class="text-2xl font-bold text-purple-600">${data.result.success_rate || 0}%</div>
+                                <div class="text-sm text-gray-600">نرخ موفقیت</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (data.result.products && data.result.products.length > 0) {
+                html += `<h4 class="text-lg font-semibold mb-3">محصولات استخراج شده</h4>`;
+                data.result.products.forEach((product, index) => {
+                    html += `
+                        <div class="bg-white p-4 rounded-lg border mb-4">
+                            <h5 class="font-bold text-lg mb-2">محصول ${index + 1}</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                ${product.title ? `<div><strong>عنوان:</strong> <span class="text-blue-600">${product.title}</span></div>` : ''}
+                                ${product.price ? `<div><strong>قیمت:</strong> <span class="text-green-600">${product.price}</span></div>` : ''}
+                                ${typeof product.availability !== 'undefined' ? `
+                                    <div><strong>موجودی:</strong>
+                                        <span class="${product.availability ? 'text-green-600' : 'text-red-600'}">
+                                            ${product.availability ? 'موجود' : 'ناموجود'}
+                                        </span>
+                                    </div>` : ''}
+                                ${product.category ? `<div><strong>دسته‌بندی:</strong> <span class="text-purple-600">${product.category}</span></div>` : ''}
+                                ${product.product_id ? `<div><strong>شناسه محصول:</strong> <span class="text-indigo-600">${product.product_id}</span></div>` : ''}
+                                ${product.guarantee ? `<div><strong>گارانتی:</strong> <span class="text-orange-600">${product.guarantee}</span></div>` : ''}
+                                ${product.image ? `<div><strong>تصویر:</strong> <a href="${product.image}" target="_blank" class="text-blue-500 hover:underline">مشاهده تصویر</a></div>` : ''}
+                                ${product.off && product.off > 0 ? `<div><strong>تخفیف:</strong> <span class="text-red-600">${product.off}%</span></div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (data.result.message) {
+                html += `
+                    <div class="mt-4 p-4 bg-gray-100 rounded-lg">
+                        <strong>پیام:</strong> ${data.result.message}
+                    </div>
+                `;
+            }
+
+            if (data.result.failed_urls && data.result.failed_urls.length > 0) {
+                html += `
+                    <div class="mt-4">
+                        <h4 class="text-lg font-semibold mb-3 text-red-600">آدرس‌های ناموفق</h4>
+                        <ul class="list-disc mr-6">
+                            ${data.result.failed_urls.map(url => `<li class="text-red-600">${url}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = html;
+            resultContainer.innerHTML = ''; // Clear previous content
+            resultContainer.appendChild(card);
+        }
+
+        // Function to display error message
+        function displayError(message) {
+            const resultContainer = document.querySelector('#result-container');
+            if (!resultContainer) {
+                console.error('Result container not found');
+                return;
+            }
+
+            resultContainer.innerHTML = `
+                <div class="card p-6 result-error">
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        خطا
+                    </h3>
+                    <div class="mt-4 p-4 bg-gray-100 rounded-lg">
+                        <strong>پیام:</strong> ${message}
+                    </div>
+                </div>
+            `;
+        }
     });
 </script>
 </body>

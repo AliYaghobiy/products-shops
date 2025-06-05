@@ -452,16 +452,32 @@ class StartController
 
         $successfulProducts = [];
         $failedProducts = [];
+        $detailedErrors = []; // اضافه کردن آرایه برای خطاهای تفصیلی
 
         foreach ($productUrls as $index => $url) {
-            $this->log("", null); // خط خالی برای بهتر دیده شدن
+            $this->log("", null);
             $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_BLUE);
             $this->log("🔍 Testing product " . ($index + 1) . "/" . count($productUrls) . ": $url", self::COLOR_BLUE);
             $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_BLUE);
 
+            $errorDetails = [
+                'url' => $url,
+                'step' => 'initialization',
+                'error_type' => '',
+                'error_message' => '',
+                'http_status' => null,
+                'html_length' => 0,
+                'selectors_configured' => false,
+                'selectors_found' => [],
+                'selectors_missing' => [],
+                'extracted_data' => null,
+                'validation_errors' => []
+            ];
+
             try {
                 // مرحله ۱: دریافت محتوای HTML صفحه
                 $this->log("📡 Step 1: Fetching page content...", self::COLOR_YELLOW);
+                $errorDetails['step'] = 'fetching_content';
 
                 $response = $this->httpClient->get($url, [
                     'headers' => [
@@ -473,45 +489,127 @@ class StartController
                 ]);
 
                 $htmlContent = (string)$response->getBody();
+                $errorDetails['http_status'] = $response->getStatusCode();
+                $errorDetails['html_length'] = strlen($htmlContent);
 
                 if (empty($htmlContent)) {
+                    $errorDetails['error_type'] = 'empty_content';
+                    $errorDetails['error_message'] = 'Empty HTML content received from server';
                     $failedProducts[] = $url;
-                    $this->log("❌ Empty HTML content received", self::COLOR_RED);
+                    $detailedErrors[] = $errorDetails;
+
+                    $this->log("❌ CRITICAL ERROR: Empty HTML content received", self::COLOR_RED);
+                    $this->log("  └─ HTTP Status Code: " . $response->getStatusCode(), self::COLOR_RED);
+                    $this->log("  └─ Response Headers: " . json_encode($response->getHeaders(), JSON_UNESCAPED_UNICODE), self::COLOR_YELLOW);
                     continue;
                 }
 
                 $this->log("✅ Page content fetched successfully (" . strlen($htmlContent) . " bytes)", self::COLOR_GREEN);
                 $this->log("📄 Response status: " . $response->getStatusCode(), self::COLOR_CYAN);
 
-                // مرحله ۲: استخراج داده‌های محصول
-                $this->log("", null);
-                $this->log("🔍 Step 2: Attempting to extract product data...", self::COLOR_YELLOW);
+                // بررسی وجود تگ‌های HTML اساسی
+                if (!str_contains($htmlContent, '<html') && !str_contains($htmlContent, '<body')) {
+                    $errorDetails['error_type'] = 'invalid_html';
+                    $errorDetails['error_message'] = 'Response does not contain valid HTML structure';
+                    $failedProducts[] = $url;
+                    $detailedErrors[] = $errorDetails;
 
-                // نمایش تنظیمات selector های استفاده شده
-                if (isset($this->config['selectors']['product_page'])) {
-                    $this->log("🎯 Available selectors for extraction:", self::COLOR_CYAN);
-                    $selectors = $this->config['selectors']['product_page'];
-
-                    foreach ($selectors as $field => $config) {
-                        if (is_array($config) && isset($config['selector'])) {
-                            $selector = is_array($config['selector']) ? implode(', ', $config['selector']) : $config['selector'];
-                            $this->log("  └─ {$field}: {$selector}", self::COLOR_GRAY);
-                        }
-                    }
-                    $this->log("", null);
+                    $this->log("❌ CRITICAL ERROR: Invalid HTML structure", self::COLOR_RED);
+                    $this->log("  └─ Content preview: " . substr($htmlContent, 0, 200) . "...", self::COLOR_YELLOW);
+                    continue;
                 }
 
+                // مرحله ۲: بررسی تنظیمات selectors
+                $this->log("", null);
+                $this->log("🔍 Step 2: Analyzing selector configuration...", self::COLOR_YELLOW);
+                $errorDetails['step'] = 'analyzing_selectors';
+
+                if (!isset($this->config['selectors']['product_page'])) {
+                    $errorDetails['error_type'] = 'missing_selectors_config';
+                    $errorDetails['error_message'] = 'No product_page selectors configuration found';
+                    $failedProducts[] = $url;
+                    $detailedErrors[] = $errorDetails;
+
+                    $this->log("❌ CRITICAL ERROR: No product_page selectors configured", self::COLOR_RED);
+                    $this->log("  └─ Available config keys: " . implode(', ', array_keys($this->config)), self::COLOR_YELLOW);
+                    continue;
+                }
+
+                $selectors = $this->config['selectors']['product_page'];
+                $errorDetails['selectors_configured'] = true;
+
+                $this->log("🎯 Analyzing configured selectors:", self::COLOR_CYAN);
+
+                // بررسی دقیق هر selector
+                $selectorAnalysis = [];
+                foreach ($selectors as $field => $config) {
+                    if (is_array($config) && isset($config['selector'])) {
+                        $selectorList = is_array($config['selector']) ? $config['selector'] : [$config['selector']];
+
+                        $this->log("  └─ {$field}:", self::COLOR_GRAY);
+
+                        foreach ($selectorList as $selector) {
+                            // تست وجود selector در HTML با روش‌های مختلف
+                            $foundMethods = [];
+
+                            // روش ۱: جستجوی مستقیم
+                            if (str_contains($htmlContent, $selector)) {
+                                $foundMethods[] = 'direct_match';
+                            }
+
+                            // روش ۲: بررسی class ها
+                            if (str_starts_with($selector, '.')) {
+                                $className = substr($selector, 1);
+                                if (preg_match('/class=["\'][^"\']*' . preg_quote($className) . '[^"\']*["\']/', $htmlContent)) {
+                                    $foundMethods[] = 'class_attribute';
+                                }
+                            }
+
+                            // روش ۳: بررسی ID ها
+                            if (str_starts_with($selector, '#')) {
+                                $idName = substr($selector, 1);
+                                if (preg_match('/id=["\']' . preg_quote($idName) . '["\']/', $htmlContent)) {
+                                    $foundMethods[] = 'id_attribute';
+                                }
+                            }
+
+                            // روش ۴: بررسی تگ‌ها
+                            if (!str_starts_with($selector, '.') && !str_starts_with($selector, '#')) {
+                                if (preg_match('/<' . preg_quote($selector) . '[\s>]/', $htmlContent)) {
+                                    $foundMethods[] = 'tag_match';
+                                }
+                            }
+
+                            if (!empty($foundMethods)) {
+                                $errorDetails['selectors_found'][] = $field . ':' . $selector;
+                                $this->log("    ├─ '{$selector}': ✅ FOUND (" . implode(', ', $foundMethods) . ")", self::COLOR_GREEN);
+                            } else {
+                                $errorDetails['selectors_missing'][] = $field . ':' . $selector;
+                                $this->log("    ├─ '{$selector}': ❌ NOT FOUND", self::COLOR_RED);
+
+                                // پیشنهاد selectors مشابه
+                                $this->suggestSimilarSelectors($htmlContent, $selector);
+                            }
+                        }
+                    }
+                }
+
+                // مرحله ۳: استخراج داده‌های محصول
+                $this->log("", null);
+                $this->log("🔍 Step 3: Attempting to extract product data...", self::COLOR_YELLOW);
+                $errorDetails['step'] = 'extracting_data';
+
                 $productData = $this->productProcessor->extractProductData($url, $htmlContent);
+                $errorDetails['extracted_data'] = $productData;
 
                 if ($productData !== null && !empty($productData)) {
                     $this->log("✅ Product data extracted successfully!", self::COLOR_GREEN);
 
-                    // نمایش تمام داده‌های استخراج شده (RAW DATA)
+                    // نمایش تمام داده‌های استخراج شده
                     $this->log("", null);
                     $this->log("📦 RAW EXTRACTED DATA:", self::COLOR_PURPLE);
                     $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
 
-                    // نمایش هر فیلد به صورت جداگانه
                     foreach ($productData as $key => $value) {
                         if (is_array($value)) {
                             $this->log("  {$key}: " . json_encode($value, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), self::COLOR_CYAN);
@@ -523,115 +621,80 @@ class StartController
                         }
                     }
                     $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
-                    $this->log("", null);
 
-                    // بررسی اعتبار داده‌های استخراج شده
-                    $this->log("🔍 Step 3: Validating extracted data...", self::COLOR_YELLOW);
+                    // مرحله ۴: اعتبارسنجی داده‌ها
+                    $this->log("", null);
+                    $this->log("🔍 Step 4: Validating extracted data...", self::COLOR_YELLOW);
+                    $errorDetails['step'] = 'validating_data';
 
                     if ($this->productProcessor->validateProductData($productData)) {
                         $successfulProducts[] = $productData;
                         $this->log("✅ Product data validation PASSED!", self::COLOR_GREEN);
 
                         // نمایش جزئیات محصول پس از validation
-                        $this->log("", null);
-                        $this->log("📦 VALIDATED PRODUCT DETAILS:", self::COLOR_BLUE);
-                        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
-                        $this->log("  └─ 🏷️  Title: " . ($productData['title'] ?? 'N/A'), self::COLOR_CYAN);
-                        $this->log("  └─ 🏷️  product_id: " . ($productData['product_id'] ?? 'N/A'), self::COLOR_CYAN);
-                        $this->log("  └─ 🏷️  image: " . ($productData['image'] ?? 'N/A'), self::COLOR_CYAN);
-                        $this->log("  └─ 🏷️  category: " . ($productData['category'] ?? 'N/A'), self::COLOR_CYAN);
-                        $this->log("  └─ 💰 Price: " . ($productData['price'] ?? 'N/A'), self::COLOR_CYAN);
-                        $this->log("  └─ 💰 off: " . ($productData['off'] ?? 'N/A'), self::COLOR_CYAN);
-                        $this->log("  └─ 📦 Available: " . (isset($productData['availability']) ? ($productData['availability'] ? '1' : '0') : 'N/A'), self::COLOR_CYAN);
-
-                        if (!empty($productData['product_id'])) {
-                            $this->log("  └─ 🆔 Product ID: " . $productData['product_id'], self::COLOR_CYAN);
-                        }
-                        if (!empty($productData['category'])) {
-                            $this->log("  └─ 📂 Category: " . $productData['category'], self::COLOR_CYAN);
-                        }
-                        if (!empty($productData['guarantee'])) {
-                            $this->log("  └─ 🛡️  Guarantee: " . $productData['guarantee'], self::COLOR_CYAN);
-                        }
-                        if (!empty($productData['image'])) {
-                            $this->log("  └─ 🖼️  Image URL: " . $productData['image'], self::COLOR_CYAN);
-                        }
-                        if (isset($productData['off']) && $productData['off'] > 0) {
-                            $this->log("  └─ 🏷️  Discount: " . $productData['off'] . "%", self::COLOR_CYAN);
-                        }
-                        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                        $this->displayValidatedProductDetails($productData);
 
                     } else {
-                        $failedProducts[] = $url;
-                        $this->log("❌ Product data validation FAILED", self::COLOR_RED);
+                        $errorDetails['error_type'] = 'validation_failed';
+                        $errorDetails['error_message'] = 'Product data validation failed';
 
                         // تحلیل دقیق مشکلات validation
-                        $this->log("", null);
-                        $this->log("🔍 VALIDATION FAILURE ANALYSIS:", self::COLOR_RED);
-                        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                        $validationErrors = $this->analyzeValidationFailures($productData);
+                        $errorDetails['validation_errors'] = $validationErrors;
 
-                        // بررسی فیلدهای اجباری
-                        $requiredFields = ['title', 'price'];
-                        foreach ($requiredFields as $field) {
-                            $status = isset($productData[$field]) && !empty($productData[$field]) ? "✅ PRESENT" : "❌ MISSING/EMPTY";
-                            $value = isset($productData[$field]) ? $productData[$field] : 'NOT SET';
-                            $this->log("  └─ {$field}: {$status} (Value: {$value})", $status === "✅ PRESENT" ? self::COLOR_GREEN : self::COLOR_RED);
-                        }
-                        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                        $failedProducts[] = $url;
+                        $detailedErrors[] = $errorDetails;
+
+                        $this->log("❌ Product data validation FAILED", self::COLOR_RED);
+                        $this->displayValidationAnalysis($validationErrors);
                     }
                 } else {
+                    $errorDetails['error_type'] = 'extraction_failed';
+                    $errorDetails['error_message'] = 'Failed to extract product data - productData is null or empty';
                     $failedProducts[] = $url;
+                    $detailedErrors[] = $errorDetails;
+
                     $this->log("❌ Failed to extract product data - productData is null or empty", self::COLOR_RED);
-
-                    // دیباگ عمیق برای بررسی مشکل
-                    $this->log("", null);
-                    $this->log("🔍 DEEP DEBUG ANALYSIS:", self::COLOR_YELLOW);
-                    $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
-                    $this->log("  └─ HTML length: " . strlen($htmlContent) . " characters", self::COLOR_YELLOW);
-                    $this->log("  └─ HTML starts with: " . substr($htmlContent, 0, 100) . "...", self::COLOR_YELLOW);
-                    $this->log("  └─ Config selectors present: " . (isset($this->config['selectors']['product_page']) ? 'Yes' : 'No'), self::COLOR_YELLOW);
-
-                    if (isset($this->config['selectors']['product_page'])) {
-                        $selectors = $this->config['selectors']['product_page'];
-                        $this->log("  └─ Configured selectors:", self::COLOR_YELLOW);
-                        foreach (['title', 'price', 'availability'] as $key) {
-                            if (isset($selectors[$key])) {
-                                $selectorValue = is_array($selectors[$key]['selector']) ?
-                                    implode(', ', $selectors[$key]['selector']) :
-                                    $selectors[$key]['selector'];
-                                $this->log("    ├─ {$key}: {$selectorValue}", self::COLOR_GRAY);
-
-                                // تست سریع وجود selector در HTML
-                                if (str_contains($htmlContent, $selectorValue)) {
-                                    $this->log("      └─ ✅ Selector found in HTML", self::COLOR_GREEN);
-                                } else {
-                                    $this->log("      └─ ❌ Selector NOT found in HTML", self::COLOR_RED);
-                                }
-                            } else {
-                                $this->log("    ├─ {$key}: ❌ NOT CONFIGURED", self::COLOR_RED);
-                            }
-                        }
-                    }
-                    $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+                    $this->displayExtractionDebugInfo($htmlContent, $selectors);
                 }
 
             } catch (\GuzzleHttp\Exception\RequestException $e) {
+                $errorDetails['error_type'] = 'http_request_exception';
+                $errorDetails['error_message'] = $e->getMessage();
+                if ($e->hasResponse()) {
+                    $errorDetails['http_status'] = $e->getResponse()->getStatusCode();
+                }
+
                 $failedProducts[] = $url;
+                $detailedErrors[] = $errorDetails;
+
                 $this->log("💥 HTTP Request Exception occurred!", self::COLOR_RED);
                 $this->log("  └─ Error: " . $e->getMessage(), self::COLOR_RED);
 
                 if ($e->hasResponse()) {
                     $statusCode = $e->getResponse()->getStatusCode();
                     $this->log("  └─ HTTP Status: {$statusCode}", self::COLOR_RED);
+
+                    // تحلیل کدهای خطای HTTP
+                    $this->analyzeHttpError($statusCode);
                 }
 
             } catch (\Exception $e) {
+                $errorDetails['error_type'] = 'general_exception';
+                $errorDetails['error_message'] = $e->getMessage();
+
                 $failedProducts[] = $url;
+                $detailedErrors[] = $errorDetails;
+
                 $this->log("💥 General Exception occurred!", self::COLOR_RED);
                 $this->log("  └─ Error: " . $e->getMessage(), self::COLOR_RED);
                 $this->log("  └─ File: " . $e->getFile(), self::COLOR_YELLOW);
                 $this->log("  └─ Line: " . $e->getLine(), self::COLOR_YELLOW);
-                $this->log("  └─ Stack trace: " . $e->getTraceAsString(), self::COLOR_GRAY);
+
+                // نمایش stack trace فقط برای خطاهای مهم
+                if (str_contains($e->getMessage(), 'Fatal') || str_contains($e->getMessage(), 'Parse')) {
+                    $this->log("  └─ Stack trace: " . $e->getTraceAsString(), self::COLOR_GRAY);
+                }
             }
 
             // اعمال تاخیر بین درخواست‌ها
@@ -645,7 +708,147 @@ class StartController
             }
         }
 
-        // خلاصه نتایج نهایی
+        // نمایش خلاصه نتایج نهایی با جزئیات خطاها
+        $this->displayFinalTestResults($successfulProducts, $failedProducts, $productUrls, $detailedErrors);
+
+        return [
+            'status' => 'success',
+            'test_mode' => true,
+            'total_tested' => count($productUrls),
+            'total_products' => count($successfulProducts),
+            'failed_links' => count($failedProducts),
+            'success_rate' => count($productUrls) > 0 ? round((count($successfulProducts) / count($productUrls)) * 100, 2) : 0,
+            'products' => $successfulProducts,
+            'failed_urls' => $failedProducts,
+            'detailed_errors' => $detailedErrors // اضافه کردن جزئیات خطاها به response
+        ];
+    }
+
+// متدهای کمکی برای نمایش بهتر اطلاعات
+
+    private function suggestSimilarSelectors(string $htmlContent, string $originalSelector): void
+    {
+        // پیشنهاد selectors مشابه بر اساس محتوای HTML
+        $suggestions = [];
+
+        if (str_starts_with($originalSelector, '.')) {
+            // جستجو برای class های مشابه
+            preg_match_all('/class=["\']([^"\']*)["\']/', $htmlContent, $matches);
+            $classes = array_unique($matches[1]);
+
+            foreach ($classes as $class) {
+                $classNames = explode(' ', $class);
+                foreach ($classNames as $className) {
+                    if (stripos($className, substr($originalSelector, 1)) !== false && $className !== substr($originalSelector, 1)) {
+                        $suggestions[] = '.' . $className;
+                    }
+                }
+            }
+        }
+
+        if (!empty($suggestions)) {
+            $this->log("      └─ 💡 Similar selectors found: " . implode(', ', array_slice($suggestions, 0, 3)), self::COLOR_YELLOW);
+        }
+    }
+
+    private function analyzeValidationFailures(array $productData): array
+    {
+        $errors = [];
+        $requiredFields = ['title', 'price'];
+
+        foreach ($requiredFields as $field) {
+            if (!isset($productData[$field]) || empty($productData[$field])) {
+                $errors[$field] = 'missing_or_empty';
+            } elseif ($field === 'price' && !is_numeric(str_replace([',', ' ', 'تومان', 'ریال'], '', $productData['price']))) {
+                $errors[$field] = 'invalid_format';
+            }
+        }
+
+        return $errors;
+    }
+
+    private function displayValidationAnalysis(array $validationErrors): void
+    {
+        $this->log("", null);
+        $this->log("🔍 VALIDATION FAILURE ANALYSIS:", self::COLOR_RED);
+        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+
+        foreach ($validationErrors as $field => $error) {
+            $errorDesc = match ($error) {
+                'missing_or_empty' => 'Field is missing or empty',
+                'invalid_format' => 'Field has invalid format',
+                default => $error
+            };
+
+            $this->log("  └─ {$field}: ❌ {$errorDesc}", self::COLOR_RED);
+        }
+
+        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+    }
+
+    private function displayExtractionDebugInfo(string $htmlContent, array $selectors): void
+    {
+        $this->log("", null);
+        $this->log("🔍 EXTRACTION DEBUG ANALYSIS:", self::COLOR_YELLOW);
+        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+        $this->log("  └─ HTML length: " . strlen($htmlContent) . " characters", self::COLOR_YELLOW);
+        $this->log("  └─ HTML starts with: " . substr($htmlContent, 0, 100) . "...", self::COLOR_YELLOW);
+
+        // بررسی وجود محتوای مهم در HTML
+        $importantElements = ['title', 'h1', 'h2', 'price', 'product', 'buy', 'cart'];
+        foreach ($importantElements as $element) {
+            $count = substr_count(strtolower($htmlContent), $element);
+            if ($count > 0) {
+                $this->log("  └─ Found '{$element}' {$count} times in HTML", self::COLOR_GREEN);
+            }
+        }
+
+        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+    }
+
+    private function analyzeHttpError(int $statusCode): void
+    {
+        $errorAnalysis = match ($statusCode) {
+            404 => "صفحه مورد نظر یافت نشد - احتمالاً URL اشتباه است یا محصول حذف شده",
+            403 => "دسترسی به صفحه ممنوع - ممکن است سایت از bot ها محافظت کند",
+            429 => "تعداد درخواست‌ها بیش از حد - باید delay بین درخواست‌ها افزایش یابد",
+            500, 502, 503, 504 => "خطای سرور - مشکل در سمت وب‌سایت هدف",
+            default => "خطای HTTP ناشناخته"
+        };
+
+        $this->log("  └─ تحلیل خطا: {$errorAnalysis}", self::COLOR_YELLOW);
+    }
+
+    private function displayValidatedProductDetails(array $productData): void
+    {
+        $this->log("", null);
+        $this->log("📦 VALIDATED PRODUCT DETAILS:", self::COLOR_BLUE);
+        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+        $this->log("  └─ 🏷️  Title: " . ($productData['title'] ?? 'N/A'), self::COLOR_CYAN);
+        $this->log("  └─ 💰 Price: " . ($productData['price'] ?? 'N/A'), self::COLOR_CYAN);
+        $this->log("  └─ 📦 Available: " . (isset($productData['availability']) ? ($productData['availability'] ? 'Yes' : 'No') : 'N/A'), self::COLOR_CYAN);
+
+        if (!empty($productData['product_id'])) {
+            $this->log("  └─ 🆔 Product ID: " . $productData['product_id'], self::COLOR_CYAN);
+        }
+        if (!empty($productData['category'])) {
+            $this->log("  └─ 📂 Category: " . $productData['category'], self::COLOR_CYAN);
+        }
+        if (!empty($productData['guarantee'])) {
+            $this->log("  └─ 🛡️  Guarantee: " . $productData['guarantee'], self::COLOR_CYAN);
+        }
+        if (!empty($productData['image'])) {
+            $this->log("  └─ 🖼️  Image URL: " . $productData['image'], self::COLOR_CYAN);
+        }
+        if (isset($productData['off']) && $productData['off'] > 0) {
+            $this->log("  └─ 🏷️  Discount: " . $productData['off'] . "%", self::COLOR_CYAN);
+        }
+
+        $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+    }
+
+    private function displayFinalTestResults(array $successfulProducts, array $failedProducts, array $productUrls, array $detailedErrors): void
+    {
         $this->log("", null);
         $this->log("", null);
         $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_PURPLE);
@@ -665,11 +868,44 @@ class StartController
             $this->log("  📈 Success Rate: {$successRate}%", $successRate > 80 ? self::COLOR_GREEN : ($successRate > 50 ? self::COLOR_YELLOW : self::COLOR_RED));
         }
 
-        if (!empty($failedProducts)) {
+        // نمایش تحلیل تفصیلی خطاها
+        if (!empty($detailedErrors)) {
             $this->log("", null);
-            $this->log("💀 Failed URLs:", self::COLOR_RED);
-            foreach ($failedProducts as $failedUrl) {
-                $this->log("  - {$failedUrl}", self::COLOR_YELLOW);
+            $this->log("💀 DETAILED ERROR ANALYSIS:", self::COLOR_RED);
+            $this->log("─────────────────────────────────────────────────────────────", self::COLOR_GRAY);
+
+            $errorTypes = [];
+            foreach ($detailedErrors as $error) {
+                $errorTypes[$error['error_type']] = ($errorTypes[$error['error_type']] ?? 0) + 1;
+            }
+
+            foreach ($errorTypes as $type => $count) {
+                $this->log("  └─ {$type}: {$count} occurrences", self::COLOR_YELLOW);
+            }
+
+            $this->log("", null);
+            $this->log("📋 Failed URLs with detailed reasons:", self::COLOR_RED);
+
+            foreach ($detailedErrors as $error) {
+                $this->log("  ┌─ URL: {$error['url']}", self::COLOR_YELLOW);
+                $this->log("  ├─ Step: {$error['step']}", self::COLOR_GRAY);
+                $this->log("  ├─ Error Type: {$error['error_type']}", self::COLOR_RED);
+                $this->log("  ├─ Error Message: {$error['error_message']}", self::COLOR_RED);
+
+                if ($error['http_status']) {
+                    $this->log("  ├─ HTTP Status: {$error['http_status']}", self::COLOR_CYAN);
+                }
+                if ($error['html_length'] > 0) {
+                    $this->log("  ├─ HTML Length: {$error['html_length']} bytes", self::COLOR_CYAN);
+                }
+                if (!empty($error['selectors_missing'])) {
+                    $this->log("  ├─ Missing Selectors: " . implode(', ', $error['selectors_missing']), self::COLOR_YELLOW);
+                }
+                if (!empty($error['validation_errors'])) {
+                    $this->log("  ├─ Validation Errors: " . implode(', ', array_keys($error['validation_errors'])), self::COLOR_YELLOW);
+                }
+
+                $this->log("  └─────────────────────────────────────────────────────────", self::COLOR_GRAY);
             }
         }
 
@@ -680,23 +916,12 @@ class StartController
                 $this->log("  Product " . ($idx + 1) . ":", self::COLOR_CYAN);
                 $this->log("    - Title: " . ($product['title'] ?? 'N/A'), self::COLOR_GRAY);
                 $this->log("    - Price: " . ($product['price'] ?? 'N/A'), self::COLOR_GRAY);
-                $this->log("    - Available: " . (isset($product['availability']) ? ($product['availability'] ? '0' : '1') : 'N/A'), self::COLOR_GRAY);
+                $this->log("    - Available: " . (isset($product['availability']) ? ($product['availability'] ? 'Yes' : 'No') : 'N/A'), self::COLOR_GRAY);
             }
         }
 
         $this->log("═══════════════════════════════════════════════════════════════", self::COLOR_PURPLE);
         $this->log("🏁 Product Test Mode completed!", self::COLOR_GREEN);
-
-        return [
-            'status' => 'success',
-            'test_mode' => true,
-            'total_tested' => $totalCount,
-            'total_products' => $successCount,
-            'failed_links' => $failCount,
-            'success_rate' => $totalCount > 0 ? round(($successCount / $totalCount) * 100, 2) : 0,
-            'products' => $successfulProducts,
-            'failed_urls' => $failedProducts
-        ];
     }
 
     // Helper methods که هنوز نیاز هستند
