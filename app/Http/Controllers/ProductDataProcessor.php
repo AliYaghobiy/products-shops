@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\FailedLink;
+use App\Models\Product;
 use Symfony\Component\DomCrawler\Crawler;
-use Illuminate\Support\Facades\DB;
 
 class ProductDataProcessor
 {
@@ -44,143 +43,84 @@ class ProductDataProcessor
             'guarantee' => ''
         ];
 
-        try {
-            if ($body === null) {
-                throw new \Exception("Body content is required for product data extraction");
-            }
-
-            $crawler = new Crawler($body);
-            $productSelectors = $this->config['selectors']['product_page'] ?? [];
-
-            // اگر set_category در کانفیگ وجود داشت، آن را استفاده کن
-            if (isset($this->config['set_category']) && !empty($this->config['set_category'])) {
-                $data['category'] = $this->config['set_category'];
-                $this->log("Using preset category from config: {$data['category']}", self::COLOR_GREEN);
-            }
-
-            foreach ($productSelectors as $field => $selector) {
-                if (!empty($selector['selector']) && array_key_exists($field, $data)) {
-                    if ($field === 'guarantee') {
-                        $data[$field] = $this->extractGuaranteeFromSelector($crawler, $selector, $data['title']);
-                    } elseif ($field === 'category' && ($this->config['category_method'] ?? 'selector') === 'selector' && !isset($this->config['set_category'])) {
-                        $data[$field] = $this->extractCategoriesFromSelectors($crawler, $selector);
-                        $this->log("Extracted categories from selectors: {$data[$field]}", self::COLOR_GREEN);
-                    } elseif ($field === 'image' && ($this->config['image_method'] ?? 'product_page') === 'product_page') {
-                        $value = $this->extractData($crawler, $selector);
-                        $data[$field] = $this->makeAbsoluteUrl($value);
-                        $this->log("Extracted image from product_page: {$data[$field]}", self::COLOR_GREEN);
-                    } elseif ($field === 'product_id' && ($this->config['product_id_source'] ?? 'product_page') === 'product_page') {
-                        $extractedId = $this->extractProductIdFromUrl($url, $data['title'] ?? '', $crawler);
-                        if (!empty($extractedId)) {
-                            $data[$field] = $extractedId;
-                            $this->log("Extracted product_id from updated method: {$data[$field]}", self::COLOR_GREEN);
-                        } else {
-                            $this->log("No product_id extracted, keeping mainPageProductId or empty", self::COLOR_YELLOW);
-                        }
-                    } elseif ($field === 'price') {
-                        $value = $this->extractPriceWithPriority($crawler, $selector);
-                        $this->log("Raw price extracted with priority method: '$value'", self::COLOR_YELLOW);
-
-                        $priceKeywords = $this->config['price_keywords']['unpriced'] ?? [];
-                        $isUnpriced = false;
-
-                        foreach ($priceKeywords as $keyword) {
-                            if (!empty($value) && mb_strpos($value, $keyword) !== false) {
-                                $isUnpriced = true;
-                                $data[$field] = trim($value);
-                                $data['price_status'] = 'unpriced';
-                                $this->log("Price is marked as unpriced text: '$value'", self::COLOR_YELLOW);
-                                break;
-                            }
-                        }
-
-                        if (!$isUnpriced) {
-                            if (!empty($value)) {
-                                if ($this->config['keep_price_format'] ?? false) {
-                                    $data[$field] = $this->cleanPriceWithFormat($value);
-                                } else {
-                                    $data[$field] = (string)$this->cleanPrice($value);
-                                }
-                            } else {
-                                $data[$field] = $this->config['keep_price_format'] ?? false ? '' : '0';
-                                $this->log("No valid price found, setting default: '{$data[$field]}'", self::COLOR_YELLOW);
-                            }
-                        }
-                    } else {
-                        $value = $this->extractData($crawler, $selector);
-                        $this->log("Raw $field extracted: '$value'", self::COLOR_YELLOW);
-
-                        if ($field === 'title') {
-                            $data[$field] = $value;
-                            $data[$field] = $this->applyTitlePrefix($data[$field], $url);
-                            $this->log("Title after applying prefix: {$data[$field]}", self::COLOR_GREEN);
-                        } elseif ($field === 'availability') {
-                            $transform = $this->config['data_transformers'][$field] ?? null;
-                            if ($transform && method_exists($this, $transform)) {
-                                $data[$field] = (int)$this->$transform($value, $crawler);
-                                $this->log("Availability processed by $transform: {$data[$field]}", self::COLOR_CYAN);
-                            } else {
-                                $data[$field] = !empty($value) ? 1 : 0;
-                                $this->log("Availability fallback processing: {$data[$field]}", self::COLOR_YELLOW);
-                            }
-                        } elseif ($field === 'off') {
-                            $transform = $this->config['data_transformers'][$field] ?? null;
-                            if ($transform && method_exists($this, $transform)) {
-                                $data[$field] = $this->$transform($value);
-                                $this->log("Off processed by $transform: {$data[$field]}", self::COLOR_CYAN);
-                            } else {
-                                preg_match('/\d+/', $value, $matches);
-                                $data[$field] = !empty($matches) ? (int)$matches[0] : 0;
-                                $this->log("Off fallback processing: {$data[$field]}", self::COLOR_YELLOW);
-                            }
-                        } else {
-                            $transform = $this->config['data_transformers'][$field] ?? null;
-                            if ($transform && method_exists($this, $transform)) {
-                                $data[$field] = (string)$this->$transform($value);
-                            } else {
-                                $data[$field] = (string)$value;
-                            }
-                        }
-                    }
-
-                    $this->log("Extracted $field: \"{$data[$field]}\" for $url", self::COLOR_GREEN);
-                }
-            }
-
-            // Category processing
-            if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
-                $wordCount = $this->config['category_word_count'] ?? 1;
-                $data['category'] = $this->extractCategoryFromTitle($data['title'], $wordCount);
-                $this->log("Extracted category from title: {$data['category']}", self::COLOR_GREEN);
-            }
-
-            // Availability fallback
-            if ($data['availability'] === null) {
-                $this->log("Availability not processed, using fallback logic", self::COLOR_YELLOW);
-                $data['availability'] = $this->processAvailabilityFallback($crawler, $data);
-            }
-
-            $data['availability'] = (int)$data['availability'];
-
-            foreach ($data as $key => $value) {
-                if ($key !== 'availability' && $key !== 'off' && is_numeric($value)) {
-                    $data[$key] = (string)$value;
-                }
-            }
-
-            if (!$this->validateProductData($data)) {
-                $this->log("No valid data extracted for $url. Adding to failed links.", self::COLOR_RED);
-                $this->saveFailedLink($url, "No valid data extracted");
-                return null;
-            }
-
-            return $data;
-
-        } catch (\Exception $e) {
-            $this->log("Failed to process $url: {$e->getMessage()}. Adding to failed links.", self::COLOR_RED);
-            $this->saveFailedLink($url, $e->getMessage());
+        if ($body === null) {
+            $this->log("Body content is required for product data extraction", self::COLOR_RED);
+            $this->saveFailedLink($url, "No body content provided");
             return null;
         }
+
+        $crawler = new Crawler($body);
+        $productSelectors = $this->config['selectors']['product_page'] ?? [];
+
+        if (isset($this->config['set_category']) && !empty($this->config['set_category'])) {
+            $data['category'] = $this->config['set_category'];
+            $this->log("Using preset category from config: {$data['category']}", self::COLOR_GREEN);
+        }
+
+        foreach ($productSelectors as $field => $selector) {
+            if (!empty($selector['selector']) && array_key_exists($field, $data)) {
+                $value = $this->extractData($crawler, $selector);
+                $this->log("Raw $field extracted: '$value'", self::COLOR_YELLOW);
+
+                if ($field === 'title') {
+                    $data[$field] = $this->applyTitlePrefix($value, $url);
+                } elseif ($field === 'price') {
+                                    $rawPrice = $this->extractPriceWithPriority($crawler, $selector);
+                
+                                    if ($this->config['keep_price_format'] ?? false) {
+                                        $data[$field] = $this->cleanPriceWithFormat($rawPrice);
+                                    } else {
+                                        $data[$field] = (string)$this->cleanPrice($rawPrice);
+                                    }
+                
+                                    if (empty($data[$field]) && !($this->config['keep_price_format'] ?? false)) {
+                                        $data[$field] = '0';
+                                    }
+                                } elseif ($field === 'availability') {
+                    $transform = $this->config['data_transformers'][$field] ?? null;
+                    $data[$field] = $transform && method_exists($this, $transform) ? (int)$this->$transform($value, $crawler) : (!empty($value) ? 1 : 0);
+                } elseif ($field === 'off') {
+                    $transform = $this->config['data_transformers'][$field] ?? null;
+                    $data[$field] = $transform && method_exists($this, $transform) ? $this->$transform($value) : (preg_match('/\d+/', $value, $matches) ? (int)$matches[0] : 0);
+                } elseif ($field === 'guarantee') {
+                    $data[$field] = $this->extractGuaranteeFromSelector($crawler, $selector, $data['title']);
+                } elseif ($field === 'image') {
+                    $data[$field] = $this->makeAbsoluteUrl($value);
+                } elseif ($field === 'category' && ($this->config['category_method'] ?? 'selector') === 'selector' && !isset($this->config['set_category'])) {
+                    $data[$field] = $this->extractCategoriesFromSelectors($crawler, $selector);
+                } else {
+                    $transform = $this->config['data_transformers'][$field] ?? null;
+                    $data[$field] = $transform && method_exists($this, $transform) ? (string)$this->$transform($value) : (string)$value;
+                }
+
+                $this->log("Extracted $field: \"{$data[$field]}\" for $url", self::COLOR_GREEN);
+            }
+        }
+
+        if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
+            $wordCount = $this->config['category_word_count'] ?? 1;
+            $data['category'] = $this->extractCategoryFromTitle($data['title'], $wordCount);
+        }
+
+        if ($data['availability'] === null) {
+            $data['availability'] = $this->processAvailabilityFallback($crawler, $data);
+        }
+
+        $data['availability'] = (int)$data['availability'];
+
+        foreach ($data as $key => $value) {
+            if ($key !== 'availability' && $key !== 'off' && is_numeric($value)) {
+                $data[$key] = (string)$value;
+            }
+        }
+
+        if (!$this->validateProductData($data)) {
+            $this->log("No valid data extracted for $url. Adding to failed links.", self::COLOR_RED);
+            $this->saveFailedLink($url, "No valid data extracted");
+            return null;
+        }
+
+        return $data;
     }
 
     public function validateProductData(array $productData): bool
@@ -191,23 +131,17 @@ class ProductDataProcessor
         }
 
         if ($productData['availability'] == 0) {
-            $this->log("Product is unavailable, skipping price validation for URL: {$productData['page_url']}", self::COLOR_YELLOW);
             return true;
         }
-
-        if (isset($productData['price_status']) && $productData['price_status'] == 'unpriced') {
-            $this->log("Product has no price but is marked as 'unpriced'. Accepting product for URL: {$productData['page_url']}", self::COLOR_YELLOW);
-            return true;
-        }
-
-        if (!empty($productData['price']) && !is_numeric($productData['price'])) {
-            $priceKeywords = $this->config['price_keywords']['unpriced'] ?? [];
-            foreach ($priceKeywords as $keyword) {
-                if (mb_strpos($productData['price'], $keyword) !== false) {
-                    $this->log("Product price contains unpriced keyword: '{$keyword}'. Accepting product for URL: {$productData['page_url']}", self::COLOR_YELLOW);
-                    return true;
-                }
+if (!empty($productData['price'])) {
+            $cleanedPrice = str_replace([',', ' ', 'تومان', 'ریال'], '', $productData['price']);
+            if (!is_numeric($cleanedPrice)) {
+                $this->log("Validation failed: price '$cleanedPrice' is not numeric for URL: {$productData['page_url']}", self::COLOR_RED);
+                return false;
             }
+        } else {
+            $this->log("Warning: price is empty for available product, but product will be saved for URL: {$productData['page_url']}", self::COLOR_YELLOW);
+            return true;
         }
 
         if (empty($productData['price']) || $productData['price'] === '0') {
@@ -239,11 +173,9 @@ class ProductDataProcessor
 
             if ($existingProduct) {
                 $changes = $this->detectProductChanges($existingProduct, $data);
-
                 if (!empty($changes)) {
                     $existingProduct->update($data);
                     $this->logProduct($productData, 'UPDATED', $changes);
-                    $this->log("📝 محصول آپدیت شد - تعداد تغییرات: " . count($changes), self::COLOR_BLUE);
                 } else {
                     $this->log("⚡ محصول بدون تغییر: {$data['title']}", self::COLOR_GRAY);
                 }
@@ -251,9 +183,7 @@ class ProductDataProcessor
                 $data['created_at'] = now();
                 Product::create($data);
                 $this->logProduct($productData, 'NEW');
-                $this->log("🎉 محصول جدید ایجاد شد: {$data['title']}", self::COLOR_GREEN);
             }
-
         } catch (\Exception $e) {
             $this->log("💥 خطا در ذخیره محصول {$productData['title']}: {$e->getMessage()}", self::COLOR_RED);
             throw $e;
@@ -262,32 +192,106 @@ class ProductDataProcessor
 
     public function cleanPrice(string $price): int
     {
-        $price = preg_replace('/[^\d,٫]/u', '', $price);
-        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-        $latin = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        $price = str_replace($persian, $latin, $price);
-        $cleaned = (int)str_replace([',', '٫'], '', $price);
-        return $cleaned;
+        if (empty(trim($price))) {
+            return 0;
+        }
+
+        // حذف تمام کلمات واحد پولی (فارسی و انگلیسی)
+        $price = preg_replace('/\b(تومان|ریال|درهم|دینار|toman|rial|dirham|dinar)\b/ui', '', $price);
+
+        // تبدیل اعداد فارسی به انگلیسی
+        $persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $price = str_replace($persianNumbers, $englishNumbers, $price);
+
+        // تبدیل اعداد عربی به انگلیسی
+        $arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $price = str_replace($arabicNumbers, $englishNumbers, $price);
+
+        // حذف تمام کاراکترهای غیرضروری و نگهداری فقط اعداد و جداکننده‌های اعشار
+        $price = preg_replace('/[^\d.,٫]/u', '', $price);
+
+        // حذف جداکننده‌های هزارگان (کاما و ممیز فارسی)
+        $price = str_replace([',', '٫'], '', $price);
+
+        // مدیریت اعشار - فقط آخرین نقطه را به عنوان جداکننده اعشار در نظر می‌گیریم
+        if (substr_count($price, '.') > 1) {
+            $parts = explode('.', $price);
+            $decimal = array_pop($parts);
+            $price = implode('', $parts) . '.' . $decimal;
+        }
+
+        // تبدیل به عدد صحیح (اعشار نادیده گرفته می‌شود)
+        return (int) floatval($price);
     }
 
     public function cleanPriceWithFormat(string $price): string
     {
-        $prices = explode('–', $price);
-        $cleanedPrices = [];
+        if (empty(trim($price))) {
+            return '';
+        }
 
-        foreach ($prices as $pricePart) {
-            $cleaned = trim(preg_replace('/[^\d, تومان]/u', '', $pricePart));
-            if (!empty($cleaned)) {
-                $cleanedPrices[] = $cleaned;
+        // تشخیص و تقسیم قیمت‌های محدوده‌ای (مثل: ۱۲۰۰۰ - ۱۵۰۰۰ تومان)
+        $rangeSeparators = ['–', '-', 'تا', 'الی', 'to'];
+        $foundSeparator = null;
+
+        foreach ($rangeSeparators as $separator) {
+            if (strpos($price, $separator) !== false) {
+                $foundSeparator = $separator;
+                break;
             }
         }
 
-        if (count($cleanedPrices) > 1) {
-            return implode(' - ', $cleanedPrices);
-        } elseif (count($cleanedPrices) === 1) {
-            return $cleanedPrices[0];
+        if ($foundSeparator) {
+            $priceRange = explode($foundSeparator, $price);
+            $cleanedPrices = [];
+
+            foreach ($priceRange as $pricePart) {
+                $cleanedPrice = $this->cleanSinglePriceWithFormat(trim($pricePart));
+                if (!empty($cleanedPrice) && $cleanedPrice !== '0') {
+                    $cleanedPrices[] = $cleanedPrice;
+                }
+            }
+
+            return count($cleanedPrices) > 1 ? implode(' - ', $cleanedPrices) :
+                (count($cleanedPrices) === 1 ? $cleanedPrices[0] : '');
         }
-        return '';
+
+        return $this->cleanSinglePriceWithFormat($price);
+    }
+
+    private function cleanSinglePriceWithFormat(string $price): string
+    {
+        if (empty(trim($price))) {
+            return '';
+        }
+
+        // حذف واحدهای پولی
+        $price = preg_replace('/\b(تومان|ریال|درهم|دینار|toman|rial|dirham|dinar)\b/ui', '', $price);
+
+        // تبدیل اعداد فارسی و عربی به انگلیسی
+        $persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+
+        $price = str_replace($persianNumbers, $englishNumbers, $price);
+        $price = str_replace($arabicNumbers, $englishNumbers, $price);
+
+        // حذف کاراکترهای اضافی ولی حفظ جداکننده‌ها برای فرمت
+        $price = preg_replace('/[^\d.,٫\s]/u', '', $price);
+
+        // حذف فاصله‌های اضافی
+        $price = preg_replace('/\s+/', ' ', trim($price));
+
+        // اگر فقط جداکننده باشد، خالی برگردان
+        if (preg_match('/^[.,٫\s]+$/', $price)) {
+            return '';
+        }
+
+        // حذف جداکننده‌های ابتدا و انتها
+        $price = trim($price, '.,٫ ');
+
+        return $price;
     }
 
     public function parseAvailability(string $value, Crawler $crawler): int
@@ -721,7 +725,7 @@ class ProductDataProcessor
         return null;
     }
 
-        private function checkOutOfStockWithPriority(Crawler $crawler, ?array $outOfStockSelector): ?int
+    private function checkOutOfStockWithPriority(Crawler $crawler, ?array $outOfStockSelector): ?int
     {
         if (!$outOfStockSelector || empty($outOfStockSelector['selector'])) {
             return null;
@@ -740,7 +744,7 @@ class ProductDataProcessor
         return null;
     }
 
-        private function processAvailabilityFallback(Crawler $crawler, array $data): int
+    private function processAvailabilityFallback(Crawler $crawler, array $data): int
     {
         $addToCartSelector = $this->config['selectors']['product_page']['add_to_cart_button'] ?? null;
         $outOfStockSelector = $this->config['selectors']['product_page']['out_of_stock'] ?? null;
@@ -756,7 +760,7 @@ class ProductDataProcessor
         }
     }
 
-        private function detectProductChanges($existingProduct, array $newData): array
+    private function detectProductChanges($existingProduct, array $newData): array
     {
         $changes = [];
         $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category'];
@@ -773,7 +777,7 @@ class ProductDataProcessor
         return $changes;
     }
 
-        private function logProduct(array $product, string $action = 'PROCESSED', array $extraInfo = []): void
+    public function logProduct(array $product, string $action = 'PROCESSED', array $extraInfo = []): void
     {
         $availability = (int)($product['availability'] ?? 0) ? 'موجود' : 'ناموجود';
         $imageStatus = empty($product['image']) ? 'ناموجود' : 'موجود';
@@ -812,7 +816,7 @@ class ProductDataProcessor
         $this->log("", null);
     }
 
-        private function getActionConfig(string $action): array
+    private function getActionConfig(string $action): array
     {
         $configs = [
             'NEW' => [
@@ -840,7 +844,7 @@ class ProductDataProcessor
         return $configs[$action] ?? $configs['PROCESSED'];
     }
 
-        private function applyTitlePrefix(string $title, string $url): string
+    private function applyTitlePrefix(string $title, string $url): string
     {
         $title = trim($title);
         $prefixRules = $this->config['title_prefix_rules'] ?? [];
@@ -865,7 +869,7 @@ class ProductDataProcessor
         return $title;
     }
 
-        private function generateAsciiTable(array $headers, array $rows): string
+    private function generateAsciiTable(array $headers, array $rows): string
     {
         $widths = [];
         foreach ($headers as $header) {
@@ -906,7 +910,7 @@ class ProductDataProcessor
         return $table;
     }
 
-        private function mb_str_pad(string $input, int $pad_length, string $pad_string = ' ', int $pad_type = STR_PAD_RIGHT): string
+    private function mb_str_pad(string $input, int $pad_length, string $pad_string = ' ', int $pad_type = STR_PAD_RIGHT): string
     {
         $input_length = mb_strwidth($input, 'UTF-8');
         if ($pad_length <= $input_length) {
@@ -928,7 +932,7 @@ class ProductDataProcessor
         }
     }
 
-        private function saveFailedLink(string $url, string $errorMessage): void
+    private function saveFailedLink(string $url, string $errorMessage): void
     {
         try {
             $existingFailedLink = FailedLink::where('url', $url)->first();
@@ -954,7 +958,7 @@ class ProductDataProcessor
         }
     }
 
-        private function log(string $message, ?string $color = null): void
+    private function log(string $message, ?string $color = null): void
     {
         $colorReset = "\033[0m";
         $formattedMessage = $color ? $color . $message . $colorReset : $message;
@@ -974,7 +978,7 @@ class ProductDataProcessor
         }
     }
 
-        private function shouldDisplayLog(string $cleanMessage): bool
+    private function shouldDisplayLog(string $cleanMessage): bool
     {
         $displayConditions = [
             str_contains($cleanMessage, '🆕') || str_contains($cleanMessage, '🔄') ||
@@ -990,4 +994,4 @@ class ProductDataProcessor
             return $carry || $condition;
         }, false);
     }
-    }
+}

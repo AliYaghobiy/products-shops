@@ -2,8 +2,8 @@
 
 namespace App\Services\Config;
 
-use Illuminate\Support\Facades\Storage;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * سرویس مدیریت فایل‌های کانفیگ
@@ -51,7 +51,36 @@ class ConfigFileService
             }
         }
 
+        // مرتب‌سازی بر اساس آخرین تاریخ ایجاد/ویرایش و سپس تاریخ اجرا
+        usort($configs, function ($a, $b) {
+            // اولویت اول: فایل‌های تازه ایجاد شده یا ویرایش شده
+            $aFileTime = Storage::lastModified('private/' . $a['filename'] . '.json');
+            $bFileTime = Storage::lastModified('private/' . $b['filename'] . '.json');
+
+            // اگر تفاوت زمان ویرایش کمتر از 5 دقیقه باشد، بر اساس تاریخ اجرا مرتب کن
+            if (abs($aFileTime - $bFileTime) < 300) { // 5 دقیقه = 300 ثانیه
+                $aStarted = $a['started_at'] ?? '0000-00-00 00:00:00';
+                $bStarted = $b['started_at'] ?? '0000-00-00 00:00:00';
+                return strcmp($bStarted, $aStarted);
+            }
+
+            // در غیر این صورت بر اساس آخرین ویرایش
+            return $bFileTime <=> $aFileTime;
+        });
+
         return $configs;
+    }
+
+    public function getRunningConfigs()
+    {
+        $configs = $this->fileService->getAllConfigs();
+        $runningConfigs = array_filter($configs, function ($config) {
+            return $config['status'] === 'running';
+        });
+
+        return response()->json([
+            'running_configs' => array_values($runningConfigs)
+        ]);
     }
 
     /**
@@ -110,14 +139,15 @@ class ConfigFileService
         exec($processCommand, $output);
 
         if (empty($output)) {
-            $configData['status'] = 'crashed';
-            $runInfo['status'] = 'crashed';
+            $configData['status'] = 'stopped'; // تغییر از 'crashed' به 'stopped'
+            $runInfo['status'] = 'stopped';    // تغییر از 'crashed' به 'stopped'
             $runInfo['stopped_at'] = date('Y-m-d H:i:s');
             Storage::put($runFilePath, json_encode($runInfo, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
 
         return $configData;
     }
+
 
     /**
      * بررسی اجرای پروسه

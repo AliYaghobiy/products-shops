@@ -41,156 +41,338 @@
         }
     </script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: "Vazirmatn", system-ui, sans-serif;
-            background-color: #F9F6F3;
-            color: #524330;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d5ad85' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E");
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
         }
 
-        .card {
-            background-color: #fff;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid #E7DBCF;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        .input-field {
-            background-color: #fff;
-            border: 1px solid #E7DBCF;
-            color: #524330;
-        }
-
-        .input-field:focus {
-            border-color: #BBA183;
-            box-shadow: 0 0 0 2px rgba(187, 161, 131, 0.2);
-        }
-
-        .btn-primary {
-            background-color: #A88C6A;
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             color: white;
-            transition: all 0.2s ease;
+            padding: 30px;
+            text-align: center;
         }
 
-        .btn-primary:hover {
-            background-color: #8D7455;
-        }
-
-        .btn-secondary {
-            background-color: #D9C9B6;
-            color: #524330;
-            transition: all 0.2s ease;
-        }
-
-        .btn-secondary:hover {
-            background-color: #CAB59C;
-        }
-
-        .btn-danger {
-            background-color: #ef4444;
-            color: white;
-            transition: all 0.2s ease;
-        }
-
-        .btn-danger:hover {
-            background-color: #dc2626;
-        }
-
-        .section-header {
-            border-bottom: 1px solid #E7DBCF;
-            padding-bottom: 0.75rem;
-            margin-bottom: 1.25rem;
+        .header h1 {
+            font-size: 28px;
             font-weight: 700;
-            color: #8D7455;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 10px;
         }
 
         .tabs {
             display: flex;
-            flex-wrap: wrap;
-            border-bottom: 2px solid #E7DBCF;
-            margin-bottom: 1.5rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            overflow-x: auto;
         }
 
         .tab-button {
             flex: 1;
-            padding: 0.75rem 1rem;
-            text-align: center;
+            min-width: 200px;
+            padding: 20px 25px;
+            background: transparent;
+            border: none;
             cursor: pointer;
-            font-weight: 500;
-            color: #524330;
-            transition: all 0.2s ease;
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-bottom: 3px solid transparent;
         }
 
         .tab-button:hover {
-            background-color: #FFF5E1;
+            background: #e2e8f0;
+            color: #4f46e5;
         }
 
         .tab-button.active {
-            background-color: #FFF5E1;
-            color: #996400;
-            font-weight: 600;
+            color: #4f46e5;
+            background: white;
+            border-bottom-color: #4f46e5;
         }
 
         .tab-content {
             display: none;
+            padding: 40px;
+            background: #f8fafc;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .result-success {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
         }
 
-        .result-error {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
+        .section-header {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .log-line {
-            margin: 2px 0;
-            font-family: monospace;
-            font-size: 0.875rem;
+        .form-group {
+            margin-bottom: 25px;
         }
 
-        .log-success {
-            color: #28a745;
+        .form-group label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
         }
 
-        .log-error {
-            color: #dc3545;
+        .required {
+            color: #ef4444;
+            margin-right: 5px;
         }
 
-        .log-warning {
-            color: #ffc107;
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #fff;
         }
 
-        .log-info {
-            color: #17a2b8;
+        .input-field:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
-        .log-primary {
-            color: #007bff;
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .log-purple {
-            color: #6f42c1;
+        .checkbox-container:hover {
+            background: #e2e8f0;
         }
 
-        .log-cyan {
-            color: #17a2b8;
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #4f46e5;
         }
 
-        .log-gray {
-            color: #6c757d;
+        .selector-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .selector-container .input-field {
+            flex: 1;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .grid {
+            display: grid;
+            gap: 25px;
+        }
+
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .space-y-3 > * + * {
+            margin-top: 12px;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* خصوصی‌سازی رنگ‌ها بر اساس تصویر */
+        .tab-button.active,
+        .tab-button:hover {
+            color: #7c3aed;
+        }
+
+        .tab-button.active {
+            border-bottom-color: #7c3aed;
+        }
+
+        .input-field:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            accent-color: #7c3aed;
+        }
+
+        .btn-primary {
+            background: #7c3aed;
+        }
+
+        .btn-primary:hover {
+            background: #6d28d9;
+        }
+
+        .btn-success {
+            background: #059669;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+            box-shadow: 0 5px 15px rgba(5, 150, 105, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                min-width: auto;
+                text-align: right;
+            }
+
+            .grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .selector-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+        }
+
+        /* انیمیشن‌های اضافی */
+        .card {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
@@ -234,7 +416,7 @@
             <!-- Tabs -->
             <div class="tabs">
                 <div class="tab-button active" data-tab="basic-settings">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-2" fill="none" viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -244,7 +426,7 @@
                     تنظیمات پایه
                 </div>
                 <div class="tab-button" data-tab="selectors-settings">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-2" fill="none" viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
@@ -252,7 +434,7 @@
                     سلکتورها
                 </div>
                 <div class="tab-button" data-tab="keywords-settings">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-2" fill="none" viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
@@ -263,61 +445,62 @@
 
             <!-- Tab Content: Basic Settings -->
             <div id="basic-settings" class="tab-content active">
-                <div class="card p-6 mb-6">
-                    <h2 class="section-header text-xl">تنظیمات پایه</h2>
+                <div class="card">
+                    <h2 class="section-header">
+                        ⚙️ تنظیمات پایه
+                    </h2>
 
                     <div class="form-group">
-                        <label for="product_url" class="block text-sm font-medium text-brown-700 mb-2">
-                            آدرس محصول <span class="text-red-500">*</span>
+                        <label for="product_url">
+                            آدرس محصول <span class="required">*</span>
                         </label>
                         <input type="url" name="product_url" id="product_url"
-                               value="{{ old('product_url', 'https://yaradarman.com/product/advanced-wound-healing-gel/') }}"
-                               class="input-field w-full px-4 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                               value="https://yaradarman.com/product/advanced-wound-healing-gel/"
+                               class="input-field"
                                placeholder="https://example.com/product/sample" required>
                     </div>
 
                     <div class="form-group">
-                        <label class="inline-flex items-center">
+                        <div class="checkbox-container">
                             <input type="hidden" name="out_of_stock_button" value="0">
-                            <input type="checkbox" name="out_of_stock_button" value="1" id="out_of_stock_button"
-                                   class="w-5 h-5 text-brown-600 border-brown-300 rounded focus:ring-brown-500 bg-white"
-                                {{ old('out_of_stock_button') ? 'checked' : '' }}>
-                            <span class="mr-3 text-brown-700">استفاده از دکمه ناموجود</span>
-                        </label>
+                            <input type="checkbox" name="out_of_stock_button" value="1" id="out_of_stock_button">
+                            <label for="out_of_stock_button">استفاده از دکمه ناموجود</label>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Tab Content: Selectors -->
             <div id="selectors-settings" class="tab-content">
-                <div class="card p-6 mb-6">
-                    <h2 class="section-header text-xl">سلکتورهای صفحه محصول</h2>
+                <div class="card">
+                    <h2 class="section-header">
+                        🎯 سلکتورهای صفحه محصول
+                    </h2>
 
                     <!-- عنوان محصول -->
                     <div class="form-group">
-                        <label for="title_selector" class="block text-sm font-medium text-brown-700 mb-2">
-                            سلکتور عنوان <span class="text-red-500">*</span>
+                        <label for="title_selector">
+                            سلکتور عنوان <span class="required">*</span>
                         </label>
                         <input type="text" name="title_selector" id="title_selector"
-                               value="{{ old('title_selector', '.elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)') }}"
-                               class="input-field w-full px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                               value=".elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)"
+                               class="input-field"
                                placeholder=".product-title" required>
                     </div>
 
                     <!-- سلکتورهای قیمت -->
                     <div class="form-group">
-                        <label class="block text-sm font-medium text-brown-700 mb-2">
-                            سلکتورهای قیمت <span class="text-red-500">*</span>
+                        <label>
+                            سلکتورهای قیمت <span class="required">*</span>
                         </label>
                         <div class="price-selectors-container space-y-3">
-                            <div class="flex">
+                            <div class="selector-container">
                                 <input type="text" name="price_selector[]"
-                                       value="{{ old('price_selector.0', 'p.price > span:nth-child(1) > bdi:nth-child(1)') }}"
-                                       class="input-field flex-1 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                       value="p.price > span:nth-child(1) > bdi:nth-child(1)"
+                                       class="input-field"
                                        placeholder=".product-price" required>
-                                <button type="button"
-                                        class="add-price-selector mr-2 btn-primary px-3 py-2 rounded-lg flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                <button type="button" class="btn btn-primary add-price-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                          fill="currentColor">
                                         <path fill-rule="evenodd"
                                               d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
@@ -330,27 +513,25 @@
 
                     <!-- سلکتورهای دسته‌بندی -->
                     <div class="form-group">
-                        <label class="block text-sm font-medium text-brown-700 mb-2">
-                            سلکتورهای دسته‌بندی
+                        <label>
+                            سلکتورهای دسته‌بندی <span class="required">*</span>
                         </label>
                         <div class="category-selectors-container space-y-3">
-                            <div class="flex">
+                            <div class="selector-container">
                                 <input type="text" name="category_selector[]"
-                                       value="{{ old('category_selector.0', '.posted_in > a:nth-child(2)') }}"
-                                       class="input-field flex-1 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                       value=".posted_in > a:nth-child(2)"
+                                       class="input-field"
                                        placeholder=".product-category">
-                                <button type="button"
-                                        class="add-category-selector mr-2 btn-primary px-3 py-2 rounded-lg flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                <button type="button" class="btn btn-primary add-category-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                          fill="currentColor">
                                         <path fill-rule="evenodd"
                                               d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                               clip-rule="evenodd"/>
                                     </svg>
                                 </button>
-                                <button type="button"
-                                        class="remove-category-selector mr-2 btn-danger px-3 py-2 rounded-lg flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                <button type="button" class="btn btn-danger remove-category-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                          fill="currentColor">
                                         <path fill-rule="evenodd"
                                               d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -363,27 +544,25 @@
 
                     <!-- سلکتورهای موجودی -->
                     <div class="form-group">
-                        <label class="block text-sm font-medium text-brown-700 mb-2">
-                            سلکتورهای موجودی
+                        <label>
+                            سلکتورهای موجودی <span class="required">*</span>
                         </label>
                         <div class="availability-selectors-container space-y-3">
-                            <div class="flex">
+                            <div class="selector-container">
                                 <input type="text" name="availability_selector[]"
-                                       value="{{ old('availability_selector.0', '.elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)') }}"
-                                       class="input-field flex-1 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                       value=".elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)"
+                                       class="input-field"
                                        placeholder=".product-availability">
-                                <button type="button"
-                                        class="add-availability-selector mr-2 btn-primary px-3 py-2 rounded-lg flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                <button type="button" class="btn btn-primary add-availability-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                          fill="currentColor">
                                         <path fill-rule="evenodd"
                                               d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                               clip-rule="evenodd"/>
                                     </svg>
                                 </button>
-                                <button type="button"
-                                        class="remove-availability-selector mr-2 btn-danger px-3 py-2 rounded-lg flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                <button type="button" class="btn btn-danger remove-availability-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                          fill="currentColor">
                                         <path fill-rule="evenodd"
                                               d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -395,29 +574,26 @@
                     </div>
 
                     <!-- سلکتورهای ناموجودی -->
-                    <div id="out-of-stock-container"
-                         class="form-group {{ old('out_of_stock_button') ? '' : 'hidden' }}">
-                        <label class="block text-sm font-medium text-brown-700 mb-2">
-                            سلکتورهای ناموجودی <span class="text-red-500">*</span>
+                    <div id="out-of-stock-container" class="form-group hidden">
+                        <label>
+                            سلکتورهای ناموجودی <span class="required">*</span>
                         </label>
                         <div class="out-of-stock-selectors-container space-y-3">
-                            <div class="flex">
+                            <div class="selector-container">
                                 <input type="text" name="out_of_stock_selector[]"
-                                       value="{{ old('out_of_stock_selector.0', '.testselector1') }}"
-                                       class="input-field flex-1 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                       value=".testselector1"
+                                       class="input-field"
                                        placeholder=".out-of-stock">
-                                <button type="button"
-                                        class="add-out-of-stock-selector mr-2 btn-primary px-3 py-2 rounded-lg flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                <button type="button" class="btn btn-primary add-out-of-stock-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                          fill="currentColor">
                                         <path fill-rule="evenodd"
                                               d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                               clip-rule="evenodd"/>
                                     </svg>
                                 </button>
-                                <button type="button"
-                                        class="remove-out-of-stock-selector mr-2 btn-danger px-3 py-2 rounded-lg flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                <button type="button" class="btn btn-danger remove-out-of-stock-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                          fill="currentColor">
                                         <path fill-rule="evenodd"
                                               d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -429,77 +605,75 @@
                     </div>
 
                     <!-- Grid for other selectors -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-2">
                         <!-- تصویر -->
                         <div class="form-group">
-                            <label for="image_selector" class="block text-sm font-medium text-brown-700 mb-2">
+                            <label for="image_selector">
                                 سلکتور تصویر
                             </label>
                             <input type="text" name="image_selector" id="image_selector"
-                                   value="{{ old('image_selector', '.woocommerce-product-gallery__image > a') }}"
-                                   class="input-field w-full px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                   value=".woocommerce-product-gallery__image > a"
+                                   class="input-field"
                                    placeholder=".product-image">
                         </div>
 
                         <!-- صفت تصویر -->
                         <div class="form-group">
-                            <label for="image_attribute" class="block text-sm font-medium text-brown-700 mb-2">
+                            <label for="image_attribute">
                                 صفت تصویر
                             </label>
                             <input type="text" name="image_attribute" id="image_attribute"
-                                   value="{{ old('image_attribute', 'href') }}"
-                                   class="input-field w-full px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                   value="href"
+                                   class="input-field"
                                    placeholder="src">
                         </div>
 
                         <!-- تخفیف -->
                         <div class="form-group">
-                            <label for="off_selector" class="block text-sm font-medium text-brown-700 mb-2">
+                            <label for="off_selector">
                                 سلکتور تخفیف
                             </label>
                             <input type="text" name="off_selector" id="off_selector"
-                                   value="{{ old('off_selector', '.discount') }}"
-                                   class="input-field w-full px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                   value=".discount"
+                                   class="input-field"
                                    placeholder=".product-discount">
                         </div>
 
                         <!-- گارانتی -->
                         <div class="form-group">
-                            <label for="guarantee_selector" class="block text-sm font-medium text-brown-700 mb-2">
+                            <label for="guarantee_selector">
                                 سلکتور گارانتی
                             </label>
                             <input type="text" name="guarantee_selector" id="guarantee_selector"
-                                   value="{{ old('guarantee_selector', '.selector') }}"
-                                   class="input-field w-full px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                   value=".selector"
+                                   class="input-field"
                                    placeholder=".product-guarantee">
                         </div>
                     </div>
 
                     <!-- Product ID Section -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-2">
                         <!-- سلکتورهای شناسه محصول -->
                         <div class="form-group">
-                            <label class="block text-sm font-medium text-brown-700 mb-2">
+                            <label>
                                 سلکتورهای شناسه محصول
                             </label>
                             <div class="product-id-selectors-container space-y-3">
-                                <div class="flex">
+                                <div class="selector-container">
                                     <input type="text" name="product_id_selector[]"
-                                           value="{{ old('product_id_selector.0', '.elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)') }}"
-                                           class="input-field flex-1 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                           value=".elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)"
+                                           class="input-field"
                                            placeholder=".product-id">
-                                    <button type="button"
-                                            class="add-product-id-selector mr-2 btn-primary px-3 py-2 rounded-lg flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    <button type="button" class="btn btn-primary add-product-id-selector">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                              fill="currentColor">
                                             <path fill-rule="evenodd"
                                                   d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                                   clip-rule="evenodd"/>
                                         </svg>
                                     </button>
-                                    <button type="button"
-                                            class="remove-product-id-selector mr-2 btn-danger px-3 py-2 rounded-lg flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    <button type="button" class="btn btn-danger remove-product-id-selector">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                              fill="currentColor">
                                             <path fill-rule="evenodd"
                                                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -512,27 +686,25 @@
 
                         <!-- صفت‌های شناسه محصول -->
                         <div class="form-group">
-                            <label class="block text-sm font-medium text-brown-700 mb-2">
+                            <label>
                                 صفت‌های شناسه محصول
                             </label>
                             <div class="product-id-attributes-container space-y-3">
-                                <div class="flex">
+                                <div class="selector-container">
                                     <input type="text" name="product_id_attribute[]"
-                                           value="{{ old('product_id_attribute.0', 'value') }}"
-                                           class="input-field flex-1 px-4 py-2.5 rounded-lg focus:outline-none focus:ring-2 transition-all duration-200"
+                                           value="value"
+                                           class="input-field"
                                            placeholder="data-id">
-                                    <button type="button"
-                                            class="add-product-id-attribute mr-2 btn-primary px-3 py-2 rounded-lg flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    <button type="button" class="btn btn-primary add-product-id-attribute">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                              fill="currentColor">
                                             <path fill-rule="evenodd"
                                                   d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                                   clip-rule="evenodd"/>
                                         </svg>
                                     </button>
-                                    <button type="button"
-                                            class="remove-product-id-attribute mr-2 btn-danger px-3 py-2 rounded-lg flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                    <button type="button" class="btn btn-danger remove-product-id-attribute">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
                                              fill="currentColor">
                                             <path fill-rule="evenodd"
                                                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -1085,6 +1257,17 @@
                     </div>
                 `;
             }
+
+            //if (data.logs && data.logs.length > 0) {
+            //    html += `
+            //       <div class="mt-4">
+            //          <h4 class="text-lg font-semibold mb-3">لاگ‌ها</h4>
+            //           <div class="bg-gray-100 p-4 rounded-lg">
+            //             ${data.logs.map(log => `<div class="log-line">${log}</div>`).join('')}
+            //         </div>
+            //      </div>
+            //  `;
+            //  }
 
             card.innerHTML = html;
             resultContainer.innerHTML = ''; // Clear previous content

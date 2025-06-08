@@ -30,6 +30,8 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     Route::post('/configs/{filename}/run', [ConfigController::class, 'runScraper'])->name('configs.run');
+        Route::get('/configs/running', [ConfigController::class, 'getRunningConfigs'])->name('configs.running');
+
     Route::post('/configs/{filename}/update', [ConfigController::class, 'updateScraper'])->name('configs.update-scraper'); // روت جدید اضافه شده
     Route::get('/configs/{filename}/logs', [ConfigController::class, 'showLogs'])->name('configs.logs');
     Route::delete('/configs/logs/delete-all', [ConfigController::class, 'deleteAllLogs'])->name('configs.logs.deleteAll');

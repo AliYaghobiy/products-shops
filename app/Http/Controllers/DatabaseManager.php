@@ -33,6 +33,9 @@ class DatabaseManager
         $databaseMode = $this->config['database'] ?? 'clear';
         $this->log("Database mode: $databaseMode", self::COLOR_GREEN);
 
+        // استفاده از اتصال پیش‌فرض برای مدیریت دیتابیس
+        DB::setDefaultConnection('mysql');
+
         // بررسی وجود دیتابیس
         $exists = DB::select("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?", [$dbName]);
         $databaseExists = !empty($exists);
@@ -42,7 +45,6 @@ class DatabaseManager
                 $this->log("Database $dbName exists, dropping it...", self::COLOR_YELLOW);
                 DB::statement("DROP DATABASE `$dbName`");
             }
-
             $this->log("Creating database $dbName...", self::COLOR_GREEN);
             DB::statement("CREATE DATABASE `$dbName`");
         } elseif ($databaseMode === 'continue') {
@@ -59,15 +61,16 @@ class DatabaseManager
         // تنظیم اتصال داینامیک
         config(["database.connections.dynamic" => [
             'driver' => 'mysql',
-            'host' => config('database.connections.mysql.host'),
-            'port' => config('database.connections.mysql.port'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
             'database' => $dbName,
-            'username' => config('database.connections.mysql.username'),
-            'password' => config('database.connections.mysql.password'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
         ]]);
 
+        // تعویض اتصال به داینامیک
         DB::purge('mysql');
         DB::setDefaultConnection('dynamic');
 
@@ -91,21 +94,24 @@ class DatabaseManager
         try {
             $insertData = [];
             $duplicateCount = 0;
-            $batchSize = 1000;
+            $batchSize = 1000; // پردازش دسته‌ای برای عملکرد بهتر
 
+            // آماده‌سازی داده‌ها برای insert
             foreach ($links as $link) {
-                $url = is_array($link) ? $link['url'] : $link;
-                $sourceUrl = is_array($link) && isset($link['sourceUrl']) ? $link['sourceUrl'] : null;
+                $url = is_array($link) ? ($link['url'] ?? '') : $link;
                 $productId = is_array($link) && isset($link['product_id']) ? $link['product_id'] : null;
 
-                if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+                // اعتبارسنجی ساده URL
+                if (empty($url) || !preg_match('/^https?:\/\/.+/', $url)) {
                     $this->log("Invalid URL skipped: " . ($url ?? 'empty'), self::COLOR_YELLOW);
                     continue;
                 }
 
+                // لاگ برای دیباگ
+                $this->log("Preparing to save link: $url", self::COLOR_BLUE);
+
                 $insertData[] = [
                     'url' => $url,
-                    'source_url' => $sourceUrl,
                     'is_processed' => false,
                     'product_id' => $productId,
                     'created_at' => now(),
@@ -118,6 +124,7 @@ class DatabaseManager
                 return;
             }
 
+            // استفاده از insertOrIgnore برای جلوگیری از درج لینک‌های تکراری
             $chunks = array_chunk($insertData, $batchSize);
             $totalInserted = 0;
 
@@ -127,6 +134,8 @@ class DatabaseManager
                     $totalInserted += $inserted;
                 } catch (\Exception $e) {
                     $this->log("Error inserting batch: " . $e->getMessage(), self::COLOR_RED);
+
+                    // اگر دسته‌ای شکست خورد، لینک‌ها رو یکی‌یکی امتحان می‌کنیم
                     foreach ($chunk as $item) {
                         try {
                             $existingLink = DB::table('links')->where('url', $item['url'])->exists();
@@ -144,7 +153,6 @@ class DatabaseManager
             }
 
             $this->log("Successfully saved $totalInserted new links to database", self::COLOR_GREEN);
-
             if ($duplicateCount > 0) {
                 $this->log("Skipped $duplicateCount duplicate links", self::COLOR_YELLOW);
             }
@@ -187,11 +195,6 @@ class DatabaseManager
             $this->log("  • Processed links: $processedLinksCount", self::COLOR_BLUE);
             $this->log("  • Unprocessed links: $unprocessedLinksCount", self::COLOR_BLUE);
 
-            if (!empty($links)) {
-                $ids = array_column($links, 'id');
-                $this->log("🔢 Link ID range: " . min($ids) . " to " . max($ids), self::COLOR_YELLOW);
-            }
-
             $pagesProcessed = DB::table('links')
                 ->distinct()
                 ->count('source_url');
@@ -229,9 +232,7 @@ class DatabaseManager
                 $this->log("Link not found in database for status update: $url", self::COLOR_YELLOW);
             } else {
                 $statusText = $status ? 'processed' : 'unprocessed';
-                if ($this->config['debug'] ?? false) {
-                    $this->log("Marked $affected link(s) as $statusText: $url", self::COLOR_BLUE);
-                }
+                $this->log("Marked $affected link(s) as $statusText: $url", self::COLOR_BLUE);
             }
 
         } catch (\Exception $e) {
@@ -243,47 +244,27 @@ class DatabaseManager
     {
         $this->log("🔄 Reset mode activated - clearing products and marking all links as unprocessed...", self::COLOR_YELLOW);
 
-        // بررسی و بستن تراکنش‌های باز
-        while (DB::transactionLevel() > 0) {
-            try {
-                DB::rollBack();
-            } catch (\Exception $e) {
-                break;
-            }
-        }
-
         try {
             DB::beginTransaction();
 
-            // پاک کردن جدول products
             $productsCount = Product::count();
             if ($productsCount > 0) {
                 Product::truncate();
                 $this->log("✅ Cleared $productsCount products from database", self::COLOR_GREEN);
-            } else {
-                $this->log("ℹ️ No products found to clear", self::COLOR_YELLOW);
             }
 
-            // ریست کردن وضعیت پردازش لینک‌ها
-            $linksUpdated = Link::where('is_processed', 1)->update([
-                'is_processed' => 0,
-                'updated_at' => now()
-            ]);
+            $linksUpdated = Link::where('is_processed', 1)->update(['is_processed' => 0, 'updated_at' => now()]);
             $this->log("🔄 Reset $linksUpdated links to unprocessed state", self::COLOR_GREEN);
 
-            // پاک کردن لینک‌های ناموفق
             $failedLinksCount = FailedLink::count();
             if ($failedLinksCount > 0) {
                 FailedLink::truncate();
                 $this->log("🗑️ Cleared $failedLinksCount failed links from database", self::COLOR_GREEN);
-            } else {
-                $this->log("ℹ️ No failed links found to clear", self::COLOR_YELLOW);
             }
 
             DB::commit();
             $this->log("✅ Database reset completed successfully", self::COLOR_GREEN);
 
-            // نمایش آمار نهایی
             $totalLinksInDb = Link::count();
             $unprocessedLinks = Link::where('is_processed', 0)->count();
 
@@ -294,14 +275,7 @@ class DatabaseManager
             $this->log("  • Failed links: 0", self::COLOR_BLUE);
 
         } catch (\Exception $e) {
-            try {
-                if (DB::transactionLevel() > 0) {
-                    DB::rollBack();
-                }
-            } catch (\Exception $rollbackException) {
-                $this->log("❌ Failed to rollback transaction: " . $rollbackException->getMessage(), self::COLOR_RED);
-            }
-
+            DB::rollBack();
             $this->log("❌ Failed to reset database: " . $e->getMessage(), self::COLOR_RED);
             throw $e;
         }
@@ -336,25 +310,22 @@ class DatabaseManager
         ];
 
         foreach ($migrationFiles as $file) {
-            try {
-                if (!file_exists($file)) {
-                    throw new \Exception("Migration file $file not found");
-                }
-
-                require_once $file;
-
-                $className = $this->getMigrationClassName($file);
-                if (!class_exists($className)) {
-                    throw new \Exception("Migration class $className not found in $file");
-                }
-
-                $migration = new $className();
-                $migration->up();
-                $this->log("Applied migration: " . basename($file), self::COLOR_GREEN);
-            } catch (\Exception $e) {
-                $this->log("Failed to apply migration " . basename($file) . ": {$e->getMessage()}", self::COLOR_RED);
-                throw $e;
+            if (!file_exists($file)) {
+                $this->log("Migration file $file not found", self::COLOR_RED);
+                continue;
             }
+
+            require_once $file;
+
+            $className = $this->getMigrationClassName($file);
+            if (!class_exists($className)) {
+                $this->log("Migration class $className not found in $file", self::COLOR_RED);
+                continue;
+            }
+
+            $migration = new $className();
+            $migration->up();
+            $this->log("Applied migration: " . basename($file), self::COLOR_GREEN);
         }
 
         $this->log("Specific migrations completed", self::COLOR_GREEN);

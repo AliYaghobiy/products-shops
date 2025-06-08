@@ -12,344 +12,524 @@
             theme: {
                 extend: {
                     colors: {
-                        gold: { 100: '#fffcf0', 500: '#ffd700', 600: '#e6c300' },
-                        sepia: { 50: '#fcf9f5', 400: '#d5ad85', 500: '#c69c6d', 600: '#b38755', 800: '#795c41', 900: '#5f4935' }
-                    },
-                },
-            },
+                        gold: {
+                            50: '#fffef7',
+                            100: '#fefcf0',
+                            200: '#fef08a',
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                            800: '#854d0e',
+                            900: '#713f12'
+                        },
+                        method: {
+                            1: '#e879f9',
+                            2: '#4ade80', 
+                            3: '#fb923c'
+                        }
+                    }
+                }
+            }
         }
     </script>
     <style>
         body {
-            font-family: "Vazirmatn", system-ui, serif;
-            background-color: #f8f1e9;
-            color: #5f4935;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d5ad85' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E");
+            font-family: "Vazirmatn", system-ui;
+            background: linear-gradient(135deg, #fffef7 0%, #fefcf0 100%);
+            min-height: 100vh;
         }
 
-        .btn-classic { background-color: #b38755; color: #fcf9f5; border: 1px solid #96714a; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-        .btn-classic:hover { background-color: #96714a; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
-        .btn-gold { background-color: #ffd700; color: #5f4935; border: 1px solid #e6c300; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-        .btn-gold:hover { background-color: #e6c300; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
-        .btn-danger { background-color: #a83240; color: #fcf9f5; border: 1px solid #8a2a36; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-        .btn-danger:hover { background-color: #8a2a36; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
-        .btn-success { background-color: #2d6a4f; color: #fcf9f5; border: 1px solid #1b4332; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-        .btn-success:hover { background-color: #1b4332; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
 
-        .config-card { background-color: #fcf9f5; border: 1px solid #d5ad85; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; }
-        .config-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); border-color: #b38755; }
+        .running-badge {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+        }
 
-        .badge { font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 0.25rem; font-weight: 500; }
-        .badge-method-1 { background-color: #e9d8fd; color: #553c9a; border: 1px solid #b794f4; }
-        .badge-method-2 { background-color: #c6f6d5; color: #2f855a; border: 1px solid #68d391; }
-        .badge-method-3 { background-color: #feebc8; color: #9c4221; border: 1px solid #f6ad55; }
+        .stopped-badge {
+            background: linear-gradient(135deg, #64748b, #475569);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
 
-        .empty-state { background-color: rgba(252, 249, 245, 0.8); border: 2px dashed #d5ad85; }
-        .table-row { border-bottom: 1px solid #e4c9aa; transition: all 0.2s ease; }
-        .table-row:hover { background-color: #f8f1e9; }
+        .method-badge-1 {
+            background: linear-gradient(135deg, #e879f9, #c084fc);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(232, 121, 249, 0.3);
+        }
 
-        .classic-panel { background-color: #fcf9f5; border: 1px solid #d5ad85; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); border-radius: 0.5rem; }
-        .classic-header { border-bottom: 2px solid #d5ad85; position: relative; }
-        .classic-header:after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, #b38755, transparent); }
-        .classic-title { font-family: "Vazirmatn", serif; color: #795c41; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1); }
+        .method-badge-2 {
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3);
+        }
 
-        .ornament { position: relative; display: inline-block; font-weight: bold; color: #b38755; }
-        .ornament:before, .ornament:after { content: "❧"; display: inline-block; margin: 0 0.5rem; font-size: 1.2em; color: #c69c6d; }
+        .method-badge-3 {
+            background: linear-gradient(135deg, #fb923c, #f97316);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(251, 146, 60, 0.3);
+        }
 
-        table.classic-table { border-collapse: separate; border-spacing: 0; width: 100%; border: 1px solid #d5ad85; border-radius: 0.5rem; overflow: hidden; }
-        table.classic-table th { background-color: #e4c9aa; color: #5f4935; font-weight: bold; padding: 0.75rem 1rem; border-bottom: 1px solid #d5ad85; text-align: right; }
-        table.classic-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #f0e0cf; }
-        table.classic-table tr:last-child td { border-bottom: none; }
-        table.classic-table tr:hover { background-color: #f8f1e9; }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-        /* تم دارک */
-        body.dark { background-color: #2d2d2d; color: #e0e0e0; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23808080' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"); }
-        body.dark .classic-panel { background-color: #2f2f2f; border: 1px solid #555; }
-        body.dark .classic-title { color: #e0e0e0; }
-        body.dark .config-card { background-color: #3a3a3a; border-color: #555; }
-        body.dark .classic-table th { background-color: #444; color: #e0e0e0; border-color: #555; }
-        body.dark .classic-table td { border-color: #444; }
-        body.dark .classic-table tr:hover { background-color: #444; }
+        .btn-primary {
+            background: linear-gradient(135deg, #eab308, #ca8a04);
+            color: white;
+            box-shadow: 0 2px 8px rgba(234, 179, 8, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #ca8a04, #a16207);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-1px);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-info:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-1px);
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-purple:hover {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            transform: translateY(-1px);
+        }
+
+        .config-row {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(234, 179, 8, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .config-row:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(234, 179, 8, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .running-config {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05));
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .running-config::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #22c55e, #4ade80, #22c55e);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .empty-state {
+            background: rgba(255, 255, 255, 0.4);
+            border: 2px dashed rgba(234, 179, 8, 0.3);
+            border-radius: 16px;
+            padding: 48px 24px;
+            text-align: center;
+            color: #a16207;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, #eab308, #ca8a04);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #eab308, transparent);
+        }
+
+        .section-title::before {
+            right: 100%;
+        }
+
+        .section-title::after {
+            left: 100%;
+        }
+
+        .stats-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .notification {
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification-success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.05));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #15803d;
+        }
+
+        .notification-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #b91c1c;
+        }
     </style>
 </head>
-<body class="min-h-screen py-10">
-<div class="container mx-auto px-4">
-    <div class="max-w-6xl mx-auto classic-panel p-8">
-        <!-- هدر -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8 pb-6 classic-header">
-            <div class="flex items-center mb-4 md:mb-0">
-                <i class="fas fa-cogs text-2xl text-sepia-600 ml-3"></i>
-                <h1 class="text-3xl font-bold classic-title">مدیریت کانفیگ‌ها</h1>
-                <button id="theme-toggle" class="btn-classic px-4 py-2 rounded-lg flex items-center mr-4">
-                    <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="flex gap-4">
-                <a href="{{ route('configs.create') }}" class="btn-gold px-6 py-3 rounded flex items-center shadow-lg hover:shadow-xl transition-all duration-300">
-                    <i class="fas fa-plus-circle ml-2"></i>
-                    ایجاد کانفیگ جدید
-                </a>
-                <a href="{{ route('configs.single_product') }}" class="btn-classic px-6 py-3 rounded flex items-center shadow-lg hover:shadow-xl transition-all duration-300">
-                    <i class="fas fa-flask ml-2"></i>
-                    تست تک محصول
-                </a>
+<body>
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="glass-card p-6 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <i class="fas fa-cogs text-3xl text-gold-500 ml-3"></i>
+                    <h1 class="text-3xl font-bold title-gradient">مدیریت کانفیگ‌ها</h1>
+                </div>
+                <div class="flex gap-3">
+                    <a href="{{ route('configs.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        کانفیگ جدید
+                    </a>
+                    <a href="{{ route('configs.single_product') }}" class="btn btn-info">
+                        <i class="fas fa-flask"></i>
+                        تست تک محصول
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!-- پیام‌های سیستم -->
+        <!-- Notifications -->
         @if(session('success'))
-            <div class="bg-green-100 border border-green-500 text-green-800 px-6 py-4 rounded mb-6 flex items-center">
-                <i class="fas fa-check-circle mr-2 text-green-600"></i>
+            <div class="notification notification-success">
+                <i class="fas fa-check-circle text-lg"></i>
                 <span>{{ session('success') }}</span>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="bg-red-100 border border-red-500 text-red-800 px-6 py-4 rounded mb-6 flex items-center">
-                <i class="fas fa-exclamation-circle mr-2 text-red-600"></i>
+            <div class="notification notification-error">
+                <i class="fas fa-exclamation-circle text-lg"></i>
                 <span>{{ session('error') }}</span>
             </div>
         @endif
 
-        <!-- نمای کارت‌ها -->
-        <div class="mb-12">
-            <h2 class="text-xl font-bold mb-6 flex items-center justify-center">
-                <span class="ornament">نمای کارت‌ها</span>
-            </h2>
+        <!-- Stats -->
+        @php
+            $runningCount = count(array_filter($configs, fn($c) => isset($c['status']) && $c['status'] === 'running'));
+            $totalCount = count($configs);
+            $stoppedCount = $totalCount - $runningCount;
+        @endphp
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="stats-card">
+                <div class="text-2xl font-bold text-green-600 mb-1">{{ $runningCount }}</div>
+                <div class="text-sm text-gray-600">در حال اجرا</div>
+            </div>
+            <div class="stats-card">
+                <div class="text-2xl font-bold text-gray-600 mb-1">{{ $stoppedCount }}</div>
+                <div class="text-sm text-gray-600">متوقف</div>
+            </div>
+            <div class="stats-card">
+                <div class="text-2xl font-bold text-gold-600 mb-1">{{ $totalCount }}</div>
+                <div class="text-sm text-gray-600">کل کانفیگ‌ها</div>
+            </div>
+        </div>
 
-            @php
-                $sortedConfigs = $configs;
-                usort($sortedConfigs, function ($a, $b) {
-                    return strcmp($b['started_at'] ?? '0000-00-00', $a['started_at'] ?? '0000-00-00');
-                });
-            @endphp
+        <!-- Running Configs Section -->
+        @php
+            $runningConfigs = array_filter($configs, fn($c) => isset($c['status']) && $c['status'] === 'running');
+            usort($runningConfigs, fn($a, $b) => strcmp($b['started_at'] ?? '0', $a['started_at'] ?? '0'));
+        @endphp
 
-            @if(count($sortedConfigs) > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($sortedConfigs as $config)
-                        <div class="config-card p-6">
-                            <div class="flex justify-between items-start mb-4 pb-3 border-b border-sepia-200">
-                                <h3 class="text-lg font-bold text-sepia-900">{{ $config['filename'] }}</h3>
-                                <span class="badge badge-method-{{ $config['content']['method'] }}">
-                                    روش {{ $config['content']['method'] }}
-                                </span>
-                            </div>
-
-                            <div class="mb-6 text-sepia-800">
-                                <div class="flex items-center mb-3">
-                                    <i class="fas fa-link text-sepia-500 ml-2"></i>
-                                    <span class="text-sm">{{ count($config['content']['base_urls']) }} URL پایه</span>
+        @if(count($runningConfigs) > 0)
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-center mb-6">
+                    <span class="section-title">کانفیگ‌های فعال</span>
+                </h2>
+                
+                <div class="space-y-3">
+                    @foreach($runningConfigs as $config)
+                        <div class="config-row running-config">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div class="flex items-center gap-4 flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                                        <span class="font-bold text-lg">{{ $config['filename'] }}</span>
+                                    </div>
+                                    <span class="method-badge-{{ $config['content']['method'] }}">
+                                        روش {{ $config['content']['method'] }}
+                                    </span>
+                                    <span class="running-badge">فعال</span>
                                 </div>
-                                <div class="flex items-center mb-3">
-                                    <i class="fas fa-shopping-cart text-sepia-500 ml-2"></i>
-                                    <span class="text-sm">{{ count($config['content']['products_urls']) }} URL محصول</span>
-                                </div>
-                                <div class="flex items-center">
-                                    @if($config['status'] === 'running')
-                                        <div class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                                        <span class="text-sm text-green-700">در حال اجرا</span>
-                                    @elseif($config['status'] === 'crashed')
-                                        <div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-                                        <span class="text-sm text-red-700">خرابی</span>
-                                    @else
-                                        <div class="w-2 h-2 bg-gray-400 rounded-full mr-2"></div>
-                                        <span class="text-sm text-gray-600">متوقف</span>
+                                
+                                <div class="flex items-center gap-4 text-sm text-gray-600">
+                                    <span><i class="fas fa-link ml-1"></i>{{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }} URL</span>
+                                    @if(isset($config['started_at']))
+                                        <span><i class="fas fa-clock ml-1"></i>{{ $config['started_at'] }}</span>
                                     @endif
                                 </div>
-                            </div>
-
-                            <div class="flex flex-wrap justify-between gap-2 pt-4 border-t border-sepia-200">
-                                <div class="flex flex-wrap gap-2">
-                                    <form action="{{ route('configs.run', $config['filename']) }}" method="POST" class="inline-block">
+                                
+                                <div class="flex gap-2 flex-wrap">
+                                    <form action="{{ route('configs.update-scraper', $config['filename']) }}" method="POST" class="inline">
                                         @csrf
-                                        <button type="submit" class="btn-success px-3 py-2 rounded text-sm flex items-center">
-                                            <i class="fas fa-play ml-1"></i>
-                                            اجرا
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('configs.update-scraper', $config['filename']) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded text-sm flex items-center">
-                                            <i class="fas fa-sync-alt ml-1"></i>
+                                        <button type="submit" class="btn btn-purple">
+                                            <i class="fas fa-sync-alt"></i>
                                             اپدیت
                                         </button>
                                     </form>
-                                    <form action="{{ route('configs.stop', $config['filename']) }}" method="POST" class="inline-block">
+                                    <form action="{{ route('configs.stop', $config['filename']) }}" method="POST" class="inline">
                                         @csrf
-                                        <button type="submit" class="btn-danger px-3 py-2 rounded text-sm flex items-center">
-                                            <i class="fas fa-stop ml-1"></i>
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fas fa-stop"></i>
                                             توقف
                                         </button>
                                     </form>
-                                    <a href="{{ route('configs.edit', $config['filename']) }}" class="btn-classic px-3 py-2 rounded text-sm flex items-center">
-                                        <i class="fas fa-edit ml-1"></i>
+                                    <a href="{{ route('configs.edit', $config['filename']) }}" class="btn btn-warning">
+                                        <i class="fas fa-edit"></i>
                                         ویرایش
                                     </a>
-                                    <a href="{{ route('configs.logs', $config['filename']) }}" class="btn-classic px-3 py-2 rounded text-sm flex items-center">
-                                        <i class="fas fa-file-alt ml-1"></i>
+                                    <a href="{{ route('configs.logs', $config['filename']) }}" class="btn btn-info">
+                                        <i class="fas fa-file-alt"></i>
                                         لاگ‌ها
                                     </a>
                                 </div>
-                                <form action="{{ route('configs.destroy', $config['filename']) }}" method="POST" class="inline-block" onsubmit="return confirm('آیا از حذف این کانفیگ اطمینان دارید؟')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-danger px-3 py-2 rounded text-sm flex items-center">
-                                        <i class="fas fa-trash-alt ml-1"></i>
-                                        حذف
-                                    </button>
-                                </form>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- All Configs Section -->
+        <div class="glass-card p-6">
+            <h2 class="text-xl font-bold text-center mb-6">
+                <span class="section-title">تمامی کانفیگ‌ها</span>
+            </h2>
+
+            @if(count($configs) > 0)
+                <div class="space-y-3">
+                    @php
+                        $sortedConfigs = $configs;
+                        usort($sortedConfigs, fn($a, $b) => ($a['content']['method'] ?? 0) <=> ($b['content']['method'] ?? 0));
+                    @endphp
+                    
+                    @foreach($sortedConfigs as $index => $config)
+                        <div class="config-row {{ (isset($config['status']) && $config['status'] === 'running') ? 'running-config' : '' }}">
+                            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                                <div class="flex items-center gap-4 flex-1">
+                                    <div class="text-gold-600 font-bold text-lg min-w-[30px]">{{ $index + 1 }}</div>
+                                    <div>
+                                        <div class="font-bold text-lg">{{ $config['filename'] }}</div>
+                                        @if(isset($config['started_at']))
+                                            <div class="text-xs text-gray-500">{{ $config['started_at'] }}</div>
+                                        @endif
+                                    </div>
+                                    <span class="method-badge-{{ $config['content']['method'] }}">
+                                        روش {{ $config['content']['method'] }}
+                                    </span>
+                                    @if(isset($config['status']) && $config['status'] === 'running')
+                                        <span class="running-badge">فعال</span>
+                                    @else
+                                        <span class="stopped-badge">متوقف</span>
+                                    @endif
+                                </div>
+                                
+                                <div class="flex items-center gap-4 text-sm text-gray-600">
+                                    <span><i class="fas fa-link ml-1"></i>{{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }} URL</span>
+                                </div>
+                                
+                                <div class="flex gap-2 flex-wrap">
+                                    @if(!isset($config['status']) || $config['status'] !== 'running')
+                                        <form action="{{ route('configs.run', $config['filename']) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-play"></i>
+                                                اجرا
+                                            </button>
+                                        </form>
+                                    @endif
+                                    
+                                    <form action="{{ route('configs.update-scraper', $config['filename']) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-purple">
+                                            <i class="fas fa-sync-alt"></i>
+                                            اپدیت
+                                        </button>
+                                    </form>
+                                    
+                                    @if(isset($config['status']) && $config['status'] === 'running')
+                                        <form action="{{ route('configs.stop', $config['filename']) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fas fa-stop"></i>
+                                                توقف
+                                            </button>
+                                        </form>
+                                    @endif
+                                    
+                                    <a href="{{ route('configs.edit', $config['filename']) }}" class="btn btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                        ویرایش
+                                    </a>
+                                    <a href="{{ route('configs.logs', $config['filename']) }}" class="btn btn-info">
+                                        <i class="fas fa-file-alt"></i>
+                                        لاگ‌ها
+                                    </a>
+                                    <form action="{{ route('configs.destroy', $config['filename']) }}" method="POST" class="inline" onsubmit="return confirm('آیا از حذف این کانفیگ اطمینان دارید؟')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                            حذف
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <div class="empty-state rounded p-10 flex flex-col items-center justify-center">
-                    <i class="fas fa-folder-open text-5xl text-sepia-400 mb-4"></i>
-                    <h3 class="text-xl font-bold text-sepia-700 mb-2">هیچ کانفیگی یافت نشد</h3>
-                    <p class="text-sepia-600 mb-6 text-center">برای شروع، یک کانفیگ جدید ایجاد کنید。</p>
-                    <a href="{{ route('configs.create') }}" class="btn-gold px-6 py-3 rounded flex items-center">
-                        <i class="fas fa-plus-circle ml-2"></i>
+                <div class="empty-state">
+                    <i class="fas fa-folder-open text-5xl mb-4 opacity-50"></i>
+                    <h3 class="text-xl font-bold mb-2">هیچ کانفیگی وجود ندارد</h3>
+                    <p class="text-gray-600 mb-4">برای شروع، اولین کانفیگ خود را ایجاد کنید</p>
+                    <a href="{{ route('configs.create') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
                         ایجاد کانفیگ جدید
                     </a>
                 </div>
             @endif
         </div>
 
-        <!-- نمای جدول -->
-        <div>
-            <h2 class="text-xl font-bold mb-6 flex items-center justify-center">
-                <span class="ornament">نمای جدول</span>
-            </h2>
-
-            @php
-                $sortedByMethod = $configs;
-                usort($sortedByMethod, function ($a, $b) {
-                    return ($a['content']['method'] ?? 0) <=> ($b['content']['method'] ?? 0);
-                });
-            @endphp
-
-            @if(count($sortedByMethod) > 0)
-                <div class="overflow-x-auto rounded">
-                    <table class="classic-table">
-                        <thead>
-                        <tr>
-                            <th class="px-6 py-4 text-right">نام فایل</th>
-                            <th class="px-6 py-4 text-right">روش</th>
-                            <th class="px-6 py-4 text-right">وضعیت</th>
-                            <th class="px-6 py-4 text-right">تعداد URL</th>
-                            <th class="px-6 py-4 text-right">عملیات</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($sortedByMethod as $config)
-                            <tr>
-                                <td class="px-6 py-4">
-                                    <div class="font-medium text-sepia-900">{{ $config['filename'] }}</div>
-                                    @if(isset($config['started_at']))
-                                        <div class="text-xs text-sepia-600">{{ $config['started_at'] }}</div>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4">
-                                        <span class="badge badge-method-{{ $config['content']['method'] }}">
-                                            روش {{ $config['content']['method'] }}
-                                        </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    @if($config['status'] === 'running')
-                                        <span class="inline-flex items-center text-green-700">
-                                                <div class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                                                در حال اجرا
-                                            </span>
-                                    @elseif($config['status'] === 'crashed')
-                                        <span class="inline-flex items-center text-red-700">
-                                                <div class="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-                                                خرابی
-                                            </span>
-                                    @else
-                                        <span class="inline-flex items-center text-gray-600">
-                                                <div class="w-2 h-2 bg-gray-400 rounded-full mr-2"></div>
-                                                متوقف
-                                            </span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 text-sepia-800">
-                                    {{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }}
-                                </td>
-                                <td class="px-6 py-4 text-right flex flex-wrap gap-2">
-                                    <a href="{{ route('configs.edit', $config['filename']) }}" class="btn-classic px-2 py-1 rounded text-xs">
-                                        <i class="fas fa-edit ml-1"></i>
-                                        ویرایش
-                                    </a>
-                                    <form action="{{ route('configs.run', $config['filename']) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        <button type="submit" class="btn-success px-2 py-1 rounded text-xs flex items-center">
-                                            <i class="fas fa-play ml-1"></i>
-                                            اجرا
-                                        </button>
-                                    </form>
-                                    <form action="{{ route('configs.stop', $config['filename']) }}" method="POST" class="inline-block">
-                                        @csrf
-                                        <button type="submit" class="btn-danger px-2 py-1 rounded text-xs flex items-center">
-                                            <i class="fas fa-stop ml-1"></i>
-                                            توقف
-                                        </button>
-                                    </form>
-                                    <a href="{{ route('configs.logs', $config['filename']) }}" class="btn-classic px-2 py-1 rounded text-xs">
-                                        <i class="fas fa-file-alt ml-1"></i>
-                                        لاگ‌ها
-                                    </a>
-                                    <form action="{{ route('configs.destroy', $config['filename']) }}" method="POST" class="inline-block" onsubmit="return confirm('آیا از حذف این کانفیگ اطمینان دارید؟')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn-danger px-2 py-1 rounded text-xs">
-                                            <i class="fas fa-trash-alt ml-1"></i>
-                                            حذف
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <div class="empty-state rounded p-8 flex flex-col items-center justify-center">
-                    <i class="fas fa-table text-4xl text-sepia-400 mb-3"></i>
-                    <h3 class="text-lg font-bold text-sepia-700 mb-1">جدول خالی است</h3>
-                    <p class="text-sepia-600 text-sm">داده‌ای برای نمایش وجود ندارد。</p>
-                </div>
-            @endif
-        </div>
-
-        <!-- دکمه حذف تمام لاگ‌ها -->
-        <div class="mt-8 pt-6 border-t border-sepia-200 flex justify-center">
-            <form action="{{ route('configs.logs.deleteAll') }}" method="POST" onsubmit="return confirm('آیا از حذف تمامی فایل‌های لاگ مرتبط با ربات اطمینان دارید؟ این عملیات قابل بازگشت نیست.')">
+        <!-- Delete All Logs -->
+        <div class="text-center mt-8">
+            <form action="{{ route('configs.logs.deleteAll') }}" method="POST" onsubmit="return confirm('آیا از حذف تمامی لاگ‌ها اطمینان دارید؟')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="btn-danger px-6 py-3 rounded flex items-center shadow-lg hover:shadow-xl transition-all duration-300">
-                    <i class="fas fa-trash-alt ml-2"></i>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i>
                     حذف تمام لاگ‌ها
                 </button>
             </form>
         </div>
     </div>
-</div>
 
-<script>
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-
-    themeToggleBtn.addEventListener('click', function () {
-        document.body.classList.toggle('dark');
-
-        if (document.body.classList.contains('dark')) {
-            themeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
-        } else {
-            themeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>`;
-        }
-    });
-</script>
+    <script>
+        // Auto-refresh running configs every 10 seconds
+        setInterval(() => {
+            location.reload();
+        }, 10000);
+    </script>
 </body>
 </html>
