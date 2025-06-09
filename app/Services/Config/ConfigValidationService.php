@@ -50,7 +50,7 @@ class ConfigValidationService
             'availability_keywords.negative.*' => 'required|string',
             'price_keywords.unpriced' => 'required|array|min:1',
             'price_keywords.unpriced.*' => 'required|string',
-            'selectors.main_page.product_links.type' => 'required|string',
+            'selectors.main_page.product_links.type' => 'required|string|in:css,xpath,xml', // تغییر: اضافه شدن xml
             'selectors.main_page.product_links.selector' => 'required|string',
             'selectors.main_page.product_links.attribute' => 'required|string',
             'out_of_stock_button' => 'boolean',

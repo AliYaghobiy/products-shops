@@ -547,7 +547,12 @@
                            value="{{ old('container', $content['container'] ?? '') }}">
                     <small class="text-gray-500">این فیلد برای متد 3 اختیاری است.</small>
                 </div>
-
+                <div class="form-group method-2-field hidden">
+                    <label class="label">کانتینر <span class="text-gray-500">(اختیاری)</span></label>
+                    <input type="text" name="container" class="input"
+                           value="{{ old('container', $content['container'] ?? '') }}">
+                    <small class="text-gray-500">این فیلد برای متد 3 اختیاری است.</small>
+                </div>
                 <div class="grid-2">
                     <div class="form-group">
                         <label class="label">تعداد اسکرول</label>
@@ -632,6 +637,7 @@
 
                 <!-- تنظیمات روش 2 -->
                 <div class="method-2-field hidden">
+
                     <div class="form-group">
                         <label class="flex items-center gap-3">
                             <input type="hidden" name="share_product_id_from_method_2" value="0">
@@ -796,17 +802,39 @@
                     <h3 class="text-lg font-bold mb-4 text-green-600">سلکتورهای صفحه اصلی</h3>
                     <div class="grid-2">
                         <div class="form-group">
+                            <label class="label">نوع سلکتور لینک محصولات <span class="required">*</span></label>
+                            <select name="selectors[main_page][product_links][type]" class="input" required>
+                                <option
+                                    value="css" {{ old('selectors.main_page.product_links.type', $content['selectors']['main_page']['product_links']['type'] ?? 'css') === 'css' ? 'selected' : '' }}>
+                                    CSS Selector
+                                </option>
+                                <option
+                                    value="xpath" {{ old('selectors.main_page.product_links.type', $content['selectors']['main_page']['product_links']['type'] ?? 'css') === 'xpath' ? 'selected' : '' }}>
+                                    XPath
+                                </option>
+                                <option
+                                    value="xml" {{ old('selectors.main_page.product_links.type', $content['selectors']['main_page']['product_links']['type'] ?? 'css') === 'xml' ? 'selected' : '' }}>
+                                    XML (برای Sitemap)
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label class="label">سلکتور لینک محصولات <span class="required">*</span></label>
-                            <input type="hidden" name="selectors[main_page][product_links][type]" value="css">
                             <input type="text" name="selectors[main_page][product_links][selector]" class="input"
-                                   placeholder=".product-item a" required
+                                   placeholder="مثال: .product-item a یا //loc" required
                                    value="{{ old('selectors.main_page.product_links.selector', $content['selectors']['main_page']['product_links']['selector'] ?? '') }}">
+                            <small class="text-gray-500 text-xs mt-1">
+                                برای CSS: .product-item a | برای XPath: //a[@class='product'] | برای XML Sitemap: //loc
+                            </small>
                         </div>
                         <div class="form-group">
                             <label class="label">صفت لینک محصولات <span class="required">*</span></label>
                             <input type="text" name="selectors[main_page][product_links][attribute]"
                                    value="{{ old('selectors.main_page.product_links.attribute', $content['selectors']['main_page']['product_links']['attribute'] ?? 'href') }}"
                                    class="input" required>
+                            <small class="text-gray-500 text-xs mt-1">
+                                برای CSS/XPath: href | برای XML: false (متن عنصر را می‌گیرد)
+                            </small>
                         </div>
                     </div>
 

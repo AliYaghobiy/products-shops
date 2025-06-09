@@ -1,0 +1,879 @@
+اجرای اسکرپر  برای کانفیگ yaradarman در تاریخ 2025-06-08 16:51:47 شروع شد...
+Starting flexible scraper...
+Loading configuration from /var/www/html/products-shops/storage/app/private/private/yaradarman.json
+[1;92mValidating configuration...[0m
+[1;92mConfig validated. Using run_method: new[0m
+Request delay set to 500 ms.
+Starting scrape operation...
+[1;95mInside scrapeMultiple method[0m
+[1;92mStarting scraper with start_id: not set[0m
+[1;92mConfiguration validated successfully.[0m
+[1;92mGenerated database name: yaradarman_com[0m
+[1;92mDatabase mode: clear[0m
+[1;93mDatabase yaradarman_com exists, dropping it...[0m
+[1;92mCreating database yaradarman_com...[0m
+[1;92mSwitched to database: yaradarman_com[0m
+[1;92mRunning specific migrations...[0m
+[1;92mApplied migration: 2025_04_08_162133_create_products_table.php[0m
+[1;92mApplied migration: 2025_04_13_073528_create_failed_links_table.php[0m
+[1;92mApplied migration: 2025_05_19_162835_create_links_table.php[0m
+[1;92mSpecific migrations completed[0m
+[1;92mRun method: new[0m
+[1;92m🌐 Fetching product links from web...[0m
+[1;92m🔄 STARTING fetchProductLinks - Method: 1[0m
+[1;95m📄 Config check - products_urls count: 1[0m
+[1;95m📄 Config check - base_urls: ["https:\/\/yaradarman.com"][0m
+[1;92m✅ Product links selector found (array): {"type":"css","selector":"div.wd-product > div > div > a","attribute":"href"}[0m
+[1;95m🔄 Processing 1 product URLs...[0m
+[1;95m🌐 Processing URL 1/1: https://yaradarman.com/shop[0m
+[1;93mNormalized URL: https://yaradarman.com/shop -> https://yaradarman.com/shop/[0m
+[1;95m🔗 Testing connection to: https://yaradarman.com/shop[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Ap...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 447330 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop[0m
+[1;92m✅ Connection successful - Content length: 447330[0m
+[1;93m📄 First 200 chars of content: <!DOCTYPE html>
+<html dir="rtl" lang="fa-IR">
+<head>
+<meta charset="UTF-8">
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="https://yaradarman.com/xmlrpc.php">
+<meta nam[0m
+[1;92mFetching page: https://yaradarman.com/shop/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Ap...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 447284 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/[0m
+[1;92mpage1 -> 21 link find[0m
+[1;92mParent node found for link: https://yaradarman.com/product/sorbact-foam-gentle-border/[0m
+[1;92mAdded link: https://yaradarman.com/product/sorbact-foam-gentle-border/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hydrotac-hartmann/[0m
+[1;92mAdded link: https://yaradarman.com/product/hydrotac-hartmann/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/mepilex/[0m
+[1;92mAdded link: https://yaradarman.com/product/mepilex/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/mepilex-ag/[0m
+[1;92mAdded link: https://yaradarman.com/product/mepilex-ag/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/mepilex-border-flex-molnlycke/[0m
+[1;92mAdded link: https://yaradarman.com/product/mepilex-border-flex-molnlycke/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hamoon-medical-alcohol-96/[0m
+[1;92mAdded link: https://yaradarman.com/product/hamoon-medical-alcohol-96/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hamoon-teb-alcohol-70/[0m
+[1;92mAdded link: https://yaradarman.com/product/hamoon-teb-alcohol-70/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/komakol-teb-alcohol-70/[0m
+[1;92mAdded link: https://yaradarman.com/product/komakol-teb-alcohol-70/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/jahan-teb-alcohol-70/[0m
+[1;92mAdded link: https://yaradarman.com/product/jahan-teb-alcohol-70/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/pakteb-alcohol-70/[0m
+[1;92mAdded link: https://yaradarman.com/product/pakteb-alcohol-70/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/farmadin-betadine-10/[0m
+[1;92mAdded link: https://yaradarman.com/product/farmadin-betadine-10/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/kimiya-betadine-10/[0m
+[1;92mAdded link: https://yaradarman.com/product/kimiya-betadine-10/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/daroo-darman-betadine-10/[0m
+[1;92mAdded link: https://yaradarman.com/product/daroo-darman-betadine-10/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/breast-prosthesis-amoena400/[0m
+[1;92mAdded link: https://yaradarman.com/product/breast-prosthesis-amoena400/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/breast-prosthesis-amoena1500/[0m
+[1;92mAdded link: https://yaradarman.com/product/breast-prosthesis-amoena1500/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/amoena-essential-light-2s/[0m
+[1;92mAdded link: https://yaradarman.com/product/amoena-essential-light-2s/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/amoena-priform/[0m
+[1;92mAdded link: https://yaradarman.com/product/amoena-priform/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-x-168/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-x-168/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-x-136/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-x-136/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/neck-hearing-aid-v-z1/[0m
+[1;92mAdded link: https://yaradarman.com/product/neck-hearing-aid-v-z1/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/ijoeir-hearing-aid-gm-106/[0m
+[1;92mAdded link: https://yaradarman.com/product/ijoeir-hearing-aid-gm-106/[0m
+[1;92mBuilt pagination URL from sample: https://yaradarman.com/shop/page/2/[0m
+[1;92mFetching page: https://yaradarman.com/shop/page/2/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/page/2/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (X11; CrOS armv7l 7077.134.0) AppleWeb...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 418755 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/page/2/[0m
+[1;92mpage2 -> 13 link find[0m
+[1;92mParent node found for link: https://yaradarman.com/product/mahdaroo-betadine-10/[0m
+[1;92mAdded link: https://yaradarman.com/product/mahdaroo-betadine-10/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/solbedin-betadine-10/[0m
+[1;92mAdded link: https://yaradarman.com/product/solbedin-betadine-10/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/arsha-teb-safety-box/[0m
+[1;92mAdded link: https://yaradarman.com/product/arsha-teb-safety-box/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/bio-safe-safety-box/[0m
+[1;92mAdded link: https://yaradarman.com/product/bio-safe-safety-box/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/supa-safety-box/[0m
+[1;92mAdded link: https://yaradarman.com/product/supa-safety-box/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/septi-rapid-disinfectant-and-cleaner-spray/[0m
+[1;92mAdded link: https://yaradarman.com/product/septi-rapid-disinfectant-and-cleaner-spray/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/septisurface-disinfectant-and-cleaner-spray/[0m
+[1;92mAdded link: https://yaradarman.com/product/septisurface-disinfectant-and-cleaner-spray/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/saya-sept-instrument-disinfection-solution/[0m
+[1;92mAdded link: https://yaradarman.com/product/saya-sept-instrument-disinfection-solution/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/amoena-aqua-wave/[0m
+[1;92mAdded link: https://yaradarman.com/product/amoena-aqua-wave/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-gm-910/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-gm-910/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-gm-100a/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-gm-100a/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-jecpp-kxw-601/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-jecpp-kxw-601/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-jecpp-kxw-212-kxw213/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-jecpp-kxw-212-kxw213/[0m
+[1;92mBuilt pagination URL from sample: https://yaradarman.com/shop/page/3/[0m
+[1;92mFetching page: https://yaradarman.com/shop/page/3/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/page/3/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 400599 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/page/3/[0m
+[1;92mpage3 -> 5 link find[0m
+[1;92mParent node found for link: https://yaradarman.com/product/septomin-disinfection-gel/[0m
+[1;92mAdded link: https://yaradarman.com/product/septomin-disinfection-gel/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-f1/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-f1/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-f138b-jecpp/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-f138b-jecpp/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-k-812/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-k-812/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-e-103/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-e-103/[0m
+[1;92mBuilt pagination URL from sample: https://yaradarman.com/shop/page/4/[0m
+[1;92mFetching page: https://yaradarman.com/shop/page/4/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/page/4/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) App...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 398085 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/page/4/[0m
+[1;92mpage4 -> 4 link find[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-a360/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-a360/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-k188/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-k188/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/mini-hearing-aid-gm-917/[0m
+[1;92mAdded link: https://yaradarman.com/product/mini-hearing-aid-gm-917/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-g12/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-g12/[0m
+[1;92mBuilt pagination URL from sample: https://yaradarman.com/shop/page/5/[0m
+[1;92mFetching page: https://yaradarman.com/shop/page/5/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/page/5/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (iPad; CPU OS 7_1_1 like Mac OS X) App...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 428856 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/page/5/[0m
+[1;92mpage5 -> 4 link find[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-vhp-220/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-vhp-220/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/hearing-aid-ijoeir-vhp-1607/[0m
+[1;92mAdded link: https://yaradarman.com/product/hearing-aid-ijoeir-vhp-1607/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-a3-g1t/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-a3-g1t/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-a130/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-a130/[0m
+[1;92mBuilt pagination URL from sample: https://yaradarman.com/shop/page/6/[0m
+[1;92mFetching page: https://yaradarman.com/shop/page/6/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/page/6/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; N...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 391410 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/page/6/[0m
+[1;92mpage6 -> 2 link find[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-v99/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-v99/[0m
+[1;92mParent node found for link: https://yaradarman.com/product/axon-hearing-aids-f16/[0m
+[1;92mAdded link: https://yaradarman.com/product/axon-hearing-aids-f16/[0m
+[1;92mBuilt pagination URL from sample: https://yaradarman.com/shop/page/7/[0m
+[1;92mFetching page: https://yaradarman.com/shop/page/7/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/page/7/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; y...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 380056 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/page/7/[0m
+[1;92mpage7 -> 0 link find[0m
+[1;93mNo products found on page 7 for https://yaradarman.com/shop. Consecutive empty pages: 1[0m
+[1;93mHTML snippet of page 7: <!DOCTYPE html>
+<html dir="rtl" lang="fa-IR">
+<head>
+<meta charset="UTF-8">
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="https://yaradarman.com/xmlrpc.php">
+<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'/>
+<title>فروشگاه | صفحه 7 از 52 | یارا درمان آینده</title>
+<link rel="canonical" href="https://yaradarman.com/shop/page/7/"/>
+<link rel="prev" href="https://yaradarman.com/sho[0m
+[1;92mBuilt pagination URL from sample: https://yaradarman.com/shop/page/8/[0m
+[1;92mFetching page: https://yaradarman.com/shop/page/8/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/page/8/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0)...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 380058 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/page/8/[0m
+[1;92mpage8 -> 0 link find[0m
+[1;93mNo products found on page 8 for https://yaradarman.com/shop. Consecutive empty pages: 2[0m
+[1;93mHTML snippet of page 8: <!DOCTYPE html>
+<html dir="rtl" lang="fa-IR">
+<head>
+<meta charset="UTF-8">
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="https://yaradarman.com/xmlrpc.php">
+<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'/>
+<title>فروشگاه | صفحه 8 از 52 | یارا درمان آینده</title>
+<link rel="canonical" href="https://yaradarman.com/shop/page/8/"/>
+<link rel="prev" href="https://yaradarman.com/sho[0m
+[1;92mBuilt pagination URL from sample: https://yaradarman.com/shop/page/9/[0m
+[1;92mFetching page: https://yaradarman.com/shop/page/9/[0m
+[1;95m🌐 FETCHING: https://yaradarman.com/shop/page/9/[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0...[0m
+[1;95m🔍 Testing DNS for host: yaradarman.com[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=UTF-8[0m
+[1;93m📊 Server: , Content-Length: [0m
+[1;92m📄 Response body length: 380161 bytes[0m
+[1;92m✅ Successfully fetched content from https://yaradarman.com/shop/page/9/[0m
+[1;92mpage9 -> 0 link find[0m
+[1;93mNo products found on page 9 for https://yaradarman.com/shop. Consecutive empty pages: 3[0m
+[1;93mHTML snippet of page 9: <!DOCTYPE html>
+<html dir="rtl" lang="fa-IR">
+<head>
+<meta charset="UTF-8">
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="https://yaradarman.com/xmlrpc.php">
+<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'/>
+<title>فروشگاه | صفحه 9 از 52 | یارا درمان آینده</title>
+<link rel="canonical" href="https://yaradarman.com/shop/page/9/"/>
+<link rel="prev" href="https://yaradarman.com/sho[0m
+[1;93mStopping pagination: 3 consecutive pages with no products found for https://yaradarman.com/shop.[0m
+[1;93m📊 Scrape result: {"links_count":49,"pages_processed":8}[0m
+[1;92m🔗 Found 49 raw links from https://yaradarman.com/shop[0m
+[1;93m📋 Sample links: [{"url":"https:\/\/yaradarman.com\/product\/sorbact-foam-gentle-border\/","image":"","product_id":""},{"url":"https:\/\/yaradarman.com\/product\/hydrotac-hartmann\/","image":"","product_id":""},{"url":"https:\/\/yaradarman.com\/product\/mepilex\/","image":"","product_id":""}][0m
+[1;92m📈 Total links so far: 49[0m
+[1;92m🏁 FINAL RESULT - Total unique links: 49[0m
+[1;92mGot 49 unique product links from web[0m
+[1;92mSaving 49 product links to database...[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/sorbact-foam-gentle-border/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hydrotac-hartmann/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/mepilex/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/mepilex-ag/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/mepilex-border-flex-molnlycke/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hamoon-medical-alcohol-96/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hamoon-teb-alcohol-70/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/komakol-teb-alcohol-70/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/jahan-teb-alcohol-70/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/pakteb-alcohol-70/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/farmadin-betadine-10/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/kimiya-betadine-10/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/daroo-darman-betadine-10/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/breast-prosthesis-amoena400/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/breast-prosthesis-amoena1500/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/amoena-essential-light-2s/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/amoena-priform/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-x-168/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-x-136/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/neck-hearing-aid-v-z1/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/ijoeir-hearing-aid-gm-106/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/mahdaroo-betadine-10/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/solbedin-betadine-10/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/arsha-teb-safety-box/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/bio-safe-safety-box/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/supa-safety-box/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/septi-rapid-disinfectant-and-cleaner-spray/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/septisurface-disinfectant-and-cleaner-spray/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/saya-sept-instrument-disinfection-solution/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/amoena-aqua-wave/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-gm-910/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-gm-100a/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-jecpp-kxw-601/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-jecpp-kxw-212-kxw213/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/septomin-disinfection-gel/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-f1/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-f138b-jecpp/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-k-812/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-e-103/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-a360/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-k188/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/mini-hearing-aid-gm-917/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-g12/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-vhp-220/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/hearing-aid-ijoeir-vhp-1607/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-a3-g1t/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-a130/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-v99/[0m
+[1;94mPreparing to save link: https://yaradarman.com/product/axon-hearing-aids-f16/[0m
+[1;92mSuccessfully saved 49 new links to database[0m
+[1;92mAfter deduplication, processing 49 unique links[0m
+[1;92mProcessing links using method: 1[0m
+[1;92mProcessing 49 product links in batches...[0m
+[1;93mInput links: [
+    "https:\/\/yaradarman.com\/product\/sorbact-foam-gentle-border\/",
+    "https:\/\/yaradarman.com\/product\/hydrotac-hartmann\/",
+    "https:\/\/yaradarman.com\/product\/mepilex\/",
+    "https:\/\/yaradarman.com\/product\/mepilex-ag\/",
+    "https:\/\/yaradarman.com\/product\/mepilex-border-flex-molnlycke\/"
+]...[0m
+[1;92mFiltered to 49 valid product links[0m
+[1;92mUsing processing method: 1[0m
+[1;92mProcessing product 1/49: https://yaradarman.com/product/pakteb-alcohol-70/[0m
+[1;92mExtracted product_id: "10143" for https://yaradarman.com/product/pakteb-alcohol-70/[0m
+[1;92m🆕 محصول جدید اضافه شد: الکل طبی 70 درصد پاک طب (ID: 10143)[0m
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |          Category           | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+|   10143    |         الکل طبی 70 درصد پاک طب          |     0      | الکل طبی, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/pakteb-alcohol-70/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/pakteb-alcohol-70/[0m
+[1;92mProcessing product 2/49: https://yaradarman.com/product/jahan-teb-alcohol-70/[0m
+[1;92mExtracted product_id: "10137" for https://yaradarman.com/product/jahan-teb-alcohol-70/[0m
+[1;92m🆕 محصول جدید اضافه شد: الکل اتیلیک طبی ۷۰ درصد جهان الکل طب اراک (ID: 10137)[0m
++------------+---------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |          Category           | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+|   10137    | الکل اتیلیک طبی ۷۰ درصد جهان الکل طب ارا... |     0      | الکل طبی, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/jahan-teb-alcohol-70/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/jahan-teb-alcohol-70/[0m
+[1;92mProcessing product 3/49: https://yaradarman.com/product/hamoon-medical-alcohol-96/[0m
+[1;92mExtracted product_id: "10118" for https://yaradarman.com/product/hamoon-medical-alcohol-96/[0m
+[1;92m🆕 محصول جدید اضافه شد: الکل طبی 96 درصد هامون طب مرکزی | TB96 (ID: 10118)[0m
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |          Category           | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+|   10118    |  الکل طبی 96 درصد هامون طب مرکزی | TB96  |     0      | الکل طبی, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hamoon-medical-alcohol-96/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hamoon-medical-alcohol-96/[0m
+[1;92mProcessing product 4/49: https://yaradarman.com/product/sorbact-foam-gentle-border/[0m
+[1;92mExtracted product_id: "559" for https://yaradarman.com/product/sorbact-foam-gentle-border/[0m
+[1;92m🆕 محصول جدید اضافه شد: پانسمان فوم سیلیکونی چسبدار سوربکت | فوم جنتل (ID: 559)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    559     | پانسمان فوم سیلیکونی چسبدار سوربکت | فوم... |     77     | پانسمان فوم سیلیکونی, محصولات ... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/sorbact-foam-gentle-border/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/sorbact-foam-gentle-border/[0m
+[1;92mProcessing product 5/49: https://yaradarman.com/product/mepilex-ag/[0m
+[1;92mExtracted product_id: "838" for https://yaradarman.com/product/mepilex-ag/[0m
+[1;92m🆕 محصول جدید اضافه شد: پانسمان فوم سیلیکونی نقره ‌مونلیکه | مپی‌لکس نقره (ID: 838)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    838     | پانسمان فوم سیلیکونی نقره ‌مونلیکه | مپی... |    181     | پانسمان فوم, پانسمان فوم سیلیک... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/mepilex-ag/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/mepilex-ag/[0m
+[1;92mProcessing product 6/49: https://yaradarman.com/product/mepilex-border-flex-molnlycke/[0m
+[1;92mExtracted product_id: "856" for https://yaradarman.com/product/mepilex-border-flex-molnlycke/[0m
+[1;92m🆕 محصول جدید اضافه شد: پانسمان فوم سیلیکونی چسبدار مونلیکه | مپی‌لکس فلکس چسبدار (ID: 856)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    856     | پانسمان فوم سیلیکونی چسبدار مونلیکه | مپ... |     62     | پانسمان فوم سیلیکونی, محصولات ... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/mepilex-border-flex-molnlycke/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/mepilex-border-flex-molnlycke/[0m
+[1;92mProcessing product 7/49: https://yaradarman.com/product/komakol-teb-alcohol-70/[0m
+[1;92mExtracted product_id: "10130" for https://yaradarman.com/product/komakol-teb-alcohol-70/[0m
+[1;92m🆕 محصول جدید اضافه شد: الکل طبی 70 درصد کماکل (ID: 10130)[0m
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |          Category           | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+|   10130    |          الکل طبی 70 درصد کماکل          |     0      | الکل طبی, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/komakol-teb-alcohol-70/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/komakol-teb-alcohol-70/[0m
+[1;92mProcessing product 8/49: https://yaradarman.com/product/hamoon-teb-alcohol-70/[0m
+[1;92mExtracted product_id: "10124" for https://yaradarman.com/product/hamoon-teb-alcohol-70/[0m
+[1;92m🆕 محصول جدید اضافه شد: الکل طبی 70 درصد هامون طب مرکزی (ID: 10124)[0m
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |          Category           | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+|   10124    |     الکل طبی 70 درصد هامون طب مرکزی      |     0      | الکل طبی, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hamoon-teb-alcohol-70/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hamoon-teb-alcohol-70/[0m
+[1;92mProcessing product 9/49: https://yaradarman.com/product/axon-hearing-aids-x-168/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-x-168/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک پشت گوش آکسون | مدل X-168 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |      سمعک پشت گوش آکسون | مدل X-168      |     1      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-x-168/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-x-168/[0m
+[1;92mProcessing product 10/49: https://yaradarman.com/product/mepilex/[0m
+[1;92mExtracted product_id: "829" for https://yaradarman.com/product/mepilex/[0m
+[1;92m🆕 محصول جدید اضافه شد: پانسمان فوم سیلیکونی ساده مونلیکه | مپی‌لکس (ID: 829)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    829     | پانسمان فوم سیلیکونی ساده مونلیکه | مپی‌... |     88     | پانسمان فوم, پانسمان فوم سیلیک... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/mepilex/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/mepilex/[0m
+[1;92mProcessing product 11/49: https://yaradarman.com/product/hydrotac-hartmann/[0m
+[1;92mExtracted product_id: "701" for https://yaradarman.com/product/hydrotac-hartmann/[0m
+[1;92m🆕 محصول جدید اضافه شد: پانسمان فوم سیلیکونی هارتمن | هیدروتک (ID: 701)[0m
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    701     |  پانسمان فوم سیلیکونی هارتمن | هیدروتک   |     67     | پانسمان فوم سیلیکونی, محصولات ... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hydrotac-hartmann/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hydrotac-hartmann/[0m
+[1;92mProcessing product 12/49: https://yaradarman.com/product/farmadin-betadine-10/[0m
+[1;92mExtracted product_id: "10149" for https://yaradarman.com/product/farmadin-betadine-10/[0m
+[1;92m🆕 محصول جدید اضافه شد: بتادین سبز ۱۰% فارمادین (ID: 10149)[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|   10149    |         بتادین سبز ۱۰% فارمادین          |     0      | بتادین, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/farmadin-betadine-10/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/farmadin-betadine-10/[0m
+[1;92mProcessing product 13/49: https://yaradarman.com/product/kimiya-betadine-10/[0m
+[1;92mExtracted product_id: "10162" for https://yaradarman.com/product/kimiya-betadine-10/[0m
+[1;92m🆕 محصول جدید اضافه شد: بتادین سبز ۱۰% پارت کیمیا (ID: 10162)[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|   10162    |        بتادین سبز ۱۰% پارت کیمیا         |     0      | بتادین, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/kimiya-betadine-10/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/kimiya-betadine-10/[0m
+[1;92mProcessing product 14/49: https://yaradarman.com/product/daroo-darman-betadine-10/[0m
+[1;92mExtracted product_id: "10175" for https://yaradarman.com/product/daroo-darman-betadine-10/[0m
+[1;92m🆕 محصول جدید اضافه شد: بتادین سبز ۱۰% دارو درمان (ID: 10175)[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|   10175    |        بتادین سبز ۱۰% دارو درمان         |     0      | بتادین, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/daroo-darman-betadine-10/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/daroo-darman-betadine-10/[0m
+[1;92mProcessing product 15/49: https://yaradarman.com/product/axon-hearing-aids-x-136/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-x-136/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک جیبی آکسون | مدل x-136 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |       سمعک جیبی آکسون | مدل x-136        |     1      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-x-136/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-x-136/[0m
+[1;92mProcessing product 16/49: https://yaradarman.com/product/neck-hearing-aid-v-z1/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/neck-hearing-aid-v-z1/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک گردنی مدل V-Z1 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |           سمعک گردنی مدل V-Z1            |     17     | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/neck-hearing-aid-v-z1/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/neck-hearing-aid-v-z1/[0m
+[1;92mProcessing product 17/49: https://yaradarman.com/product/ijoeir-hearing-aid-gm-106/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/ijoeir-hearing-aid-gm-106/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک آیجویر مدل GM-106 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |          سمعک آیجویر مدل GM-106          |     3      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/ijoeir-hearing-aid-gm-106/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/ijoeir-hearing-aid-gm-106/[0m
+[1;92mProcessing product 18/49: https://yaradarman.com/product/amoena-essential-light-2s/[0m
+[1;92mExtracted product_id: "6970" for https://yaradarman.com/product/amoena-essential-light-2s/[0m
+[1;92m🆕 محصول جدید اضافه شد: پروتز سینه اکسترنال فوق سبک عاج دار آموئنا | مدل Essential Light 2S (ID: 6970)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    6970    | پروتز سینه اکسترنال فوق سبک عاج دار آموئ... |     7      | پروتز اکسترنال سینه, پروتز سین... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/amoena-essential-light-2s/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/amoena-essential-light-2s/[0m
+[1;92mProcessing product 19/49: https://yaradarman.com/product/breast-prosthesis-amoena400/[0m
+[1;92mExtracted product_id: "6607" for https://yaradarman.com/product/breast-prosthesis-amoena400/[0m
+[1;92m🆕 محصول جدید اضافه شد: پروتز سینه اکسترنال مثلثی فوق سبک آموئنا | مدل Natura Xtra Light 2SN (ID: 6607)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    6607    | پروتز سینه اکسترنال مثلثی فوق سبک آموئنا... |     8      | پروتز اکسترنال سینه, پروتز سین... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/breast-prosthesis-amoena400/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/breast-prosthesis-amoena400/[0m
+[1;92mProcessing product 20/49: https://yaradarman.com/product/breast-prosthesis-amoena1500/[0m
+[1;92mExtracted product_id: "6900" for https://yaradarman.com/product/breast-prosthesis-amoena1500/[0m
+[1;92m🆕 محصول جدید اضافه شد: پروتز سینه اکسترنال اشکی آموئنا | مدل Amoena Essential 2E (ID: 6900)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    6900    | پروتز سینه اکسترنال اشکی آموئنا | مدل Am... |     7      | پروتز اکسترنال سینه, پروتز سین... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/breast-prosthesis-amoena1500/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/breast-prosthesis-amoena1500/[0m
+[1;92mProcessing product 21/49: https://yaradarman.com/product/amoena-priform/[0m
+[1;92mExtracted product_id: "7036" for https://yaradarman.com/product/amoena-priform/[0m
+[1;92m🆕 محصول جدید اضافه شد: پروتز الیافی اکسترنال پریفورم آموئنا | مدل Amoena Priform (ID: 7036)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    7036    | پروتز الیافی اکسترنال پریفورم آموئنا | م... |     1      | پروتز اکسترنال سینه, پروتز سین... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/amoena-priform/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/amoena-priform/[0m
+[1;92mProcessing product 22/49: https://yaradarman.com/product/mahdaroo-betadine-10/[0m
+[1;92mExtracted product_id: "10187" for https://yaradarman.com/product/mahdaroo-betadine-10/[0m
+[1;92m🆕 محصول جدید اضافه شد: بتادین سبز ۱۰% مهدارو (ID: 10187)[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|   10187    |          بتادین سبز ۱۰% مهدارو           |     0      | بتادین, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/mahdaroo-betadine-10/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/mahdaroo-betadine-10/[0m
+[1;92mProcessing product 23/49: https://yaradarman.com/product/solbedin-betadine-10/[0m
+[1;92mExtracted product_id: "10199" for https://yaradarman.com/product/solbedin-betadine-10/[0m
+[1;92m🆕 محصول جدید اضافه شد: بتادین سبز ۱۰% سولبدین (ID: 10199)[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|   10199    |          بتادین سبز ۱۰% سولبدین          |     0      | بتادین, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/solbedin-betadine-10/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/solbedin-betadine-10/[0m
+[1;92mProcessing product 24/49: https://yaradarman.com/product/arsha-teb-safety-box/[0m
+[1;92mExtracted product_id: "10211" for https://yaradarman.com/product/arsha-teb-safety-box/[0m
+[1;92m🆕 محصول جدید اضافه شد: سیفتی باکس آرشا | Arsha (ID: 10211)[0m
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |           Category            | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+|   10211    |         سیفتی باکس آرشا | Arsha          |     0      | سیفتی باکس, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/arsha-teb-safety-box/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/arsha-teb-safety-box/[0m
+[1;92mProcessing product 25/49: https://yaradarman.com/product/bio-safe-safety-box/[0m
+[1;92mExtracted product_id: "10235" for https://yaradarman.com/product/bio-safe-safety-box/[0m
+[1;92m🆕 محصول جدید اضافه شد: سیفتی باکس بیوسیف | Bio Safe (ID: 10235)[0m
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |           Category            | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+|   10235    |       سیفتی باکس بیوسیف | Bio Safe       |     0      | سیفتی باکس, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/bio-safe-safety-box/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/bio-safe-safety-box/[0m
+[1;92mProcessing product 26/49: https://yaradarman.com/product/saya-sept-instrument-disinfection-solution/[0m
+[1;92mExtracted product_id: "10313" for https://yaradarman.com/product/saya-sept-instrument-disinfection-solution/[0m
+[1;92m🆕 محصول جدید اضافه شد: محلول ضدعفونی ابزار یک لیتری سایاسپت | Saya Sept (ID: 10313)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|   10313    | محلول ضدعفونی ابزار یک لیتری سایاسپت | S... |     0      | ژل و محلول ضد عفونی, کنترل کنن... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/saya-sept-instrument-disinfection-solution/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/saya-sept-instrument-disinfection-solution/[0m
+[1;92mProcessing product 27/49: https://yaradarman.com/product/supa-safety-box/[0m
+[1;92mExtracted product_id: "10265" for https://yaradarman.com/product/supa-safety-box/[0m
+[1;92m🆕 محصول جدید اضافه شد: سیفتی باکس سوپا | Supa (ID: 10265)[0m
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |           Category            | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+|   10265    |          سیفتی باکس سوپا | Supa          |     0      | سیفتی باکس, کنترل کننده عفونت |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/supa-safety-box/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/supa-safety-box/[0m
+[1;92mProcessing product 28/49: https://yaradarman.com/product/septi-rapid-disinfectant-and-cleaner-spray/[0m
+[1;92mExtracted product_id: "10295" for https://yaradarman.com/product/septi-rapid-disinfectant-and-cleaner-spray/[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپری ضد عفونی سطوح و ابزار سپتی رپید | Septi Rapid (ID: 10295)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|   10295    | اسپری ضد عفونی سطوح و ابزار سپتی رپید | ... |     0      | ژل و محلول ضد عفونی, کنترل کنن... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/septi-rapid-disinfectant-and-cleaner-spray/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/septi-rapid-disinfectant-and-cleaner-spray/[0m
+[1;92mProcessing product 29/49: https://yaradarman.com/product/amoena-aqua-wave/[0m
+[1;92mExtracted product_id: "8555" for https://yaradarman.com/product/amoena-aqua-wave/[0m
+[1;92m🆕 محصول جدید اضافه شد: پروتز سینه اکسترنال سیلیکونی مثلثی آکوئا آموئنا | مدل Balance Aqua Wave (ID: 8555)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|    8555    | پروتز سینه اکسترنال سیلیکونی مثلثی آکوئا... |     7      | پروتز اکسترنال سینه, پروتز سین... |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/amoena-aqua-wave/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/amoena-aqua-wave/[0m
+[1;92mProcessing product 30/49: https://yaradarman.com/product/hearing-aid-gm-910/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-gm-910/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک مدل GM-910 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |             سمعک مدل GM-910              |     3      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-gm-910/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-gm-910/[0m
+[1;92mProcessing product 31/49: https://yaradarman.com/product/septisurface-disinfectant-and-cleaner-spray/[0m
+[1;92mExtracted product_id: "10304" for https://yaradarman.com/product/septisurface-disinfectant-and-cleaner-spray/[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپری ضدعفونی کننده سپتی سرفیس | Septisurface (ID: 10304)[0m
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|   10304    | اسپری ضدعفونی کننده سپتی سرفیس | Septisu... |     0      | ژل و محلول ضد عفونی, کنترل کنن... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/septisurface-disinfectant-and-cleaner-spray/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/septisurface-disinfectant-and-cleaner-spray/[0m
+[1;92mProcessing product 32/49: https://yaradarman.com/product/axon-hearing-aids-k188/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-k188/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک درون گوشی (ITE) آکسون | مدل K188 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |  سمعک درون گوشی (ITE) آکسون | مدل K188   |     1      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-k188/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-k188/[0m
+[1;92mProcessing product 33/49: https://yaradarman.com/product/hearing-aid-gm-100a/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-gm-100a/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک مدل GM-100A (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |             سمعک مدل GM-100A             |     2      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-gm-100a/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-gm-100a/[0m
+[1;92mProcessing product 34/49: https://yaradarman.com/product/hearing-aid-jecpp-kxw-601/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-jecpp-kxw-601/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک JECPP مدل KXW-601 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |          سمعک JECPP مدل KXW-601          |     6      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-jecpp-kxw-601/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-jecpp-kxw-601/[0m
+[1;92mProcessing product 35/49: https://yaradarman.com/product/hearing-aid-jecpp-kxw-212-kxw213/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-jecpp-kxw-212-kxw213/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک JECPP مدل KXw-212-KXW213 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |      سمعک JECPP مدل KXw-212-KXW213       |     4      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-jecpp-kxw-212-kxw213/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-jecpp-kxw-212-kxw213/[0m
+[1;92mProcessing product 36/49: https://yaradarman.com/product/hearing-aid-f1/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-f1/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک مدل F1 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |               سمعک مدل F1                |     12     | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-f1/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-f1/[0m
+[1;92mProcessing product 37/49: https://yaradarman.com/product/hearing-aid-f138b-jecpp/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-f138b-jecpp/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک مدل F138B JECPP (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |           سمعک مدل F138B JECPP           |     4      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-f138b-jecpp/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-f138b-jecpp/[0m
+[1;92mProcessing product 38/49: https://yaradarman.com/product/septomin-disinfection-gel/[0m
+[1;92mExtracted product_id: "10322" for https://yaradarman.com/product/septomin-disinfection-gel/[0m
+[1;92m🆕 محصول جدید اضافه شد: ژل ضدعفونی کننده دست سپتومین | Septomin (ID: 10322)[0m
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |             Category              | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+|   10322    | ژل ضدعفونی کننده دست سپتومین | Septomin  |     0      | ژل و محلول ضد عفونی, کنترل کنن... |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/septomin-disinfection-gel/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/septomin-disinfection-gel/[0m
+[1;92mProcessing product 39/49: https://yaradarman.com/product/axon-hearing-aids-k-812/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-k-812/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک طرح ایرپاد آکسون | مدل K-812 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |    سمعک طرح ایرپاد آکسون | مدل K-812     |     4      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-k-812/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-k-812/[0m
+[1;92mProcessing product 40/49: https://yaradarman.com/product/axon-hearing-aids-e-103/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-e-103/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک پشت گوش آکسون | مدل E-103 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |      سمعک پشت گوش آکسون | مدل E-103      |     1      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-e-103/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-e-103/[0m
+[1;92mProcessing product 41/49: https://yaradarman.com/product/axon-hearing-aids-a360/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-a360/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک پشت گوش آکسون | مدل A360 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |      سمعک پشت گوش آکسون | مدل A360       |     4      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-a360/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-a360/[0m
+[1;92mProcessing product 42/49: https://yaradarman.com/product/mini-hearing-aid-gm-917/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/mini-hearing-aid-gm-917/[0m
+[1;92m🆕 محصول جدید اضافه شد: مینی سمعک GM-917 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |             مینی سمعک GM-917             |     5      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/mini-hearing-aid-gm-917/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/mini-hearing-aid-gm-917/[0m
+[1;92mProcessing product 43/49: https://yaradarman.com/product/hearing-aid-g12/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-g12/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک مدل G12 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |               سمعک مدل G12               |     4      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-g12/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-g12/[0m
+[1;92mProcessing product 44/49: https://yaradarman.com/product/hearing-aid-vhp-220/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-vhp-220/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک تقویت کننده شنوایی VHP-220 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |     سمعک تقویت کننده شنوایی VHP-220      |     1      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-vhp-220/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-vhp-220/[0m
+[1;92mProcessing product 45/49: https://yaradarman.com/product/hearing-aid-ijoeir-vhp-1607/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/hearing-aid-ijoeir-vhp-1607/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک طرح ایرپاد آیجویر VHP-1607 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |     سمعک طرح ایرپاد آیجویر VHP-1607      |     3      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/hearing-aid-ijoeir-vhp-1607/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/hearing-aid-ijoeir-vhp-1607/[0m
+[1;92mProcessing product 46/49: https://yaradarman.com/product/axon-hearing-aids-a3-g1t/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-a3-g1t/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک طرح ایرپاد آکسون | مدل A3-G1T (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |    سمعک طرح ایرپاد آکسون | مدل A3-G1T    |     7      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-a3-g1t/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-a3-g1t/[0m
+[1;92mProcessing product 47/49: https://yaradarman.com/product/axon-hearing-aids-v99/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-v99/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک جیبی آکسون | مدل v99 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |        سمعک جیبی آکسون | مدل v99         |     1      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-v99/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-v99/[0m
+[1;92mProcessing product 48/49: https://yaradarman.com/product/axon-hearing-aids-a130/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-a130/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک پشت گوش آکسون | مدل A130 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |      سمعک پشت گوش آکسون | مدل A130       |     3      | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-a130/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-a130/[0m
+[1;92mProcessing product 49/49: https://yaradarman.com/product/axon-hearing-aids-f16/[0m
+[1;92mExtracted product_id: "" for https://yaradarman.com/product/axon-hearing-aids-f16/[0m
+[1;92m🆕 محصول جدید اضافه شد: سمعک جیبی آکسون | مدل f16 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |        سمعک جیبی آکسون | مدل f16         |    990     | تجهیزات پزشکی, سمعک |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: https://yaradarman.com/product/axon-hearing-aids-f16/[0m
+[1;92mSuccessfully processed: https://yaradarman.com/product/axon-hearing-aids-f16/[0m
+[1;92mBatch processing completed. Processed: 49, Failed: 0[0m
+[1;92mScraping completed! Processed: 49, Failed: 0[0m
+Scraping completed successfully!
+Total products scraped: 49
+Failed links: 0

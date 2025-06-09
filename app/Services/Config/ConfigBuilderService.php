@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\Config;
 
 use Illuminate\Http\Request;
@@ -96,7 +97,7 @@ class ConfigBuilderService
         return [
             'main_page' => [
                 'product_links' => [
-                    'type' => $request->input('selectors.main_page.product_links.type'),
+                    'type' => $request->input('selectors.main_page.product_links.type', 'css'), // تغییر: پشتیبانی از xml
                     'selector' => $request->input('selectors.main_page.product_links.selector'),
                     'attribute' => $request->input('selectors.main_page.product_links.attribute'),
                 ],
@@ -670,7 +671,7 @@ class ConfigBuilderService
     {
         if (is_array($input)) {
             // فیلتر کردن مقادیر خالی
-            $filtered = array_filter($input, function($value) {
+            $filtered = array_filter($input, function ($value) {
                 return !empty(trim($value));
             });
             return array_values($filtered);
@@ -689,7 +690,7 @@ class ConfigBuilderService
     private function processKeywords($input): array
     {
         if (is_array($input)) {
-            return array_filter($input, function($value) {
+            return array_filter($input, function ($value) {
                 return !empty(trim($value));
             });
         }

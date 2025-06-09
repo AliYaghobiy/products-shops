@@ -252,7 +252,7 @@ class LinkScraper
         return null;
     }
 
-    public function scrapeMethodOneForUrl(string $baseUrl): array
+  public function scrapeMethodOneForUrl(string $baseUrl): array
     {
         if ($this->config['method_settings']['method_1']['pagination']['use_webdriver']) {
             return $this->scrapeWithPlaywright(1);
@@ -266,16 +266,16 @@ class LinkScraper
 
         while ($hasMorePages && $currentPage <= $this->config['method_settings']['method_1']['pagination']['max_pages']) {
             $pageUrl = $this->buildPaginationUrl($baseUrl, $currentPage, $this->config['method_settings']['method_1']['pagination']);
-            $this->log("Fetching page: $pageUrl", self::COLOR_GREEN);
+            $this->log("دریافت صفحه: $pageUrl", self::COLOR_GREEN);
             $body = $this->fetchPageContent($pageUrl, false);
 
             if ($body === null) {
                 $consecutiveEmptyPages++;
-                $this->log("Failed to fetch page $currentPage for $baseUrl or page was redirected. Treating as empty page. Consecutive empty pages: $consecutiveEmptyPages", self::COLOR_YELLOW);
+                $this->log("خطا در دریافت صفحه $currentPage برای $baseUrl یا ریدایرکت شده. به‌عنوان صفحه خالی در نظر گرفته شد. تعداد صفحات خالی متوالی: $consecutiveEmptyPages", self::COLOR_YELLOW);
                 $pagesProcessed++;
 
                 if ($consecutiveEmptyPages >= 3) {
-                    $this->log("Stopping pagination: 3 consecutive empty pages (including failed fetches) for $baseUrl.", self::COLOR_YELLOW);
+                    $this->log("توقف صفحه‌بندی: 3 صفحه خالی متوالی برای $baseUrl.", self::COLOR_YELLOW);
                     $hasMorePages = false;
                     break;
                 }
@@ -285,140 +285,166 @@ class LinkScraper
             }
 
             $crawler = new Crawler($body);
-            $linkSelector = $this->config['selectors']['main_page']['product_links']['selector'];
+            $linkSelectorConfig = $this->config['selectors']['main_page']['product_links'];
+            $selectorType = $linkSelectorConfig['type'] ?? 'css';
+            $linkSelector = $linkSelectorConfig['selector'];
+            $linkAttribute = $linkSelectorConfig['attribute'] ?? 'href';
             $imageSelector = $this->config['selectors']['main_page']['image']['selector'] ?? '';
             $productIdSelector = $this->config['selectors']['main_page']['product_id']['selector'] ?? '';
             $productIdAttribute = $this->config['selectors']['main_page']['product_id']['attribute'] ?? 'data-product_id';
             $productIdFromLink = $this->config['selectors']['main_page']['product_links']['product_id'] ?? false;
             $productIdSource = $this->config['product_id_source'] ?? 'main_page';
-            $linksFound = $crawler->filter($linkSelector)->count();
-            $this->log("page$currentPage -> $linksFound link find", self::COLOR_GREEN);
 
-            if ($linksFound === 0) {
-                $consecutiveEmptyPages++;
-                $this->log("No products found on page $currentPage for $baseUrl. Consecutive empty pages: $consecutiveEmptyPages", self::COLOR_YELLOW);
-                $htmlSnippet = substr($body, 0, 500);
-                $this->log("HTML snippet of page $currentPage: $htmlSnippet", self::COLOR_YELLOW);
-
-                if ($consecutiveEmptyPages >= 3) {
-                    $this->log("Stopping pagination: 3 consecutive pages with no products found for $baseUrl.", self::COLOR_YELLOW);
-                    $hasMorePages = false;
-                    break;
+            try {
+                // ثبت فضانام برای XML سایت‌مپ
+                if ($selectorType === 'xpath') {
+                    $crawler->registerNamespace('s', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+                    // اصلاح سلکتور برای استفاده از فضانام
+                    $linkSelector = str_replace('//url/loc', '//s:url/s:loc', $linkSelector);
+                    $this->log("سلکتور XPath اصلاح‌شده: $linkSelector", self::COLOR_PURPLE);
                 }
 
-                $currentPage++;
-                $pagesProcessed++;
-                continue;
-            }
+                $linksFound = ($selectorType === 'xpath')
+                    ? $crawler->filterXPath($linkSelector)->count()
+                    : $crawler->filter($linkSelector)->count();
+                $this->log("صفحه $currentPage -> $linksFound لینک پیدا شد", self::COLOR_GREEN);
 
-            $consecutiveEmptyPages = 0;
+                if ($linksFound === 0) {
+                    $consecutiveEmptyPages++;
+                    $this->log("هیچ محصولی در صفحه $currentPage برای $baseUrl پیدا نشد. تعداد صفحات خالی متوالی: $consecutiveEmptyPages", self::COLOR_YELLOW);
+                    $htmlSnippet = substr($body, 0, 500);
+                    $this->log("بخشی از HTML صفحه $currentPage: $htmlSnippet", self::COLOR_YELLOW);
 
-            $crawler->filter($linkSelector)->each(function (Crawler $node, $index) use (&$links, $crawler, $imageSelector, $productIdSelector, $productIdAttribute, $productIdFromLink, $productIdSource) {
-                $href = $node->attr($this->config['selectors']['main_page']['product_links']['attribute']);
-                if ($this->isInvalidLink($href)) {
-                    $this->log("Invalid link skipped: $href", self::COLOR_YELLOW);
-                    return;
-                }
-
-                $fullUrl = $this->makeAbsoluteUrl($href);
-                if ($this->isUnwantedDomain($fullUrl)) {
-                    $this->log("Unwanted domain skipped: $fullUrl", self::COLOR_YELLOW);
-                    return;
-                }
-
-                $linkData = ['url' => $fullUrl, 'image' => '', 'product_id' => ''];
-
-                try {
-                    $parentNode = $node->ancestors()->first();
-                    if (!$parentNode->count()) {
-                        $this->log("No parent node found for link: $fullUrl", self::COLOR_YELLOW);
-                    } else {
-                        $this->log("Parent node found for link: $fullUrl", self::COLOR_GREEN);
+                    if ($consecutiveEmptyPages >= 3) {
+                        $this->log("توقف صفحه‌بندی: 3 صفحه بدون محصول برای $baseUrl.", self::COLOR_YELLOW);
+                        $hasMorePages = false;
+                        break;
                     }
 
-                    if ($imageSelector) {
-                        $this->log("Trying image selector: $imageSelector", self::COLOR_YELLOW);
-                        try {
-                            $parentNodeHtml = $parentNode->count() ? $parentNode->html() : 'No parent node';
-                            $this->log("Parent node HTML: " . substr($parentNodeHtml, 0, 500), self::COLOR_YELLOW);
-                            $imageElement = $parentNode->filter($imageSelector);
-                            $this->log("Image elements found: {$imageElement->count()}", self::COLOR_YELLOW);
-                            if ($imageElement->count() > 0) {
-                                $image = $imageElement->attr($this->config['selectors']['main_page']['image']['attribute'] ?? 'src');
-                                $this->log("Raw image URL: $image", self::COLOR_YELLOW);
-                                $linkData['image'] = $this->makeAbsoluteUrl($image);
-                                $this->log("Extracted image from main page: {$linkData['image']} for $fullUrl", self::COLOR_GREEN);
-                            } else {
-                                $this->log("No image found with selector '$imageSelector' for $fullUrl", self::COLOR_YELLOW);
-                            }
-                        } catch (\Exception $e) {
-                            $this->log("Error extracting image for $fullUrl: {$e->getMessage()}", self::COLOR_RED);
-                        }
+                    $currentPage++;
+                    $pagesProcessed++;
+                    continue;
+                }
+
+                $consecutiveEmptyPages = 0;
+
+                $crawlerMethod = ($selectorType === 'xpath') ? 'filterXPath' : 'filter';
+                $crawler->$crawlerMethod($linkSelector)->each(function (Crawler $node, $index) use (&$links, $crawler, $imageSelector, $productIdSelector, $productIdAttribute, $productIdFromLink, $productIdSource, $linkAttribute, $selectorType) {
+                    $href = ($selectorType === 'xpath' && $linkAttribute === 'text')
+                        ? trim($node->text())
+                        : $node->attr($linkAttribute);
+
+                    if ($this->isInvalidLink($href)) {
+                        $this->log("لینک نامعتبر حذف شد: $href", self::COLOR_YELLOW);
+                        return;
                     }
 
-                    // Product ID extraction logic...
-                    if ($productIdSource === 'product_links' && $productIdFromLink) {
-                        try {
-                            $productId = $node->attr($productIdFromLink);
-                            $this->log("Raw product_id extracted from product_links: '$productId' for $fullUrl", self::COLOR_YELLOW);
-                            if ($productId) {
-                                $linkData['product_id'] = $productId;
-                                $this->log("Extracted product_id from product_links: {$linkData['product_id']} for $fullUrl", self::COLOR_GREEN);
-                            } else {
-                                $this->log("No product_id found in product_links attribute '$productIdFromLink' for $fullUrl", self::COLOR_YELLOW);
-                            }
-                        } catch (\Exception $e) {
-                            $this->log("Error extracting product_id from product_links for $fullUrl: {$e->getMessage()}", self::COLOR_RED);
+                    $fullUrl = $this->makeAbsoluteUrl($href);
+                    if ($this->isUnwantedDomain($fullUrl)) {
+                        $this->log("دامنه نامطلوب حذف شد: $fullUrl", self::COLOR_YELLOW);
+                        return;
+                    }
+
+                    $linkData = ['url' => $fullUrl, 'image' => '', 'product_id' => ''];
+                    $this->log("پردازش لینک: $fullUrl", self::COLOR_GREEN);
+
+                    try {
+                        $parentNode = $node->ancestors()->first();
+                        if (!$parentNode->count()) {
+                            $this->log("والد برای لینک پیدا نشد: $fullUrl", self::COLOR_YELLOW);
+                        } else {
+                            $this->log("والد برای لینک پیدا شد: $fullUrl", self::COLOR_GREEN);
                         }
-                    } elseif ($productIdSource === 'main_page') {
-                        if ($productIdFromLink) {
+
+                        if ($imageSelector) {
+                            $this->log("تلاش برای سلکتور تصویر: $imageSelector", self::COLOR_YELLOW);
+                            try {
+                                $parentNodeHtml = $parentNode->count() ? $parentNode->html() : 'والد وجود ندارد';
+                                $this->log("HTML والد: " . substr($parentNodeHtml, 0, 500), self::COLOR_YELLOW);
+                                $imageElement = $parentNode->filter($imageSelector);
+                                $this->log("تعداد عناصر تصویر پیدا شده: {$imageElement->count()}", self::COLOR_YELLOW);
+                                if ($imageElement->count() > 0) {
+                                    $image = $imageElement->attr($this->config['selectors']['main_page']['image']['attribute'] ?? 'src');
+                                    $this->log("لینک خام تصویر: $image", self::COLOR_YELLOW);
+                                    $linkData['image'] = $this->makeAbsoluteUrl($image);
+                                    $this->log("تصویر استخراج‌شده از صفحه اصلی: {$linkData['image']} برای $fullUrl", self::COLOR_GREEN);
+                                } else {
+                                    $this->log("تصویری با ابزار $imageSelector برای $fullUrl پیدا نشد", self::COLOR_YELLOW);
+                                }
+                            } catch (\Exception $e) {
+                                $this->log("خطا در استخراج تصویر برای $fullUrl: {$e->getMessage()}", self::COLOR_RED);
+                            }
+                        }
+
+                        if ($productIdSource === 'product_links' && $productIdFromLink) {
                             try {
                                 $productId = $node->attr($productIdFromLink);
+                                $this->log("شناسه محصول خام از لینک‌ها: '$productId' برای $fullUrl", self::COLOR_YELLOW);
                                 if ($productId) {
                                     $linkData['product_id'] = $productId;
-                                    $this->log("Extracted product_id from link attribute '$productIdFromLink': {$linkData['product_id']} for $fullUrl", self::COLOR_GREEN);
+                                    $this->log("شناسه محصول استخراج شده از لینک‌ها: {$linkData['product_id']} برای $fullUrl", self::COLOR_GREEN);
                                 } else {
-                                    $this->log("No product_id found with link attribute '$productIdFromLink' for $fullUrl", self::COLOR_YELLOW);
+                                    $this->log("شناسه محصولی با ویژگی $productIdFromLink برای $fullUrl پیدا نشد", self::COLOR_YELLOW);
                                 }
                             } catch (\Exception $e) {
-                                $this->log("Error extracting product_id from link for $fullUrl: {$e->getMessage()}", self::COLOR_RED);
+                                $this->log("خطا در استخراج شناسه محصول از لینک‌ها برای $fullUrl: {$e->getMessage()}", self::COLOR_RED);
                             }
-                        }
-
-                        if (!$linkData['product_id'] && $productIdSelector) {
-                            try {
-                                $productIdElements = $crawler->filter($productIdSelector);
-                                if ($productIdElements->count() > 0) {
-                                    $productId = $productIdElements->attr($productIdAttribute);
+                        } elseif ($productIdSource === 'main_page') {
+                            if ($productIdFromLink) {
+                                try {
+                                    $productId = $node->attr($productIdFromLink);
                                     if ($productId) {
                                         $linkData['product_id'] = $productId;
-                                        $this->log("Extracted product_id from selector '$productIdSelector': {$linkData['product_id']} for $fullUrl", self::COLOR_GREEN);
+                                        $this->log("شناسه محصول استخراج شده از ویژگی: {$linkData['product_id']} برای $fullUrl", self::COLOR_GREEN);
                                     } else {
-                                        $this->log("No product_id found with selector '$productIdSelector' for $fullUrl", self::COLOR_YELLOW);
+                                        $this->log("شناسه محصولی با ویژگی $productIdFromLink برای $fullUrl پیدا نشد", self::COLOR_YELLOW);
                                     }
-                                } else {
-                                    $this->log("No elements found with product_id selector '$productIdSelector' for $fullUrl", self::COLOR_YELLOW);
-                                    $ancestorWithId = $node->ancestors()->filter($productIdSelector)->first();
-                                    if ($ancestorWithId->count() > 0) {
-                                        $productId = $ancestorWithId->attr($productIdAttribute);
-                                        $linkData['product_id'] = $productId;
-                                        $this->log("Extracted product_id from ancestor: {$linkData['product_id']} for $fullUrl", self::COLOR_GREEN);
-                                    } else {
-                                        $this->log("No product_id found in ancestors with selector '$productIdSelector' for $fullUrl", self::COLOR_YELLOW);
-                                    }
+                                } catch (\Exception $e) {
+                                    $this->log("خطا در استخراج شناسه از ویژگی لینک برای $fullUrl: {$e->getMessage()}", self::COLOR_RED);
                                 }
-                            } catch (\Exception $e) {
-                                $this->log("Error extracting product_id for $fullUrl: {$e->getMessage()}", self::COLOR_RED);
+                            }
+
+                            if (!$linkData['product_id'] && $productIdSelector) {
+                                try {
+                                    $productIdElements = $crawler->filter($productIdSelector);
+                                    if ($productIdElements->count() > 0) {
+                                        $productId = $productIdElements->attr($productIdAttribute);
+                                        if ($productId) {
+                                            $linkData['product_id'] = $productId;
+                                            $this->log("شناسه محصول با سلکتور '$productIdSelector': {$linkData['product_id']} برای $fullUrl", self::COLOR_GREEN);
+                                        } else {
+                                            $this->log("شناسه محصولی با سلکتور '$productIdSelector' برای $fullUrl پیدا نشد", self::COLOR_YELLOW);
+                                        }
+                                    } else {
+                                        $this->log("هیچ عنصری با سلکتور شناسه محصول '$productIdSelector' برای $fullUrl پیدا نشد", self::COLOR_YELLOW);
+                                        $ancestorWithId = $node->ancestors()->filter($productIdSelector)->first();
+                                        if ($ancestorWithId->count() > 0) {
+                                            $productId = $ancestorWithId->attr($productIdAttribute);
+                                            $linkData['product_id'] = $productId;
+                                            $this->log("شناسه محصول استخراج شده از والد: {$linkData['product_id']} برای $fullUrl", self::COLOR_GREEN);
+                                        } else {
+                                            $this->log("شناسه محصولی در والدان با سلکتور '$productIdSelector' برای $fullUrl پیدا نشد", self::COLOR_YELLOW);
+                                        }
+                                    }
+                                } catch (\Exception $e) {
+                                    $this->log("خطا در استخراج شناسه محصول برای $fullUrl: {$e->getMessage()}", self::COLOR_RED);
+                                }
                             }
                         }
-                    }
 
-                    $links[] = $linkData;
-                    $this->log("Added link: $fullUrl", self::COLOR_GREEN);
-                } catch (\Exception $e) {
-                    $this->log("Error processing node for $fullUrl: {$e->getMessage()}", self::COLOR_RED);
-                }
-            });
+                        $links[] = $linkData;
+                        $this->log("لینک اضافه شد: $fullUrl", self::COLOR_GREEN);
+                    } catch (\Exception $e) {
+                        $this->log("خطا در پردازش نود برای $fullUrl: {$e->getMessage()}", self::COLOR_RED);
+                    }
+                });
+            } catch (\Exception $e) {
+                $this->log("خطا در پردازش سلکتور '$linkSelector': {$e->getMessage()}", self::COLOR_RED);
+                $consecutiveEmptyPages++;
+                $pagesProcessed++;
+                $currentPage++;
+                continue;
+            }
 
             $pagesProcessed++;
             $currentPage++;
@@ -1408,18 +1434,16 @@ JAVASCRIPT;
                 ];
 
                 // validation با استفاده از ProductDataProcessor
-                if ($this->productProcessor->validateProductData($processedData)) {
-                    $links[] = [
-                        'url' => $processedData['page_url'],
-                        'image' => $processedData['image'],
-                        'product_id' => $processedData['product_id']
-                    ];
-
-                    $successfulProducts++;
-                    $this->log("✅ Product processed successfully: {$processedData['page_url']}", self::COLOR_GREEN);
+               if ($this->productProcessor->validateProductData($processedData)) {
+                    $this->log("✅ Product processed successfully: {$productData['url']}", self::COLOR_GREEN);
+                    $this->successfulLinks[] = $productData['url'];
+                    // اضافه کردن ذخیره‌سازی به دیتابیس
+                   $this->productProcessor->saveProductToDatabase($processedData);
                 } else {
-                    $this->log("Invalid product data for {$processedData['page_url']}", self::COLOR_RED);
-                    $failedProducts++;
+                    $maxRetries = $this->config['max_retries'] ?? 2;
+                    $this->log("🔄 لینک ناموفق آپدیت شد (تلاش #$maxRetries): {$productData['url']}", self::COLOR_YELLOW);
+                    $this->log("  └─ خطا: Failed to extract product data", self::COLOR_RED);
+                    $this->updateFailedLink($productData['url'], "Failed to extract product data");
                 }
             }
 

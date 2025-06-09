@@ -65,18 +65,18 @@ class ProductDataProcessor
                 if ($field === 'title') {
                     $data[$field] = $this->applyTitlePrefix($value, $url);
                 } elseif ($field === 'price') {
-                                    $rawPrice = $this->extractPriceWithPriority($crawler, $selector);
-                
-                                    if ($this->config['keep_price_format'] ?? false) {
-                                        $data[$field] = $this->cleanPriceWithFormat($rawPrice);
-                                    } else {
-                                        $data[$field] = (string)$this->cleanPrice($rawPrice);
-                                    }
-                
-                                    if (empty($data[$field]) && !($this->config['keep_price_format'] ?? false)) {
-                                        $data[$field] = '0';
-                                    }
-                                } elseif ($field === 'availability') {
+                    $rawPrice = $this->extractPriceWithPriority($crawler, $selector);
+
+                    if ($this->config['keep_price_format'] ?? false) {
+                        $data[$field] = $this->cleanPriceWithFormat($rawPrice);
+                    } else {
+                        $data[$field] = (string)$this->cleanPrice($rawPrice);
+                    }
+
+                    if (empty($data[$field]) && !($this->config['keep_price_format'] ?? false)) {
+                        $data[$field] = '0';
+                    }
+                } elseif ($field === 'availability') {
                     $transform = $this->config['data_transformers'][$field] ?? null;
                     $data[$field] = $transform && method_exists($this, $transform) ? (int)$this->$transform($value, $crawler) : (!empty($value) ? 1 : 0);
                 } elseif ($field === 'off') {
@@ -133,7 +133,7 @@ class ProductDataProcessor
         if ($productData['availability'] == 0) {
             return true;
         }
-if (!empty($productData['price'])) {
+        if (!empty($productData['price'])) {
             $cleanedPrice = str_replace([',', ' ', 'تومان', 'ریال'], '', $productData['price']);
             if (!is_numeric($cleanedPrice)) {
                 $this->log("Validation failed: price '$cleanedPrice' is not numeric for URL: {$productData['page_url']}", self::COLOR_RED);
@@ -208,21 +208,43 @@ if (!empty($productData['price'])) {
         $arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
         $price = str_replace($arabicNumbers, $englishNumbers, $price);
 
-        // حذف تمام کاراکترهای غیرضروری و نگهداری فقط اعداد و جداکننده‌های اعشار
+        // حذف تمام کاراکترهای غیرضروری و نگهداری فقط اعداد و جداکننده‌ها
         $price = preg_replace('/[^\d.,٫]/u', '', $price);
 
-        // حذف جداکننده‌های هزارگان (کاما و ممیز فارسی)
-        $price = str_replace([',', '٫'], '', $price);
+        // حذف فاصله‌های اضافی
+        $price = trim($price);
 
-        // مدیریت اعشار - فقط آخرین نقطه را به عنوان جداکننده اعشار در نظر می‌گیریم
-        if (substr_count($price, '.') > 1) {
-            $parts = explode('.', $price);
-            $decimal = array_pop($parts);
-            $price = implode('', $parts) . '.' . $decimal;
+        // اگر خالی شد، صفر برگردان
+        if (empty($price)) {
+            return 0;
         }
 
-        // تبدیل به عدد صحیح (اعشار نادیده گرفته می‌شود)
-        return (int) floatval($price);
+        // تشخیص الگوی قیمت
+        // اگر فقط یک نقطه یا کاما در انتها وجود دارد و بعدش سه رقم یا کمتر -> جداکننده هزارگان
+        // اگر نقطه یا کاما در وسط و بعدش بیش از سه رقم -> احتمالاً اعشار
+
+        // ابتدا تمام نقاط و کاماها را پیدا کنیم
+        $lastDotPos = strrpos($price, '.');
+        $lastCommaPos = strrpos($price, ',');
+        $lastSeparatorPos = max($lastDotPos, $lastCommaPos);
+
+        if ($lastSeparatorPos !== false) {
+            $afterSeparator = substr($price, $lastSeparatorPos + 1);
+            $beforeSeparator = substr($price, 0, $lastSeparatorPos);
+
+            // اگر بعد از آخرین جداکننده 3 رقم یا کمتر باشد، احتمالاً جداکننده هزارگان است
+            if (strlen($afterSeparator) <= 3) {
+                // حذف تمام جداکننده‌های هزارگان
+                $price = str_replace([',', '.', '٫'], '', $price);
+            } else {
+                // احتمالاً اعشار است - فقط آخرین جداکننده را حفظ می‌کنیم
+                $beforeSeparator = str_replace([',', '.', '٫'], '', $beforeSeparator);
+                $price = $beforeSeparator . '.' . $afterSeparator;
+            }
+        }
+
+        // تبدیل به عدد صحیح
+        return (int)floatval($price);
     }
 
     public function cleanPriceWithFormat(string $price): string
@@ -281,19 +303,37 @@ if (!empty($productData['price'])) {
         $price = preg_replace('/[^\d.,٫\s]/u', '', $price);
 
         // حذف فاصله‌های اضافی
-        $price = preg_replace('/\s+/', ' ', trim($price));
+        $price = preg_replace('/\s+/', '', trim($price));
 
         // اگر فقط جداکننده باشد، خالی برگردان
-        if (preg_match('/^[.,٫\s]+$/', $price)) {
+        if (preg_match('/^[.,٫\s]*$/', $price)) {
             return '';
         }
 
         // حذف جداکننده‌های ابتدا و انتها
         $price = trim($price, '.,٫ ');
 
+        // اگر خالی شد، خالی برگردان
+        if (empty($price)) {
+            return '';
+        }
+
+        // برای حفظ فرمت، فقط اعداد را تمیز می‌کنیم و جداکننده‌ها را حفظ می‌کنیم
+        // اما اگر pattern مشخص هزارگان باشد (مثل 281.000) آن را اصلاح می‌کنیم
+
+        // تشخیص الگوی هزارگان (عددی که هر سه رقم یک جداکننده دارد)
+        if (preg_match('/^\d{1,3}([.,٫]\d{3})+$/', $price)) {
+            // این یک عدد با فرمت هزارگان است - جداکننده‌ها را حذف می‌کنیم
+            $price = str_replace([',', '.', '٫'], '', $price);
+
+            // دوباره فرمت هزارگان اضافه می‌کنیم
+            return number_format((int)$price);
+        }
+
         return $price;
     }
 
+   
     public function parseAvailability(string $value, Crawler $crawler): int
     {
         $outOfStockButton = $this->config['out_of_stock_button'] ?? false;
@@ -407,7 +447,15 @@ if (!empty($productData['price'])) {
         $value = '';
 
         foreach ($selectors as $index => $sel) {
-            $elements = $selector['type'] === 'css' ? $crawler->filter($sel) : $crawler->filterXPath($sel);
+            // بررسی نوع selector
+            if (isset($selector['type']) && $selector['type'] === 'xml') {
+                // برای XML sitemap
+                $elements = $crawler->filterXPath($sel);
+            } elseif ($selector['type'] === 'css') {
+                $elements = $crawler->filter($sel);
+            } else {
+                $elements = $crawler->filterXPath($sel);
+            }
 
             if ($elements->count() > 0) {
                 $currentAttribute = $attributes[$index] ?? $attributes[0] ?? null;

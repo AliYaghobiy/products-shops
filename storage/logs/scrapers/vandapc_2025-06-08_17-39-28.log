@@ -1,0 +1,954 @@
+اجرای اسکرپر  برای کانفیگ vandapc در تاریخ 2025-06-08 17:39:28 شروع شد...
+Starting flexible scraper...
+Loading configuration from /var/www/html/products-shops/storage/app/private/private/vandapc.json
+[1;92mValidating configuration...[0m
+[1;92mConfig validated. Using run_method: new[0m
+Request delay set to 500 ms.
+Starting scrape operation...
+[1;95mInside scrapeMultiple method[0m
+[1;92mStarting scraper with start_id: not set[0m
+[1;92mConfiguration validated successfully.[0m
+[1;92mGenerated database name: vandapc_ir[0m
+[1;92mDatabase mode: clear[0m
+[1;93mDatabase vandapc_ir exists, dropping it...[0m
+[1;92mCreating database vandapc_ir...[0m
+[1;92mSwitched to database: vandapc_ir[0m
+[1;92mRunning specific migrations...[0m
+[1;92mApplied migration: 2025_04_08_162133_create_products_table.php[0m
+[1;92mApplied migration: 2025_04_13_073528_create_failed_links_table.php[0m
+[1;92mApplied migration: 2025_05_19_162835_create_links_table.php[0m
+[1;92mSpecific migrations completed[0m
+[1;92mRun method: new[0m
+[1;92m🌐 Fetching product links from web...[0m
+[1;92m🔄 STARTING fetchProductLinks - Method: 2[0m
+[1;95m📄 Config check - products_urls count: 1[0m
+[1;95m📄 Config check - base_urls: ["http:\/\/vandapc.ir"][0m
+[1;92m✅ Product links selector found (array): {"type":"css","selector":"div.product-box > div > a:nth-child(2)","attribute":"href"}[0m
+[1;95m🔄 Processing 1 product URLs...[0m
+[1;95m🌐 Processing URL 1/1: http://vandapc.ir/products[0m
+[1;93mNormalized URL: http://vandapc.ir/products -> http://vandapc.ir/products/[0m
+[1;95m🔗 Testing connection to: http://vandapc.ir/products[0m
+[1;95m🌐 FETCHING: http://vandapc.ir/products[0m
+[1;92m🔄 Attempt 1/2 - UserAgent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:39.0) Gecko...[0m
+[1;95m🔍 Testing DNS for host: vandapc.ir[0m
+[1;92m✅ HTTP 200 - Content-Type: text/html; charset=utf-8[0m
+[1;93m📊 Server: Microsoft-IIS/10.0, Content-Length: 207541[0m
+[1;92m📄 Response body length: 207541 bytes[0m
+[1;92m✅ Successfully fetched content from http://vandapc.ir/products[0m
+[1;92m✅ Connection successful - Content length: 207541[0m
+[1;93m📄 First 200 chars of content: 
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head id="ctl00_hdmain"><title>
+	محصولات و خدمات وندا
+</title><meta name="description" /><meta charset="utf-8" /><meta http-equiv="X-UA-Comp[0m
+[1;92mStarting Playwright scraping process for URL: http://vandapc.ir/products...[0m
+[1;93mPagination method: next_button[0m
+[1;93mNext button selector: #ctl00_mainBody_btnnext[0m
+[1;92mTemporary script file created at: /tmp/playwright_method2_2og0r8repfgvdJRGlLT.cjs[0m
+[1;92mExecuting Playwright script: NODE_PATH=/var/www/html/products-shops/node_modules node /tmp/playwright_method2_2og0r8repfgvdJRGlLT.cjs[0m
+[1;93mPlaywright output: Launching browser...[0m
+[1;93mPlaywright output: Browser launched successfully.[0m
+[1;93mPlaywright output: Browser context and page created successfully.[0m
+[1;93mPlaywright output: Navigating to URL: "http://vandapc.ir/products"[0m
+[1;93mPlaywright output: Processing page 1 at URL: http://vandapc.ir/products...[0m
+[1;93mPlaywright output: Scroll 1 completed[0m
+[1;93mPlaywright output: Scroll 2 completed[0m
+[1;93mPlaywright output: Scroll 3 completed[0m
+[1;93mPlaywright output: Found 20 links on page 1[0m
+[1;93mPlaywright output: Processing page 2 at URL: http://vandapc.ir/products...[0m
+[1;93mPlaywright output: Scroll 1 completed[0m
+[1;93mPlaywright output: Scroll 2 completed[0m
+[1;93mPlaywright output: Scroll 3 completed[0m
+[1;93mPlaywright output: Found 32 links on page 2[0m
+[1;93mPlaywright output: Processing page 3 at URL: http://vandapc.ir/products...[0m
+[1;93mPlaywright output: Scroll 1 completed[0m
+[1;93mPlaywright output: Scroll 2 completed[0m
+[1;93mPlaywright output: Scroll 3 completed[0m
+[1;93mPlaywright output: Found 44 links on page 3[0m
+[1;93mPlaywright output: Processing page 4 at URL: http://vandapc.ir/products...[0m
+[1;93mPlaywright output: Scroll 1 completed[0m
+[1;93mPlaywright output: Scroll 2 completed[0m
+[1;93mPlaywright output: Scroll 3 completed[0m
+[1;93mPlaywright output: Found 56 links on page 4[0m
+[1;93mPlaywright output: Processing page 5 at URL: http://vandapc.ir/products...[0m
+[1;93mPlaywright output: Scroll 1 completed[0m
+[1;93mPlaywright output: Scroll 2 completed[0m
+[1;93mPlaywright output: Scroll 3 completed[0m
+[1;93mPlaywright output: Found 68 links on page 5[0m
+[1;93mPlaywright output: Failed to click next button: page.waitForSelector: Timeout 10000ms exceeded.[0m
+[1;93mPlaywright output: Call log:[0m
+[1;93mPlaywright output: - waiting for locator('#ctl00_mainBody_btnnext') to be visible[0m
+[1;93mPlaywright output: [0m
+[1;92mPlaywright script execution completed with return code: 0[0m
+[1;92mFound 68 unique links for http://vandapc.ir/products.[0m
+[1;93m📊 Scrape result: {"links_count":68,"pages_processed":0}[0m
+[1;92m🔗 Found 68 raw links from http://vandapc.ir/products[0m
+[1;93m📋 Sample links: [{"url":"http:\/\/vandapc.ir\/products\/695798\/\u0627\u0633\u067e\u06cc\u06a9\u0631-\u0634\u0627\u0631\u0698\u06cc-\u067e\u0627\u0631\u062a\u06cc-\u0628\u0627\u06a9\u0633-\u0645\u062f\u0644-KP?ref=Products","image":"","product_id":"unknown"},{"url":"http:\/\/vandapc.ir\/products\/695769\/\u0627\u0633\u067e\u06cc\u06a9\u0631-\u067e\u0627\u0631\u062a\u06cc-\u0628\u0627\u06a9\u0633-KP?ref=Products","image":"","product_id":"unknown"},{"url":"http:\/\/vandapc.ir\/products\/695768\/\u0627\u0633\u067e\u06cc\u06a9\u0631-\u0628\u0644\u0648\u062a\u0648\u062b\u06cc-\u0622\u0632\u062f\u0627-\u0645\u062f\u0644-PD-S?ref=Products","image":"","product_id":"unknown"}][0m
+[1;92m📈 Total links so far: 68[0m
+[1;92m🏁 FINAL RESULT - Total unique links: 68[0m
+[1;92mGot 68 unique product links from web[0m
+[1;92mSaving 68 product links to database...[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695798/اسپیکر-شارژی-پارتی-باکس-مدل-KP?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695769/اسپیکر-پارتی-باکس-KP?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695768/اسپیکر-بلوتوثی-آزدا-مدل-PD-S?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695767/اسپیکر-پارتی-باکس-ویکر-مدل-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695646/ایرپاد-KOLEER-s?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695645/ایرپاد-KOLEER-s?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695625/مودم-سیمکارت-خور-حرفه-ایی-مدل-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695589/آچار-استریپر-مدل-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695588/فازمتر-جنرال-مدل-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695587/فازمتر-کوچک-اورانوس-مدل-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695551/باتری-ریموتی-های-ولتاژ-A?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695550/باتری-A-جی-پی-مدل-Super-Alkaline?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695549/کابل-AUX-PAU-برند-P-net?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695548/موس-بی-سیم-مچر-مدل-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695547/ماوس-بی-سیم-مچر-مدل-MR-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695546/ماوس-بیسیم-مچر-مدل-MR-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695545/ماوس-بی-سیم-آئولا-مدل-AM?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695544/ماوس-سیم-دار-مخصوص-بازی-آئولا-مدل-S?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695543/ماوس-مخصوص-بازی-آئولا-مدل-Mountain-S?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695542/موس-سیم-دار-آئولا-گیمینگ-مدل-Mountain-S?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695541/موس-سیمی-بیاند-مدل-Beyond-BM-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695540/ماوس-باسیم-بیاند-مدل-BM-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695539/افزایش-طول-USB-با-کابل-شبکه-تا-متر?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695538/اکستندر-HDMI-با-طول-متر-D-tech?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695537/اکستندر-lan-to-hdmi-تبدیل-افزایش-طول-HDMI-تحت-شبکه-متری?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695536/پایه-نگهدارنده-گوشی-کد-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695535/شارژر-کلگی-W-PIN-SAMSUNG-پی-نت?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695533/سوییچ-دو-پورت-مدل-VGA?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695532/کارت-شبکه-بی-سیم-پی-نت-مدل-CO?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695531/کارت-شبکه-بی-سیم-آنتن-دار-پی-نت-مدل-CO?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695530/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695529/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695527/کابل-تبدیل-USB-به-لایتنینگ-لنیز-مدل-LCi-طول-متر?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695526/کابل-آیفون-Lightning-وریتی-مدل-CB-i?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695525/کابل-شارژ-تایپ-سی-وریتی-VERITY-CB-T?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695524/گارد-گوشی-موبایل-حرفه-ایی-لایسنس?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695507/گارد-گوشی-موبایل-عروسکی?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695506/گارد-مگ-سیف-آیفون-MegSafe?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695458/اسپیکر-پارتی-باکس-سوارز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695457/اسپیکر-قابل-حمل-پارتی-باکس-سوارز-مکسیدر-مدل-AN?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695395/اسپیکر-سوآرز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695394/اسپیکر-سوآرز-مدل-AN?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695249/شاژرفندکی-پورت-آمپر?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695244/شاژرفندکی-وات-PD-QC?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/695123/اسپیکرشارژی-مدل-ZQS-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694573/کابل-شارژ-دو-سر-Type-C-پی-نت-درجه-یک?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694571/کابل-شارژ-دو-سر-USB-Type-C-پی-نت?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694570/کابل-لایتنینگ-به-جک-AUX-میلی-متری-اپل?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694568/میکروفن-یقه-ای-بی-سیم-مدل-K-Dual-Type-C-با-تبدیل-Lightning?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694567/میکروفن-بی-سیم-مدل-F-CLEAR-TIMBRE?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694566/شارژر-سامسونگ-وات-سه-پین?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694565/شارژر-سامسونگ-وات-دو-پین-بدون-کابل-اصل?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694563/هولدر-گوشی-موبایل-مدل-RT-D?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694520/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694519/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694516/ماوس-باسیم-لیگو-مدل-M?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694515/موس-با-سیم-تسکو-مدل-TM-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694479/رابط-برق-خانه-با-کابل-سیم-بلند-متری?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694462/مبدل-به-جک-میلی-متری-ایتوک-مدل-Arco?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694241/تبدیل-به-برق-تایمردار-محافظ-برند-پی-نت?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694118/کابل-شارژر-پاور-بانکی-چند-سر?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/694029/اسپیکر-آیوا-مدل-پرو-AW-XDSP-PRO-?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/693639/اسپیکر-دیجی-دار-دنای-DENAY-DE-DJ?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/693290/اسپیکر-شارژی-بروفن-مدل-BR?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/692829/کیبورد-پی-نت-مدل-KB?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/692671/رم-گیگ-با-گارانتی-مادام-العمر-برند-وریتی?ref=Products[0m
+[1;94mPreparing to save link: http://vandapc.ir/products/692670/رم-موبایل-ظرفیت-گیگابایت-گارانتی-مادام-العمر-bexo?ref=Products[0m
+[1;92mSuccessfully saved 68 new links to database[0m
+[1;92mAfter deduplication, processing 68 unique links[0m
+[1;92mProcessing links using method: 1[0m
+[1;92mProcessing 68 product links in batches...[0m
+[1;93mInput links: [
+    "http:\/\/vandapc.ir\/products\/695798\/اسپیکر-شارژی-پارتی-باکس-مدل-KP?ref=Products",
+    "http:\/\/vandapc.ir\/products\/695769\/اسپیکر-پارتی-باکس-KP?ref=Products",
+    "http:\/\/vandapc.ir\/products\/695768\/اسپیکر-بلوتوثی-آزدا-مدل-PD-S?ref=Products",
+    "http:\/\/vandapc.ir\/products\/695767\/اسپیکر-پارتی-باکس-ویکر-مدل-?ref=Products",
+    "http:\/\/vandapc.ir\/products\/695646\/ایرپاد-KOLEER-s?ref=Products"
+]...[0m
+[1;92mFiltered to 68 valid product links[0m
+[1;92mUsing processing method: 1[0m
+[1;92mProcessing product 1/68: http://vandapc.ir/products/695798/اسپیکر-شارژی-پارتی-باکس-مدل-KP?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695798/اسپیکر-شارژی-پارتی-باکس-مدل-KP?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر شارژی پارتی باکس مدل KP4 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |     اسپیکر شارژی پارتی باکس مدل KP4      |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695798/اسپیکر-شارژی-پارتی-باکس-مدل-KP?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695798/اسپیکر-شارژی-پارتی-باکس-مدل-KP?ref=Products[0m
+[1;92mProcessing product 2/68: http://vandapc.ir/products/695588/فازمتر-جنرال-مدل-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695588/فازمتر-جنرال-مدل-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: فازمتر جنرال مدل 005 (ID: )[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|            |           فازمتر جنرال مدل 005           |     0      | لوازم الکتریکی و دکوراتیو |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695588/فازمتر-جنرال-مدل-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695588/فازمتر-جنرال-مدل-?ref=Products[0m
+[1;92mProcessing product 3/68: http://vandapc.ir/products/695769/اسپیکر-پارتی-باکس-KP?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695769/اسپیکر-پارتی-باکس-KP?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر پارتی باکس KP4 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |          اسپیکر پارتی باکس KP4           |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695769/اسپیکر-پارتی-باکس-KP?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695769/اسپیکر-پارتی-باکس-KP?ref=Products[0m
+[1;92mProcessing product 4/68: http://vandapc.ir/products/695589/آچار-استریپر-مدل-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695589/آچار-استریپر-مدل-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: آچار استریپر مدل 020 (ID: )[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|            |           آچار استریپر مدل 020           |     0      | لوازم الکتریکی و دکوراتیو |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695589/آچار-استریپر-مدل-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695589/آچار-استریپر-مدل-?ref=Products[0m
+[1;92mProcessing product 5/68: http://vandapc.ir/products/695768/اسپیکر-بلوتوثی-آزدا-مدل-PD-S?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695768/اسپیکر-بلوتوثی-آزدا-مدل-PD-S?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر بلوتوثی آزدا مدل PD-S102 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |     اسپیکر بلوتوثی آزدا مدل PD-S102      |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695768/اسپیکر-بلوتوثی-آزدا-مدل-PD-S?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695768/اسپیکر-بلوتوثی-آزدا-مدل-PD-S?ref=Products[0m
+[1;92mProcessing product 6/68: http://vandapc.ir/products/695587/فازمتر-کوچک-اورانوس-مدل-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695587/فازمتر-کوچک-اورانوس-مدل-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: فازمتر کوچک اورانوس مدل 020 (ID: )[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|            |       فازمتر کوچک اورانوس مدل 020        |     0      | لوازم الکتریکی و دکوراتیو |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695587/فازمتر-کوچک-اورانوس-مدل-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695587/فازمتر-کوچک-اورانوس-مدل-?ref=Products[0m
+[1;92mProcessing product 7/68: http://vandapc.ir/products/695646/ایرپاد-KOLEER-s?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695646/ایرپاد-KOLEER-s?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ایرپاد KOLEER s15 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |            ایرپاد KOLEER s15             |     0      |   ایرپاد   |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695646/ایرپاد-KOLEER-s?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695646/ایرپاد-KOLEER-s?ref=Products[0m
+[1;92mProcessing product 8/68: http://vandapc.ir/products/695645/ایرپاد-KOLEER-s?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695645/ایرپاد-KOLEER-s?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ایرپاد KOLEER s13 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |            ایرپاد KOLEER s13             |     0      |   ایرپاد   |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695645/ایرپاد-KOLEER-s?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695645/ایرپاد-KOLEER-s?ref=Products[0m
+[1;92mProcessing product 9/68: http://vandapc.ir/products/695625/مودم-سیمکارت-خور-حرفه-ایی-مدل-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695625/مودم-سیمکارت-خور-حرفه-ایی-مدل-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: مودم سیمکارت خور حرفه ایی مدل 106 (ID: )[0m
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+|            |    مودم سیمکارت خور حرفه ایی مدل 106     |     0      | مودم سیمکارت خور |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695625/مودم-سیمکارت-خور-حرفه-ایی-مدل-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695625/مودم-سیمکارت-خور-حرفه-ایی-مدل-?ref=Products[0m
+[1;92mProcessing product 10/68: http://vandapc.ir/products/695767/اسپیکر-پارتی-باکس-ویکر-مدل-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695767/اسپیکر-پارتی-باکس-ویکر-مدل-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر پارتی باکس ویکر مدل 6620 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |     اسپیکر پارتی باکس ویکر مدل 6620      |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695767/اسپیکر-پارتی-باکس-ویکر-مدل-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695767/اسپیکر-پارتی-باکس-ویکر-مدل-?ref=Products[0m
+[1;92mProcessing product 11/68: http://vandapc.ir/products/695549/کابل-AUX-PAU-برند-P-net?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695549/کابل-AUX-PAU-برند-P-net?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کابل AUX PAU.10 برند P-net (ID: )[0m
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category      | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+|            |        کابل AUX PAU.10 برند P-net        |     0      | لوازم جانبی ماشین |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695549/کابل-AUX-PAU-برند-P-net?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695549/کابل-AUX-PAU-برند-P-net?ref=Products[0m
+[1;92mProcessing product 12/68: http://vandapc.ir/products/695550/باتری-A-جی-پی-مدل-Super-Alkaline?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695550/باتری-A-جی-پی-مدل-Super-Alkaline?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: باتری 23A جی پی مدل Super Alkaline (ID: )[0m
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |    Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+|            |    باتری 23A جی پی مدل Super Alkaline    |     0      | کالاهای کاربردی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695550/باتری-A-جی-پی-مدل-Super-Alkaline?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695550/باتری-A-جی-پی-مدل-Super-Alkaline?ref=Products[0m
+[1;92mProcessing product 13/68: http://vandapc.ir/products/695551/باتری-ریموتی-های-ولتاژ-A?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695551/باتری-ریموتی-های-ولتاژ-A?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: باتری ریموتی های ولتاژ 27A (ID: )[0m
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |    Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+|            |        باتری ریموتی های ولتاژ 27A        |     0      | کالاهای کاربردی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695551/باتری-ریموتی-های-ولتاژ-A?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695551/باتری-ریموتی-های-ولتاژ-A?ref=Products[0m
+[1;92mProcessing product 14/68: http://vandapc.ir/products/695544/ماوس-سیم-دار-مخصوص-بازی-آئولا-مدل-S?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695544/ماوس-سیم-دار-مخصوص-بازی-آئولا-مدل-S?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ماوس سیم دار مخصوص بازی آئولا مدل S80 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |  ماوس سیم دار مخصوص بازی آئولا مدل S80   |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695544/ماوس-سیم-دار-مخصوص-بازی-آئولا-مدل-S?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695544/ماوس-سیم-دار-مخصوص-بازی-آئولا-مدل-S?ref=Products[0m
+[1;92mProcessing product 15/68: http://vandapc.ir/products/695548/موس-بی-سیم-مچر-مدل-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695548/موس-بی-سیم-مچر-مدل-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: موس بی سیم مچر مدل 172 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |          موس بی سیم مچر مدل 172          |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695548/موس-بی-سیم-مچر-مدل-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695548/موس-بی-سیم-مچر-مدل-?ref=Products[0m
+[1;92mProcessing product 16/68: http://vandapc.ir/products/695546/ماوس-بیسیم-مچر-مدل-MR-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695546/ماوس-بیسیم-مچر-مدل-MR-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ماوس بیسیم مچر مدل MR-167 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |        ماوس بیسیم مچر مدل MR-167         |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695546/ماوس-بیسیم-مچر-مدل-MR-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695546/ماوس-بیسیم-مچر-مدل-MR-?ref=Products[0m
+[1;92mProcessing product 17/68: http://vandapc.ir/products/695543/ماوس-مخصوص-بازی-آئولا-مدل-Mountain-S?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695543/ماوس-مخصوص-بازی-آئولا-مدل-Mountain-S?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ماوس مخصوص بازی آئولا مدل Mountain S18 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |  ماوس مخصوص بازی آئولا مدل Mountain S18  |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695543/ماوس-مخصوص-بازی-آئولا-مدل-Mountain-S?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695543/ماوس-مخصوص-بازی-آئولا-مدل-Mountain-S?ref=Products[0m
+[1;92mProcessing product 18/68: http://vandapc.ir/products/695547/ماوس-بی-سیم-مچر-مدل-MR-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695547/ماوس-بی-سیم-مچر-مدل-MR-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ماوس بی سیم مچر مدل MR-169 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |        ماوس بی سیم مچر مدل MR-169        |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695547/ماوس-بی-سیم-مچر-مدل-MR-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695547/ماوس-بی-سیم-مچر-مدل-MR-?ref=Products[0m
+[1;92mProcessing product 19/68: http://vandapc.ir/products/695542/موس-سیم-دار-آئولا-گیمینگ-مدل-Mountain-S?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695542/موس-سیم-دار-آئولا-گیمینگ-مدل-Mountain-S?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: موس سیم دار آئولا گیمینگ مدل Mountain S12 (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | موس سیم دار آئولا گیمینگ مدل Mountain S1... |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695542/موس-سیم-دار-آئولا-گیمینگ-مدل-Mountain-S?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695542/موس-سیم-دار-آئولا-گیمینگ-مدل-Mountain-S?ref=Products[0m
+[1;92mProcessing product 20/68: http://vandapc.ir/products/695545/ماوس-بی-سیم-آئولا-مدل-AM?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695545/ماوس-بی-سیم-آئولا-مدل-AM?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ماوس بی سیم آئولا مدل AM210 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |       ماوس بی سیم آئولا مدل AM210        |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695545/ماوس-بی-سیم-آئولا-مدل-AM?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695545/ماوس-بی-سیم-آئولا-مدل-AM?ref=Products[0m
+[1;92mProcessing product 21/68: http://vandapc.ir/products/695541/موس-سیمی-بیاند-مدل-Beyond-BM-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695541/موس-سیمی-بیاند-مدل-Beyond-BM-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: موس سیمی بیاند مدل Beyond BM-1066 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |    موس سیمی بیاند مدل Beyond BM-1066     |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695541/موس-سیمی-بیاند-مدل-Beyond-BM-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695541/موس-سیمی-بیاند-مدل-Beyond-BM-?ref=Products[0m
+[1;92mProcessing product 22/68: http://vandapc.ir/products/695540/ماوس-باسیم-بیاند-مدل-BM-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695540/ماوس-باسیم-بیاند-مدل-BM-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ماوس باسیم بیاند مدل BM-1144 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |       ماوس باسیم بیاند مدل BM-1144       |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695540/ماوس-باسیم-بیاند-مدل-BM-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695540/ماوس-باسیم-بیاند-مدل-BM-?ref=Products[0m
+[1;92mProcessing product 23/68: http://vandapc.ir/products/695537/اکستندر-lan-to-hdmi-تبدیل-افزایش-طول-HDMI-تحت-شبکه-متری?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695537/اکستندر-lan-to-hdmi-تبدیل-افزایش-طول-HDMI-تحت-شبکه-متری?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اکستندر lan to hdmi تبدیل افزایش طول HDMI تحت شبکه 30 متری (ID: )[0m
++------------+---------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |    Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+|            | اکستندر lan to hdmi تبدیل افزایش طول HDM... |     0      | تجهیزات کاربردی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695537/اکستندر-lan-to-hdmi-تبدیل-افزایش-طول-HDMI-تحت-شبکه-متری?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695537/اکستندر-lan-to-hdmi-تبدیل-افزایش-طول-HDMI-تحت-شبکه-متری?ref=Products[0m
+[1;92mProcessing product 24/68: http://vandapc.ir/products/695539/افزایش-طول-USB-با-کابل-شبکه-تا-متر?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695539/افزایش-طول-USB-با-کابل-شبکه-تا-متر?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: افزایش طول USB با کابل شبکه تا 50 متر (ID: )[0m
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |    Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+|            |  افزایش طول USB با کابل شبکه تا 50 متر   |     0      | تجهیزات کاربردی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695539/افزایش-طول-USB-با-کابل-شبکه-تا-متر?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695539/افزایش-طول-USB-با-کابل-شبکه-تا-متر?ref=Products[0m
+[1;92mProcessing product 25/68: http://vandapc.ir/products/695538/اکستندر-HDMI-با-طول-متر-D-tech?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695538/اکستندر-HDMI-با-طول-متر-D-tech?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اکستندر HDMI با طول 60 متر D-tech (ID: )[0m
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |    Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+|            |    اکستندر HDMI با طول 60 متر D-tech     |     0      | تجهیزات کاربردی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695538/اکستندر-HDMI-با-طول-متر-D-tech?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695538/اکستندر-HDMI-با-طول-متر-D-tech?ref=Products[0m
+[1;92mProcessing product 26/68: http://vandapc.ir/products/695536/پایه-نگهدارنده-گوشی-کد-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695536/پایه-نگهدارنده-گوشی-کد-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: پایه نگهدارنده گوشی کد 211 (ID: )[0m
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category      | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+|            |        پایه نگهدارنده گوشی کد 211        |     0      | لوازم جانبی ماشین |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695536/پایه-نگهدارنده-گوشی-کد-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695536/پایه-نگهدارنده-گوشی-کد-?ref=Products[0m
+[1;92mProcessing product 27/68: http://vandapc.ir/products/695533/سوییچ-دو-پورت-مدل-VGA?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695533/سوییچ-دو-پورت-مدل-VGA?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: سوییچ دو پورت مدل VGA (ID: )[0m
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |    Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+|            |          سوییچ دو پورت مدل VGA           |     0      | تجهیزات کاربردی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695533/سوییچ-دو-پورت-مدل-VGA?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695533/سوییچ-دو-پورت-مدل-VGA?ref=Products[0m
+[1;92mProcessing product 28/68: http://vandapc.ir/products/695532/کارت-شبکه-بی-سیم-پی-نت-مدل-CO?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695532/کارت-شبکه-بی-سیم-پی-نت-مدل-CO?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کارت شبکه بی سیم پی نت مدل CO.500 (ID: )[0m
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |    Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+|            |    کارت شبکه بی سیم پی نت مدل CO.500     |     0      | تجهیزات کاربردی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695532/کارت-شبکه-بی-سیم-پی-نت-مدل-CO?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695532/کارت-شبکه-بی-سیم-پی-نت-مدل-CO?ref=Products[0m
+[1;92mProcessing product 29/68: http://vandapc.ir/products/695535/شارژر-کلگی-W-PIN-SAMSUNG-پی-نت?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695535/شارژر-کلگی-W-PIN-SAMSUNG-پی-نت?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: شارژر کلگی 15W 3PIN SAMSUNG پی نت (ID: )[0m
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            |    شارژر کلگی 15W 3PIN SAMSUNG پی نت     |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695535/شارژر-کلگی-W-PIN-SAMSUNG-پی-نت?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695535/شارژر-کلگی-W-PIN-SAMSUNG-پی-نت?ref=Products[0m
+[1;92mProcessing product 30/68: http://vandapc.ir/products/695531/کارت-شبکه-بی-سیم-آنتن-دار-پی-نت-مدل-CO?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695531/کارت-شبکه-بی-سیم-آنتن-دار-پی-نت-مدل-CO?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کارت شبکه بی سیم آنتن دار پی نت مدل CO.400 (ID: )[0m
++------------+---------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |    Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+|            | کارت شبکه بی سیم آنتن دار پی نت مدل CO.4... |     0      | تجهیزات کاربردی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-----------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695531/کارت-شبکه-بی-سیم-آنتن-دار-پی-نت-مدل-CO?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695531/کارت-شبکه-بی-سیم-آنتن-دار-پی-نت-مدل-CO?ref=Products[0m
+[1;92mProcessing product 31/68: http://vandapc.ir/products/695530/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695530/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: پایه خنک کننده پی نت مدل P706 (ID: )[0m
++------------+------------------------------------------+------------+--------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |   Category   | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------+--------------+------------+------------+------------+
+|            |      پایه خنک کننده پی نت مدل P706       |     0      | فن زیرلپ تاپ |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695530/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695530/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;92mProcessing product 32/68: http://vandapc.ir/products/695529/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695529/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: پایه خنک کننده پی نت مدل P705 (ID: )[0m
++------------+------------------------------------------+------------+--------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |   Category   | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------+--------------+------------+------------+------------+
+|            |      پایه خنک کننده پی نت مدل P705       |     0      | فن زیرلپ تاپ |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695529/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695529/پایه-خنک-کننده-پی-نت-مدل-P?ref=Products[0m
+[1;92mProcessing product 33/68: http://vandapc.ir/products/695527/کابل-تبدیل-USB-به-لایتنینگ-لنیز-مدل-LCi-طول-متر?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695527/کابل-تبدیل-USB-به-لایتنینگ-لنیز-مدل-LCi-طول-متر?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کابل تبدیل USB به لایتنینگ لنیز مدل LC937i طول 1 متر (ID: )[0m
++------------+---------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            | کابل تبدیل USB به لایتنینگ لنیز مدل LC93... |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695527/کابل-تبدیل-USB-به-لایتنینگ-لنیز-مدل-LCi-طول-متر?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695527/کابل-تبدیل-USB-به-لایتنینگ-لنیز-مدل-LCi-طول-متر?ref=Products[0m
+[1;92mProcessing product 34/68: http://vandapc.ir/products/695526/کابل-آیفون-Lightning-وریتی-مدل-CB-i?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695526/کابل-آیفون-Lightning-وریتی-مدل-CB-i?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کابل آیفون Lightning وریتی مدل CB-3146 i (ID: )[0m
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            | کابل آیفون Lightning وریتی مدل CB-3146 i |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695526/کابل-آیفون-Lightning-وریتی-مدل-CB-i?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695526/کابل-آیفون-Lightning-وریتی-مدل-CB-i?ref=Products[0m
+[1;92mProcessing product 35/68: http://vandapc.ir/products/695507/گارد-گوشی-موبایل-عروسکی?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695507/گارد-گوشی-موبایل-عروسکی?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: گارد گوشی موبایل عروسکی (ID: )[0m
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+|            |         گارد گوشی موبایل عروسکی          |     0      | قاب و محافظ گوشی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695507/گارد-گوشی-موبایل-عروسکی?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695507/گارد-گوشی-موبایل-عروسکی?ref=Products[0m
+[1;92mProcessing product 36/68: http://vandapc.ir/products/695524/گارد-گوشی-موبایل-حرفه-ایی-لایسنس?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695524/گارد-گوشی-موبایل-حرفه-ایی-لایسنس?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: گارد گوشی موبایل حرفه ایی لایسنس (ID: )[0m
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+|            |     گارد گوشی موبایل حرفه ایی لایسنس     |     0      | قاب و محافظ گوشی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695524/گارد-گوشی-موبایل-حرفه-ایی-لایسنس?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695524/گارد-گوشی-موبایل-حرفه-ایی-لایسنس?ref=Products[0m
+[1;92mProcessing product 37/68: http://vandapc.ir/products/695525/کابل-شارژ-تایپ-سی-وریتی-VERITY-CB-T?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695525/کابل-شارژ-تایپ-سی-وریتی-VERITY-CB-T?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کابل شارژ تایپ سی وریتی VERITY-CB-3146T (ID: )[0m
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            | کابل شارژ تایپ سی وریتی VERITY-CB-3146T  |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695525/کابل-شارژ-تایپ-سی-وریتی-VERITY-CB-T?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695525/کابل-شارژ-تایپ-سی-وریتی-VERITY-CB-T?ref=Products[0m
+[1;92mProcessing product 38/68: http://vandapc.ir/products/695458/اسپیکر-پارتی-باکس-سوارز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695458/اسپیکر-پارتی-باکس-سوارز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر(پارتی باکس) سوارز مدل AN-1388 دو ساب 10 اینچ (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | اسپیکر(پارتی باکس) سوارز مدل AN-1388 دو ... |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695458/اسپیکر-پارتی-باکس-سوارز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695458/اسپیکر-پارتی-باکس-سوارز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;92mProcessing product 39/68: http://vandapc.ir/products/695506/گارد-مگ-سیف-آیفون-MegSafe?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695506/گارد-مگ-سیف-آیفون-MegSafe?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: گارد مگ سیف آیفون MegSafe (ID: )[0m
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category     | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+|            |        گارد مگ سیف آیفون MegSafe         |     0      | قاب و محافظ گوشی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695506/گارد-مگ-سیف-آیفون-MegSafe?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695506/گارد-مگ-سیف-آیفون-MegSafe?ref=Products[0m
+[1;92mProcessing product 40/68: http://vandapc.ir/products/695457/اسپیکر-قابل-حمل-پارتی-باکس-سوارز-مکسیدر-مدل-AN?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695457/اسپیکر-قابل-حمل-پارتی-باکس-سوارز-مکسیدر-مدل-AN?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر قابل حمل پارتی باکس سوارز (مکسیدر) مدل AN1385 (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | اسپیکر قابل حمل پارتی باکس سوارز (مکسیدر... |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695457/اسپیکر-قابل-حمل-پارتی-باکس-سوارز-مکسیدر-مدل-AN?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695457/اسپیکر-قابل-حمل-پارتی-باکس-سوارز-مکسیدر-مدل-AN?ref=Products[0m
+[1;92mProcessing product 41/68: http://vandapc.ir/products/695395/اسپیکر-سوآرز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695395/اسپیکر-سوآرز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر سوآرز مدل AN1390 دو ساب 10 اینچ (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |  اسپیکر سوآرز مدل AN1390 دو ساب 10 اینچ  |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695395/اسپیکر-سوآرز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695395/اسپیکر-سوآرز-مدل-AN-دو-ساب-اینچ?ref=Products[0m
+[1;92mProcessing product 42/68: http://vandapc.ir/products/695249/شاژرفندکی-پورت-آمپر?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695249/شاژرفندکی-پورت-آمپر?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: شاژرفندکی 2پورت 2.1 آمپر (ID: )[0m
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category      | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+|            |         شاژرفندکی 2پورت 2.1 آمپر         |     0      | لوازم جانبی ماشین |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695249/شاژرفندکی-پورت-آمپر?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695249/شاژرفندکی-پورت-آمپر?ref=Products[0m
+[1;92mProcessing product 43/68: http://vandapc.ir/products/695394/اسپیکر-سوآرز-مدل-AN?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695394/اسپیکر-سوآرز-مدل-AN?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر سوآرز مدل AN1392 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |         اسپیکر سوآرز مدل AN1392          |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695394/اسپیکر-سوآرز-مدل-AN?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695394/اسپیکر-سوآرز-مدل-AN?ref=Products[0m
+[1;92mProcessing product 44/68: http://vandapc.ir/products/695244/شاژرفندکی-وات-PD-QC?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695244/شاژرفندکی-وات-PD-QC?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: شاژرفندکی 38 وات PD QC3 (ID: )[0m
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category      | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+|            |         شاژرفندکی 38 وات PD QC3          |     0      | لوازم جانبی ماشین |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695244/شاژرفندکی-وات-PD-QC?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695244/شاژرفندکی-وات-PD-QC?ref=Products[0m
+[1;92mProcessing product 45/68: http://vandapc.ir/products/695123/اسپیکرشارژی-مدل-ZQS-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/695123/اسپیکرشارژی-مدل-ZQS-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکرشارژی مدل ZQS-6201 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |         اسپیکرشارژی مدل ZQS-6201         |     0      | اسپیکر شارژی پرتابل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/695123/اسپیکرشارژی-مدل-ZQS-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/695123/اسپیکرشارژی-مدل-ZQS-?ref=Products[0m
+[1;92mProcessing product 46/68: http://vandapc.ir/products/694573/کابل-شارژ-دو-سر-Type-C-پی-نت-درجه-یک?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694573/کابل-شارژ-دو-سر-Type-C-پی-نت-درجه-یک?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کابل شارژ دو سر Type-C پی نت درجه یک (ID: )[0m
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            |   کابل شارژ دو سر Type-C پی نت درجه یک   |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694573/کابل-شارژ-دو-سر-Type-C-پی-نت-درجه-یک?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694573/کابل-شارژ-دو-سر-Type-C-پی-نت-درجه-یک?ref=Products[0m
+[1;92mProcessing product 47/68: http://vandapc.ir/products/694570/کابل-لایتنینگ-به-جک-AUX-میلی-متری-اپل?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694570/کابل-لایتنینگ-به-جک-AUX-میلی-متری-اپل?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کابل لایتنینگ به جک(AUX) 3.5 میلی متری اپل (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | کابل لایتنینگ به جک(AUX) 3.5 میلی متری ا... |     0      |  کابل aux  |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694570/کابل-لایتنینگ-به-جک-AUX-میلی-متری-اپل?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694570/کابل-لایتنینگ-به-جک-AUX-میلی-متری-اپل?ref=Products[0m
+[1;92mProcessing product 48/68: http://vandapc.ir/products/694571/کابل-شارژ-دو-سر-USB-Type-C-پی-نت?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694571/کابل-شارژ-دو-سر-USB-Type-C-پی-نت?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کابل شارژ دو سر USB 3.1 Type-C پی نت (ID: )[0m
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            |   کابل شارژ دو سر USB 3.1 Type-C پی نت   |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694571/کابل-شارژ-دو-سر-USB-Type-C-پی-نت?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694571/کابل-شارژ-دو-سر-USB-Type-C-پی-نت?ref=Products[0m
+[1;92mProcessing product 49/68: http://vandapc.ir/products/694568/میکروفن-یقه-ای-بی-سیم-مدل-K-Dual-Type-C-با-تبدیل-Lightning?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694568/میکروفن-یقه-ای-بی-سیم-مدل-K-Dual-Type-C-با-تبدیل-Lightning?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: میکروفن یقه ای بی سیم مدل K9 Dual Type-C با تبدیل Lightning (ID: )[0m
++------------+---------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |     Category      | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+|            | میکروفن یقه ای بی سیم مدل K9 Dual Type-C... |     0      | ابزار تولید محتوا |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694568/میکروفن-یقه-ای-بی-سیم-مدل-K-Dual-Type-C-با-تبدیل-Lightning?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694568/میکروفن-یقه-ای-بی-سیم-مدل-K-Dual-Type-C-با-تبدیل-Lightning?ref=Products[0m
+[1;92mProcessing product 50/68: http://vandapc.ir/products/694567/میکروفن-بی-سیم-مدل-F-CLEAR-TIMBRE?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694567/میکروفن-بی-سیم-مدل-F-CLEAR-TIMBRE?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: میکروفن بی سیم مدل F5 CLEAR TIMBRE (ID: )[0m
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category      | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+|            |    میکروفن بی سیم مدل F5 CLEAR TIMBRE    |     0      | ابزار تولید محتوا |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694567/میکروفن-بی-سیم-مدل-F-CLEAR-TIMBRE?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694567/میکروفن-بی-سیم-مدل-F-CLEAR-TIMBRE?ref=Products[0m
+[1;92mProcessing product 51/68: http://vandapc.ir/products/694566/شارژر-سامسونگ-وات-سه-پین?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694566/شارژر-سامسونگ-وات-سه-پین?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: شارژر سامسونگ 25 وات سه پین (ID: )[0m
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            |       شارژر سامسونگ 25 وات سه پین        |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694566/شارژر-سامسونگ-وات-سه-پین?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694566/شارژر-سامسونگ-وات-سه-پین?ref=Products[0m
+[1;92mProcessing product 52/68: http://vandapc.ir/products/694565/شارژر-سامسونگ-وات-دو-پین-بدون-کابل-اصل?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694565/شارژر-سامسونگ-وات-دو-پین-بدون-کابل-اصل?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: شارژر سامسونگ 25 وات دو پین بدون کابل اصل (ID: )[0m
++------------+---------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            | شارژر سامسونگ 25 وات دو پین بدون کابل اص... |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694565/شارژر-سامسونگ-وات-دو-پین-بدون-کابل-اصل?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694565/شارژر-سامسونگ-وات-دو-پین-بدون-کابل-اصل?ref=Products[0m
+[1;92mProcessing product 53/68: http://vandapc.ir/products/694563/هولدر-گوشی-موبایل-مدل-RT-D?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694563/هولدر-گوشی-موبایل-مدل-RT-D?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: هولدر گوشی موبایل مدل RT-66D (ID: )[0m
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |     Category      | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+|            |       هولدر گوشی موبایل مدل RT-66D       |     0      | لوازم جانبی ماشین |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694563/هولدر-گوشی-موبایل-مدل-RT-D?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694563/هولدر-گوشی-موبایل-مدل-RT-D?ref=Products[0m
+[1;92mProcessing product 54/68: http://vandapc.ir/products/694520/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694520/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کیبورد و ماوس بی سیم لیگو liggo مدل KW807 (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | کیبورد و ماوس بی سیم لیگو liggo مدل KW80... |     0      |   کیبورد   |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694520/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694520/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;92mProcessing product 55/68: http://vandapc.ir/products/694516/ماوس-باسیم-لیگو-مدل-M?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694516/ماوس-باسیم-لیگو-مدل-M?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: ماوس باسیم لیگو مدل M301 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |         ماوس باسیم لیگو مدل M301         |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694516/ماوس-باسیم-لیگو-مدل-M?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694516/ماوس-باسیم-لیگو-مدل-M?ref=Products[0m
+[1;92mProcessing product 56/68: http://vandapc.ir/products/694515/موس-با-سیم-تسکو-مدل-TM-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694515/موس-با-سیم-تسکو-مدل-TM-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: موس با سیم تسکو مدل TM 307 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |        موس با سیم تسکو مدل TM 307        |     0      |    ماوس    |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694515/موس-با-سیم-تسکو-مدل-TM-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694515/موس-با-سیم-تسکو-مدل-TM-?ref=Products[0m
+[1;92mProcessing product 57/68: http://vandapc.ir/products/694519/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694519/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کیبورد و ماوس بی سیم لیگو liggo مدل KW806 (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | کیبورد و ماوس بی سیم لیگو liggo مدل KW80... |     0      |   کیبورد   |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694519/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694519/کیبورد-و-ماوس-بی-سیم-لیگو-liggo-مدل-KW?ref=Products[0m
+[1;92mProcessing product 58/68: http://vandapc.ir/products/694479/رابط-برق-خانه-با-کابل-سیم-بلند-متری?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694479/رابط-برق-خانه-با-کابل-سیم-بلند-متری?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: رابط برق 4 خانه با کابل سیم بلند 5 متری (ID: )[0m
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category          | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+|            | رابط برق 4 خانه با کابل سیم بلند 5 متری  |     0      | لوازم الکتریکی و دکوراتیو |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694479/رابط-برق-خانه-با-کابل-سیم-بلند-متری?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694479/رابط-برق-خانه-با-کابل-سیم-بلند-متری?ref=Products[0m
+[1;92mProcessing product 59/68: http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;93m🔄 لینک ناموفق آپدیت شد (تلاش #2): http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;91m  └─ خطا: Invalid or missing product data[0m
+[1;91mFailed to extract valid data: http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;92mProcessing product 60/68: http://vandapc.ir/products/694241/تبدیل-به-برق-تایمردار-محافظ-برند-پی-نت?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694241/تبدیل-به-برق-تایمردار-محافظ-برند-پی-نت?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: تبدیل 3به2 برق تایمردار (محافظ) برند پی نت (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | تبدیل 3به2 برق تایمردار (محافظ) برند پی ... |     0      | تبدیل برق  |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694241/تبدیل-به-برق-تایمردار-محافظ-برند-پی-نت?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694241/تبدیل-به-برق-تایمردار-محافظ-برند-پی-نت?ref=Products[0m
+[1;92mProcessing product 61/68: http://vandapc.ir/products/694462/مبدل-به-جک-میلی-متری-ایتوک-مدل-Arco?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694462/مبدل-به-جک-میلی-متری-ایتوک-مدل-Arco?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: مبدل 1 به 2 جک 3.5 میلی متری ایتوک مدل Arco (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | مبدل 1 به 2 جک 3.5 میلی متری ایتوک مدل A... |     0      |  کابل aux  |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694462/مبدل-به-جک-میلی-متری-ایتوک-مدل-Arco?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694462/مبدل-به-جک-میلی-متری-ایتوک-مدل-Arco?ref=Products[0m
+[1;92mProcessing product 62/68: http://vandapc.ir/products/694118/کابل-شارژر-پاور-بانکی-چند-سر?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694118/کابل-شارژر-پاور-بانکی-چند-سر?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کابل شارژر پاور بانکی چند سر (ID: )[0m
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |         Category         | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+|            |       کابل شارژر پاور بانکی چند سر       |     0      | شارژر و کابل شارژرموبایل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+--------------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694118/کابل-شارژر-پاور-بانکی-چند-سر?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694118/کابل-شارژر-پاور-بانکی-چند-سر?ref=Products[0m
+[1;92mProcessing product 63/68: http://vandapc.ir/products/693290/اسپیکر-شارژی-بروفن-مدل-BR?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/693290/اسپیکر-شارژی-بروفن-مدل-BR?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر شارژی بروفن مدل BR3 (ID: )[0m
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |      Category       | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+|            |        اسپیکر شارژی بروفن مدل BR3        |     0      | اسپیکر شارژی پرتابل |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+---------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/693290/اسپیکر-شارژی-بروفن-مدل-BR?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/693290/اسپیکر-شارژی-بروفن-مدل-BR?ref=Products[0m
+[1;92mProcessing product 64/68: http://vandapc.ir/products/694029/اسپیکر-آیوا-مدل-پرو-AW-XDSP-PRO-?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694029/اسپیکر-آیوا-مدل-پرو-AW-XDSP-PRO-?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر آیوا مدل 1650 پرو (AW-X1650DSP PRO) (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | اسپیکر آیوا مدل 1650 پرو (AW-X1650DSP PR... |     0      | پارتی باکس |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694029/اسپیکر-آیوا-مدل-پرو-AW-XDSP-PRO-?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/694029/اسپیکر-آیوا-مدل-پرو-AW-XDSP-PRO-?ref=Products[0m
+[1;92mProcessing product 65/68: http://vandapc.ir/products/692829/کیبورد-پی-نت-مدل-KB?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/692829/کیبورد-پی-نت-مدل-KB?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کیبورد پی نت مدل KB.600 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |         کیبورد پی نت مدل KB.600          |     0      |   کیبورد   |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/692829/کیبورد-پی-نت-مدل-KB?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/692829/کیبورد-پی-نت-مدل-KB?ref=Products[0m
+[1;92mProcessing product 66/68: http://vandapc.ir/products/693639/اسپیکر-دیجی-دار-دنای-DENAY-DE-DJ?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/693639/اسپیکر-دیجی-دار-دنای-DENAY-DE-DJ?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: اسپیکر دیجی دار دنای DENAY DE-3010DJ5 (ID: )[0m
++------------+------------------------------------------+------------+-----------------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |       Category        | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-----------------------+--------------+------------+------------+------------+
+|            |  اسپیکر دیجی دار دنای DENAY DE-3010DJ5   |     0      | اسپیکر 2تیکه حرفه ایی |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-----------------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/693639/اسپیکر-دیجی-دار-دنای-DENAY-DE-DJ?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/693639/اسپیکر-دیجی-دار-دنای-DENAY-DE-DJ?ref=Products[0m
+[1;92mProcessing product 67/68: http://vandapc.ir/products/692671/رم-گیگ-با-گارانتی-مادام-العمر-برند-وریتی?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/692671/رم-گیگ-با-گارانتی-مادام-العمر-برند-وریتی?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: رم 64 گیگ با گارانتی مادام العمر برند وریتی (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | رم 64 گیگ با گارانتی مادام العمر برند ور... |     0      | رم موبایل  |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/692671/رم-گیگ-با-گارانتی-مادام-العمر-برند-وریتی?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/692671/رم-گیگ-با-گارانتی-مادام-العمر-برند-وریتی?ref=Products[0m
+[1;92mProcessing product 68/68: http://vandapc.ir/products/692670/رم-موبایل-ظرفیت-گیگابایت-گارانتی-مادام-العمر-bexo?ref=Products[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/692670/رم-موبایل-ظرفیت-گیگابایت-گارانتی-مادام-العمر-bexo?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: رم موبایل ظرفیت 32 گیگابایت گارانتی مادام العمر bexo (ID: )[0m
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                    Title                    |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            | رم موبایل ظرفیت 32 گیگابایت گارانتی مادا... |     0      | رم موبایل  |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+---------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/692670/رم-موبایل-ظرفیت-گیگابایت-گارانتی-مادام-العمر-bexo?ref=Products[0m
+[1;92mSuccessfully processed: http://vandapc.ir/products/692670/رم-موبایل-ظرفیت-گیگابایت-گارانتی-مادام-العمر-bexo?ref=Products[0m
+[1;92mBatch processing completed. Processed: 68, Failed: 1[0m
+[1;95mFound 1 failed links in database. Attempting to retry...[0m
+[1;95m🔄 شروع تلاش مجدد برای 1 لینک ناموفق...[0m
+[1;95m═══════════════════════════════════════════════════════════════[0m
+[1;93m⚠️ هشدار: پروکسی تعریف نشده - استفاده از اتصال مستقیم[0m
+[1;94m🔍 تلاش مجدد [1/1] - تلاش #3: http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;94mAttempting to fetch failed URL with proxy and random UA: http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;94m🔌 Connecting to proxy : (Type: unknown) for URL: http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products (Attempt 1)[0m
+[1;92mSuccessfully fetched content with proxy : and UA: Mozilla/5.0 (Macintosh; Intel ...[0m
+[1;92mExtracted product_id: "" for http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;92m🆕 محصول جدید اضافه شد: کیبورد Liggo K112 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |            کیبورد Liggo K112             |     0      |   کیبورد   |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;94mMarked 1 link(s) as processed: http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;95m✅ محصول از failed_links بازیابی شد: کیبورد Liggo K112 (ID: )[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|            |            کیبورد Liggo K112             |     0      |   کیبورد   |    موجود     |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;92m🎉 موفقیت در بازیابی لینک: http://vandapc.ir/products/694517/کیبورد-Liggo-K?ref=Products[0m
+[1;90m───────────────────────────────────────────────────────────────[0m
+[1;95m═══════════════════════════════════════════════════════════════[0m
+[1;95m📊 گزارش تلاش مجدد تکمیل شد:[0m
+[1;92m  ✅ موفق: 1[0m
+[1;91m  ❌ ناموفق: 0[0m
+[1;93m  ⏭️ پرش شده (به دلیل ?add-to-cart=): 0[0m
+[1;95m═══════════════════════════════════════════════════════════════[0m
+[1;92mSuccessfully processed 1 failed links during retry[0m
+[1;92mScraping completed! Processed: 69, Failed: 0[0m
+Scraping completed successfully!
+Total products scraped: 69
+Failed links: 0

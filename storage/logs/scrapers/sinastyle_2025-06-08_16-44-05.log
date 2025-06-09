@@ -1,0 +1,775 @@
+اجرای اسکرپر  برای کانفیگ sinastyle در تاریخ 2025-06-08 16:44:05 شروع شد...
+Starting flexible scraper...
+Loading configuration from /var/www/html/products-shops/storage/app/private/private/sinastyle.json
+[1;92mValidating configuration...[0m
+[1;92mConfig validated. Using run_method: new[0m
+Request delay set to 500 ms.
+Starting scrape operation...
+[1;95mInside scrapeMultiple method[0m
+[1;92mStarting scraper with start_id: not set[0m
+[1;92mConfiguration validated successfully.[0m
+[1;92mGenerated database name: sinastyle_ir[0m
+[1;92mDatabase mode: clear[0m
+[1;93mDatabase sinastyle_ir exists, dropping it...[0m
+[1;92mCreating database sinastyle_ir...[0m
+[1;92mSwitched to database: sinastyle_ir[0m
+[1;92mRunning specific migrations...[0m
+[1;92mApplied migration: 2025_04_08_162133_create_products_table.php[0m
+[1;92mApplied migration: 2025_04_13_073528_create_failed_links_table.php[0m
+[1;92mApplied migration: 2025_05_19_162835_create_links_table.php[0m
+[1;92mSpecific migrations completed[0m
+[1;92mRun method: new[0m
+[1;92m🌐 Fetching product links from web...[0m
+[1;92m🔄 STARTING fetchProductLinks - Method: 3[0m
+[1;95m📄 Config check - products_urls count: 1[0m
+[1;95m📄 Config check - base_urls: ["https:\/\/sinastyle.ir"][0m
+[1;92m✅ Product links selector found (array): {"type":"css","selector":"div.sc-e8c2a00d-1 > a:nth-child(1)","attribute":"href"}[0m
+[1;92m🎯 Using scrapeMethodThree for method 3...[0m
+[1;92mStarting scrapeMethodThree...[0m
+[1;93mNormalized URL: https://sinastyle.ir/products -> https://sinastyle.ir/products/[0m
+[1;95mProcessing products_url 1: https://sinastyle.ir/products[0m
+[1;92mTemporary script file created at: /tmp/playwright_method3_v79g8brpi8p96Um2L2D.cjs[0m
+[1;92mExecuting Playwright script: NODE_PATH=/var/www/html/products-shops/node_modules node /tmp/playwright_method3_v79g8brpi8p96Um2L2D.cjs[0m
+[1;93mPlaywright output: Launching headless Chrome browser...[0m
+[1;93mPlaywright output: Creating new browser context...[0m
+[1;93mPlaywright output: Creating new page...[0m
+[1;93mPlaywright output: Processing page 1...[0m
+[1;93mPlaywright output: Navigating to page: https://sinastyle.ir/products...[0m
+[1;93mPlaywright output: Page navigation completed.[0m
+[1;93mPlaywright output: Waiting for product links to appear (max 30s)...[0m
+[1;93mPlaywright output: Added new link: /product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876[0m
+[1;93mPlaywright output: Added new link: /product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875[0m
+[1;93mPlaywright output: Added new link: /product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874[0m
+[1;93mPlaywright output: Added new link: /product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873[0m
+[1;93mPlaywright output: Added new link: /product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872[0m
+[1;93mPlaywright output: Added new link: /product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871[0m
+[1;93mPlaywright output: Added new link: /product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87[0m
+[1;93mPlaywright output: Added new link: /product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA[0m
+[1;93mPlaywright output: Added new link: /product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;93mPlaywright output: Added new link: /product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;93mPlaywright output: Added new link: /product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY[0m
+[1;93mPlaywright output: Added new link: /product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs[0m
+[1;93mPlaywright output: Added new link: /product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga[0m
+[1;93mPlaywright output: Added new link: /product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE[0m
+[1;93mPlaywright output: Added new link: /product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.[0m
+[1;93mPlaywright output: Added new link: /product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871[0m
+[1;93mPlaywright output: Added new link: /product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE[0m
+[1;93mPlaywright output: Added new link: /product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2[0m
+[1;93mPlaywright output: Added new link: /product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873[0m
+[1;93mPlaywright output: Added new link: /product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874[0m
+[1;93mPlaywright output: Added new link: /product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875[0m
+[1;93mPlaywright output: Added new link: /product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6[0m
+[1;93mPlaywright output: Added new link: /product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87[0m
+[1;93mPlaywright output: Added new link: /product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87[0m
+[1;93mPlaywright output: Extracted 24 new product links from page 1.[0m
+[1;93mPlaywright output: Total unique links extracted: 24[0m
+[1;93mPlaywright output: Processing link 1: https://sinastyle.ir/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: جلیقه6[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 678,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1546_fVtfSSb.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: جلیقه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725581[0m
+[1;93mPlaywright output: Processed product 1: https://sinastyle.ir/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876[0m
+[1;93mPlaywright output: Processing link 2: https://sinastyle.ir/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: جلیقه5[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 678,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1547_ZgQWEpL.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: جلیقه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725575[0m
+[1;93mPlaywright output: Processed product 2: https://sinastyle.ir/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875[0m
+[1;93mPlaywright output: Processing link 3: https://sinastyle.ir/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: جلیقه4[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 678,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1549_h61Ndas.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: جلیقه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725569[0m
+[1;93mPlaywright output: Processed product 3: https://sinastyle.ir/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874[0m
+[1;93mPlaywright output: Processing link 4: https://sinastyle.ir/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: جلیقه3[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 678,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1550_I2q0Chg.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: جلیقه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725568[0m
+[1;93mPlaywright output: Processed product 4: https://sinastyle.ir/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873[0m
+[1;93mPlaywright output: Processing link 5: https://sinastyle.ir/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: جلیقه2[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 678,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1535_HxiUrJk.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: جلیقه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725565[0m
+[1;93mPlaywright output: Processed product 5: https://sinastyle.ir/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872[0m
+[1;93mPlaywright output: Processing link 6: https://sinastyle.ir/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: جلیقه1[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 678,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1536_W7vLDAu.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: جلیقه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725562[0m
+[1;93mPlaywright output: Processed product 6: https://sinastyle.ir/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871[0m
+[1;93mPlaywright output: Processing link 7: https://sinastyle.ir/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: جلیقه[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 678,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1537_uzK9O8Z.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: جلیقه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725544[0m
+[1;93mPlaywright output: Processed product 7: https://sinastyle.ir/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87[0m
+[1;93mPlaywright output: Processing link 8: https://sinastyle.ir/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: تیشرت[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 530,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1530_ZpZ8oTV.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: تیشرت[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725530[0m
+[1;93mPlaywright output: Processed product 8: https://sinastyle.ir/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA[0m
+[1;93mPlaywright output: Processing link 9: https://sinastyle.ir/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: .تیشرت طرح دار[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 530,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1524_iDlMPsR.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: تیشرت[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725520[0m
+[1;93mPlaywright output: Processed product 9: https://sinastyle.ir/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;93mPlaywright output: Processing link 10: https://sinastyle.ir/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: تیشرت  طرح دار[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 540,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1525_a3IRYkY.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: تیشرت[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725508[0m
+[1;93mPlaywright output: Processed product 10: https://sinastyle.ir/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;93mPlaywright output: Processing link 11: https://sinastyle.ir/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: تیشرت GBY[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 520,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1526_NTERBgo.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: تیشرت[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725424[0m
+[1;93mPlaywright output: Processed product 11: https://sinastyle.ir/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY[0m
+[1;93mPlaywright output: Processing link 12: https://sinastyle.ir/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: تیشرت champs[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 530,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1523_FRMQR5V.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: تیشرت[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725419[0m
+[1;93mPlaywright output: Processed product 12: https://sinastyle.ir/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs[0m
+[1;93mPlaywright output: Processing link 13: https://sinastyle.ir/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: تیشرتbalenciaga[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 498,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1521_QzTEMej.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: تیشرت[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1725416[0m
+[1;93mPlaywright output: Processed product 13: https://sinastyle.ir/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga[0m
+[1;93mPlaywright output: Processing link 14: https://sinastyle.ir/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کراپ[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 240,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1494_5rmrEnP.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کراپ[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1723516[0m
+[1;93mPlaywright output: Processed product 14: https://sinastyle.ir/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE[0m
+[1;93mPlaywright output: Processing link 15: https://sinastyle.ir/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87....[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه.[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,180,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1502_v0HEZ5S.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1723334[0m
+[1;93mPlaywright output: Processed product 15: https://sinastyle.ir/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.[0m
+[1;93mPlaywright output: Processing link 16: https://sinastyle.ir/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه1[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,062,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/34A03C87-1203-4DC5-B8CB-FC46126A36AB.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722314[0m
+[1;93mPlaywright output: Processed product 16: https://sinastyle.ir/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871[0m
+[1;93mPlaywright output: Processing link 17: https://sinastyle.ir/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه پارچه کرپ[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,062,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/EE8FC058-A415-478B-91F4-4CE85602ADFF.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722308[0m
+[1;93mPlaywright output: Processed product 17: https://sinastyle.ir/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE[0m
+[1;93mPlaywright output: Processing link 18: https://sinastyle.ir/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه 2[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,062,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/87C2F1DA-7732-48CB-A511-433C7222C365.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722301[0m
+[1;93mPlaywright output: Processed product 18: https://sinastyle.ir/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2[0m
+[1;93mPlaywright output: Processing link 19: https://sinastyle.ir/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه3[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,062,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/A00BA5D2-0D82-4572-9456-3CC7FDEDFACD.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722199[0m
+[1;93mPlaywright output: Processed product 19: https://sinastyle.ir/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873[0m
+[1;93mPlaywright output: Processing link 20: https://sinastyle.ir/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه4[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,062,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1503_QLHQXLB.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722185[0m
+[1;93mPlaywright output: Processed product 20: https://sinastyle.ir/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874[0m
+[1;93mPlaywright output: Processing link 21: https://sinastyle.ir/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه5[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,062,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1500_4x7BX5K.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722093[0m
+[1;93mPlaywright output: Processed product 21: https://sinastyle.ir/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875[0m
+[1;93mPlaywright output: Processing link 22: https://sinastyle.ir/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه‌6[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,062,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1501_2wFiNao.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722091[0m
+[1;93mPlaywright output: Processed product 22: https://sinastyle.ir/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6[0m
+[1;93mPlaywright output: Processing link 23: https://sinastyle.ir/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: کت زنانه[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 1,062,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1499_uc9pgDg.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: کت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722085[0m
+[1;93mPlaywright output: Processed product 23: https://sinastyle.ir/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87[0m
+[1;93mPlaywright output: Processing link 24: https://sinastyle.ir/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87[0m
+[1;93mPlaywright output: Navigating to https://sinastyle.ir/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87...[0m
+[1;93mPlaywright output: Product page navigation completed.[0m
+[1;93mPlaywright output: Waiting for title selector...[0m
+[1;93mPlaywright output: Extracted title: تیشرت نیم تنه[0m
+[1;93mPlaywright output: Waiting for price selector...[0m
+[1;93mPlaywright output: Extracted price: 320,000[0m
+[1;93mPlaywright output: Waiting for availability selector...[0m
+[1;93mPlaywright output: Raw availability text: افزودن به سبد خرید[0m
+[1;93mPlaywright output: No matching availability keywords found for text: افزودن به سبد خرید, defaulting to unavailable[0m
+[1;93mPlaywright output: Final availability value: 0[0m
+[1;93mPlaywright output: Waiting for image selector...[0m
+[1;93mPlaywright output: Extracted image: https://digifycdn.com/media/item_images/IMG_1498_KbxRMh5.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true[0m
+[1;93mPlaywright output: Waiting for category selector...[0m
+[1;93mPlaywright output: Extracted category: تیشرت زنانه[0m
+[1;93mPlaywright output: No guarantee selector provided. Skipping guarantee extraction.[0m
+[1;93mPlaywright output: Extracting product_id...[0m
+[1;93mPlaywright output: Using URL method for product_id extraction...[0m
+[1;93mPlaywright output: Extracted product_id from URL: 1722079[0m
+[1;93mPlaywright output: Processed product 24: https://sinastyle.ir/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87[0m
+[1;93mPlaywright output: Final result: {"links":["/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876","/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875","/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874","/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873","/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872","/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871","/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87","/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA","/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1","/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1","/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY","/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs","/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga","/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE","/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.","/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871","/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE","/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2","/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873","/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874","/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875","/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6","/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87","/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87"],"products":[{"url":"https://sinastyle.ir/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876","title":"جلیقه6","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1546_fVtfSSb.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725581","error":""},{"url":"https://sinastyle.ir/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875","title":"جلیقه5","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1547_ZgQWEpL.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725575","error":""},{"url":"https://sinastyle.ir/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874","title":"جلیقه4","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1549_h61Ndas.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725569","error":""},{"url":"https://sinastyle.ir/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873","title":"جلیقه3","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1550_I2q0Chg.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725568","error":""},{"url":"https://sinastyle.ir/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872","title":"جلیقه2","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1535_HxiUrJk.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725565","error":""},{"url":"https://sinastyle.ir/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871","title":"جلیقه1","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1536_W7vLDAu.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725562","error":""},{"url":"https://sinastyle.ir/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87","title":"جلیقه","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1537_uzK9O8Z.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725544","error":""},{"url":"https://sinastyle.ir/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA","title":"تیشرت","price":"530,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1530_ZpZ8oTV.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725530","error":""},{"url":"https://sinastyle.ir/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1","title":".تیشرت طرح دار","price":"530,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1524_iDlMPsR.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725520","error":""},{"url":"https://sinastyle.ir/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1","title":"تیشرت  طرح دار","price":"540,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1525_a3IRYkY.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725508","error":""},{"url":"https://sinastyle.ir/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY","title":"تیشرت GBY","price":"520,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1526_NTERBgo.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725424","error":""},{"url":"https://sinastyle.ir/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs","title":"تیشرت champs","price":"530,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1523_FRMQR5V.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725419","error":""},{"url":"https://sinastyle.ir/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga","title":"تیشرتbalenciaga","price":"498,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1521_QzTEMej.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725416","error":""},{"url":"https://sinastyle.ir/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE","title":"کراپ","price":"240,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1494_5rmrEnP.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کراپ","guarantee":"","product_id":"1723516","error":""},{"url":"https://sinastyle.ir/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.","title":"کت زنانه.","price":"1,180,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1502_v0HEZ5S.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1723334","error":""},{"url":"https://sinastyle.ir/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871","title":"کت زنانه1","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/34A03C87-1203-4DC5-B8CB-FC46126A36AB.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722314","error":""},{"url":"https://sinastyle.ir/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE","title":"کت زنانه پارچه کرپ","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/EE8FC058-A415-478B-91F4-4CE85602ADFF.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722308","error":""},{"url":"https://sinastyle.ir/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2","title":"کت زنانه 2","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/87C2F1DA-7732-48CB-A511-433C7222C365.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722301","error":""},{"url":"https://sinastyle.ir/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873","title":"کت زنانه3","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/A00BA5D2-0D82-4572-9456-3CC7FDEDFACD.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722199","error":""},{"url":"https://sinastyle.ir/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874","title":"کت زنانه4","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1503_QLHQXLB.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722185","error":""},{"url":"https://sinastyle.ir/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875","title":"کت زنانه5","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1500_4x7BX5K.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722093","error":""},{"url":"https://sinastyle.ir/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6","title":"کت زنانه‌6","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1501_2wFiNao.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722091","error":""},{"url":"https://sinastyle.ir/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87","title":"کت زنانه","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1499_uc9pgDg.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722085","error":""},{"url":"https://sinastyle.ir/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87","title":"تیشرت نیم تنه","price":"320,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1498_KbxRMh5.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت زنانه","guarantee":"","product_id":"1722079","error":""}],"pages_processed":1,"console_logs":[]}[0m
+[1;93mPlaywright output: Closing browser...[0m
+[1;93mPlaywright output: Browser disconnected unexpectedly.[0m
+[1;93mPlaywright output: Browser closed.[0m
+[1;93mPlaywright output: Final result: {"links":["/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876","/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875","/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874","/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873","/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872","/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871","/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87","/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA","/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1","/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1","/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY","/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs","/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga","/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE","/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.","/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871","/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE","/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2","/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873","/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874","/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875","/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6","/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87","/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87"],"products":[{"url":"https://sinastyle.ir/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876","title":"جلیقه6","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1546_fVtfSSb.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725581","error":""},{"url":"https://sinastyle.ir/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875","title":"جلیقه5","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1547_ZgQWEpL.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725575","error":""},{"url":"https://sinastyle.ir/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874","title":"جلیقه4","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1549_h61Ndas.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725569","error":""},{"url":"https://sinastyle.ir/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873","title":"جلیقه3","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1550_I2q0Chg.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725568","error":""},{"url":"https://sinastyle.ir/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872","title":"جلیقه2","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1535_HxiUrJk.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725565","error":""},{"url":"https://sinastyle.ir/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871","title":"جلیقه1","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1536_W7vLDAu.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725562","error":""},{"url":"https://sinastyle.ir/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87","title":"جلیقه","price":"678,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1537_uzK9O8Z.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"جلیقه","guarantee":"","product_id":"1725544","error":""},{"url":"https://sinastyle.ir/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA","title":"تیشرت","price":"530,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1530_ZpZ8oTV.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725530","error":""},{"url":"https://sinastyle.ir/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1","title":".تیشرت طرح دار","price":"530,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1524_iDlMPsR.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725520","error":""},{"url":"https://sinastyle.ir/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1","title":"تیشرت  طرح دار","price":"540,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1525_a3IRYkY.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725508","error":""},{"url":"https://sinastyle.ir/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY","title":"تیشرت GBY","price":"520,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1526_NTERBgo.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725424","error":""},{"url":"https://sinastyle.ir/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs","title":"تیشرت champs","price":"530,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1523_FRMQR5V.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725419","error":""},{"url":"https://sinastyle.ir/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga","title":"تیشرتbalenciaga","price":"498,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1521_QzTEMej.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت","guarantee":"","product_id":"1725416","error":""},{"url":"https://sinastyle.ir/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE","title":"کراپ","price":"240,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1494_5rmrEnP.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کراپ","guarantee":"","product_id":"1723516","error":""},{"url":"https://sinastyle.ir/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.","title":"کت زنانه.","price":"1,180,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1502_v0HEZ5S.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1723334","error":""},{"url":"https://sinastyle.ir/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871","title":"کت زنانه1","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/34A03C87-1203-4DC5-B8CB-FC46126A36AB.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722314","error":""},{"url":"https://sinastyle.ir/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE","title":"کت زنانه پارچه کرپ","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/EE8FC058-A415-478B-91F4-4CE85602ADFF.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722308","error":""},{"url":"https://sinastyle.ir/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2","title":"کت زنانه 2","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/87C2F1DA-7732-48CB-A511-433C7222C365.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722301","error":""},{"url":"https://sinastyle.ir/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873","title":"کت زنانه3","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/A00BA5D2-0D82-4572-9456-3CC7FDEDFACD.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722199","error":""},{"url":"https://sinastyle.ir/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874","title":"کت زنانه4","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1503_QLHQXLB.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722185","error":""},{"url":"https://sinastyle.ir/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875","title":"کت زنانه5","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1500_4x7BX5K.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722093","error":""},{"url":"https://sinastyle.ir/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6","title":"کت زنانه‌6","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1501_2wFiNao.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722091","error":""},{"url":"https://sinastyle.ir/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87","title":"کت زنانه","price":"1,062,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1499_uc9pgDg.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"کت زنانه","guarantee":"","product_id":"1722085","error":""},{"url":"https://sinastyle.ir/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87","title":"تیشرت نیم تنه","price":"320,000","availability":0,"image":"https://digifycdn.com/media/item_images/IMG_1498_KbxRMh5.jpeg?x-img=v1/optimize,q_95/resize,w_500,force_true","category":"تیشرت زنانه","guarantee":"","product_id":"1722079","error":""}],"pages_processed":1,"console_logs":["Browser disconnected unexpectedly."]}[0m
+[1;92mPlaywright script execution completed with return code: 0[0m
+[1;93mProcessing product: https://sinastyle.ir/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725581/%D8%AC%D9%84%DB%8C%D9%82%D9%876[0m
+[1;92m🆕 محصول جدید اضافه شد: جلیقه6 (ID: 1725581)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725581   |                  جلیقه6                  |   678000   |   جلیقه    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725575/%D8%AC%D9%84%DB%8C%D9%82%D9%875[0m
+[1;92m🆕 محصول جدید اضافه شد: جلیقه5 (ID: 1725575)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725575   |                  جلیقه5                  |   678000   |   جلیقه    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725569/%D8%AC%D9%84%DB%8C%D9%82%D9%874[0m
+[1;92m🆕 محصول جدید اضافه شد: جلیقه4 (ID: 1725569)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725569   |                  جلیقه4                  |   678000   |   جلیقه    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725568/%D8%AC%D9%84%DB%8C%D9%82%D9%873[0m
+[1;92m🆕 محصول جدید اضافه شد: جلیقه3 (ID: 1725568)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725568   |                  جلیقه3                  |   678000   |   جلیقه    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725565/%D8%AC%D9%84%DB%8C%D9%82%D9%872[0m
+[1;92m🆕 محصول جدید اضافه شد: جلیقه2 (ID: 1725565)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725565   |                  جلیقه2                  |   678000   |   جلیقه    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725562/%D8%AC%D9%84%DB%8C%D9%82%D9%871[0m
+[1;92m🆕 محصول جدید اضافه شد: جلیقه1 (ID: 1725562)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725562   |                  جلیقه1                  |   678000   |   جلیقه    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725544/%D8%AC%D9%84%DB%8C%D9%82%D9%87[0m
+[1;92m🆕 محصول جدید اضافه شد: جلیقه (ID: 1725544)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725544   |                  جلیقه                   |   678000   |   جلیقه    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725530/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA[0m
+[1;92m🆕 محصول جدید اضافه شد: تیشرت (ID: 1725530)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725530   |                  تیشرت                   |   530000   |   تیشرت    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725520/.%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;92m🆕 محصول جدید اضافه شد: .تیشرت طرح دار (ID: 1725520)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725520   |              .تیشرت طرح دار              |   530000   |   تیشرت    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725508/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA--%D8%B7%D8%B1%D8%AD-%D8%AF%D8%A7%D8%B1[0m
+[1;92m🆕 محصول جدید اضافه شد: تیشرت  طرح دار (ID: 1725508)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725508   |              تیشرت  طرح دار              |   540000   |   تیشرت    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725424/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-GBY[0m
+[1;92m🆕 محصول جدید اضافه شد: تیشرت GBY (ID: 1725424)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725424   |                تیشرت GBY                 |   520000   |   تیشرت    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725419/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-champs[0m
+[1;92m🆕 محصول جدید اضافه شد: تیشرت champs (ID: 1725419)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725419   |               تیشرت champs               |   530000   |   تیشرت    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1725416/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AAbalenciaga[0m
+[1;92m🆕 محصول جدید اضافه شد: تیشرتbalenciaga (ID: 1725416)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1725416   |             تیشرتbalenciaga              |   498000   |   تیشرت    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1723516/%DA%A9%D8%B1%D8%A7%D9%BE[0m
+[1;92m🆕 محصول جدید اضافه شد: کراپ (ID: 1723516)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1723516   |                   کراپ                   |   240000   |    کراپ    |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1723334/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87.[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه. (ID: 1723334)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1723334   |                کت زنانه.                 |  1180000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722314/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%871[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه1 (ID: 1722314)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1722314   |                کت زنانه1                 |  1062000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722308/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-%D9%BE%D8%A7%D8%B1%DA%86%D9%87-%DA%A9%D8%B1%D9%BE[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه پارچه کرپ (ID: 1722308)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1722308   |            کت زنانه پارچه کرپ            |  1062000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722301/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87-2[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه 2 (ID: 1722301)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1722301   |                کت زنانه 2                |  1062000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722199/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%873[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه3 (ID: 1722199)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1722199   |                کت زنانه3                 |  1062000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722185/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%874[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه4 (ID: 1722185)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1722185   |                کت زنانه4                 |  1062000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722093/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%875[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه5 (ID: 1722093)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1722093   |                کت زنانه5                 |  1062000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722091/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87%E2%80%8C6[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه‌6 (ID: 1722091)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1722091   |                کت زنانه‌6                |  1062000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722085/%DA%A9%D8%AA-%D8%B2%D9%86%D8%A7%D9%86%D9%87[0m
+[1;92m🆕 محصول جدید اضافه شد: کت زنانه (ID: 1722085)[0m
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category  | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+|  1722085   |                 کت زنانه                 |  1062000   |  کت زنانه  |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+------------+--------------+------------+------------+------------+
+
+[1;93mProcessing product: https://sinastyle.ir/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87[0m
+[1;92m✅ Product processed successfully: https://sinastyle.ir/product/1722079/%D8%AA%DB%8C%D8%B4%D8%B1%D8%AA-%D9%86%DB%8C%D9%85-%D8%AA%D9%86%D9%87[0m
+[1;92m🆕 محصول جدید اضافه شد: تیشرت نیم تنه (ID: 1722079)[0m
++------------+------------------------------------------+------------+-------------+--------------+------------+------------+------------+
+| Product ID |                  Title                   |   Price    |  Category   | Availability |  Discount  |   Image    | Guarantee  |
++------------+------------------------------------------+------------+-------------+--------------+------------+------------+------------+
+|  1722079   |              تیشرت نیم تنه               |   320000   | تیشرت زنانه |   ناموجود    |     0%     |   موجود    |   ندارد    |
++------------+------------------------------------------+------------+-------------+--------------+------------+------------+------------+
+
+[1;95mProducts processing summary - Successful: 0, Failed: 0[0m
+[1;92mAll products_urls processed. Total links: 0, Total pages: 1[0m
+[1;92m📊 Method 3 result - Links: 0, Pages: 1[0m
+[1;92mGot 0 unique product links from web[0m
+[1;93mNo links collected from web. Stopping scrape.[0m
+Scraping completed successfully!
+Total products scraped: 0
+Failed links: 0
