@@ -92,7 +92,7 @@ class StartController
         ]);
 
         // Initialize LinkScraper with HTTP client
-        $this->linkScraper = new LinkScraper($config, $this->httpClient);
+        $this->linkScraper = new LinkScraper($config, $this->httpClient, $this);
         $this->linkScraper->setOutputCallback([$this, 'handleOutput']);
     }
 
@@ -303,6 +303,21 @@ class StartController
                     $image = is_array($product) && isset($product['image']) ? $product['image'] : null;
                     $productId = is_array($product) && isset($product['product_id']) ? $product['product_id'] : '';
 
+                    // اگر share_product_id_from_method_2 فعال باشد و product_id از متد ۲ آمده باشد، از آن استفاده کن
+                    if (($this->config['share_product_id_from_method_2'] ?? false) && !empty($productId)) {
+                        $this->log("Using product_id from method 2: {$productId} for {$url}", self::COLOR_GREEN);
+                    } elseif (($this->config['product_id_method'] ?? 'selector') === 'url' && empty($productId)) {
+                        // فال‌بک: استخراج product_id از URL فقط اگر product_id_method = url باشد
+                        $pattern = $this->config['product_id_url_pattern'] ?? 'products/(\d+)';
+                        if (preg_match("#$pattern#", $url, $matches)) {
+                            $productId = $matches[1];
+                            $this->log("Extracted product_id from URL: {$productId} for {$url}", self::COLOR_GREEN);
+                        }
+                    } else {
+                        // اگر product_id_method = selector، استخراج به extractProductData واگذار شود
+                        $this->log("Product_id will be extracted from product page for {$url}", self::COLOR_YELLOW);
+                    }
+
                     if (in_array($url, $processedUrls)) {
                         $this->log("Skipping duplicate URL: $url", self::COLOR_YELLOW);
                         return;
@@ -318,7 +333,8 @@ class StartController
                             if (is_array($product) && isset($product['off'])) {
                                 $productData['off'] = $product['off'];
                             }
-
+                            $productData['product_id'] = $productId !== '' ? $productId : ($productData['product_id'] ?? '');
+                            $this->log("Extracted product_id: \"{$productData['product_id']}\" for {$url}", self::COLOR_YELLOW);
                             DB::beginTransaction();
                             try {
                                 $this->productProcessor->saveProductToDatabase($productData);
@@ -350,7 +366,7 @@ class StartController
 
             $promise = $pool->promise();
             $promise->wait();
-        } // Method 2 & 3: Sequential processing
+        }// Method 2 & 3: Sequential processing
         else {
             $batchSize = $this->config['batch_size'] ?? 75;
             $batches = array_chunk($filteredProducts, $batchSize);
@@ -362,6 +378,21 @@ class StartController
                     $url = is_array($product) ? $product['url'] : $product;
                     $image = is_array($product) && isset($product['image']) ? $product['image'] : null;
                     $productId = is_array($product) && isset($product['product_id']) ? $product['product_id'] : '';
+
+                    // اگر share_product_id_from_method_2 فعال باشد و product_id از متد ۲ آمده باشد، از آن استفاده کن
+                    if (($this->config['share_product_id_from_method_2'] ?? false) && !empty($productId)) {
+                        $this->log("Using product_id from method 2: {$productId} for {$url}", self::COLOR_GREEN);
+                    } elseif (($this->config['product_id_method'] ?? 'selector') === 'url' && empty($productId)) {
+                        // فال‌بک: استخراج product_id از URL فقط اگر product_id_method = url باشد
+                        $pattern = $this->config['product_id_url_pattern'] ?? 'products/(\d+)';
+                        if (preg_match("#$pattern#", $url, $matches)) {
+                            $productId = $matches[1];
+                            $this->log("Extracted product_id from URL: {$productId} for {$url}", self::COLOR_GREEN);
+                        }
+                    } else {
+                        // اگر product_id_method = selector، استخراج به extractProductData واگذار شود
+                        $this->log("Product_id will be extracted from product page for {$url}", self::COLOR_YELLOW);
+                    }
 
                     if (in_array($url, $processedUrls)) {
                         $this->log("Skipping duplicate URL: $url", self::COLOR_YELLOW);
@@ -392,6 +423,8 @@ class StartController
                         $productData['off'] = isset($productData['off']) ? (int)$productData['off'] : 0;
                         $productData['category'] = $productData['category'] ?? '';
                         $productData['guarantee'] = $productData['guarantee'] ?? '';
+
+                        $this->log("Extracted product_id: \"{$productData['product_id']}\" for {$url}", self::COLOR_YELLOW);
 
                         if ($this->productProcessor->validateProductData($productData)) {
                             DB::beginTransaction();
@@ -1194,7 +1227,7 @@ class StartController
         return null;
     }
 
-    private function saveFailedLink(string $url, string $errorMessage): void
+    public function saveFailedLink(string $url, string $errorMessage): void
     {
         if (stripos($url, '?add-to-cart=') !== false) {
             $this->log("⏭️ Skipping saving failed link containing ?add-to-cart=: $url", self::COLOR_YELLOW);

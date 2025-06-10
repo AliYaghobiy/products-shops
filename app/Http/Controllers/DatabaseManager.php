@@ -106,6 +106,12 @@ class DatabaseManager
                     $this->log("Invalid URL skipped: " . ($url ?? 'empty'), self::COLOR_YELLOW);
                     continue;
                 }
+                if (!isset($link['product_id']) && ($this->config['product_id_method'] ?? 'selector') === 'url') {
+                    $pattern = $this->config['product_id_url_pattern'] ?? 'products/(\d+)';
+                    if (preg_match("#$pattern#", $link['url'], $matches)) {
+                        $link['product_id'] = $matches[1];
+                    }
+                }
 
                 // لاگ برای دیباگ
                 $this->log("Preparing to save link: $url", self::COLOR_BLUE);

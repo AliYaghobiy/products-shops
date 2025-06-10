@@ -4,7 +4,7 @@ namespace App\Services\Config;
 
 use Exception;
 use Illuminate\Support\Facades\Storage;
-
+use App\Helpers\JalaliHelper;
 /**
  * سرویس مدیریت فایل‌های کانفیگ
  */
@@ -94,6 +94,9 @@ class ConfigFileService
             'status' => 'stopped',
             'type' => 'normal',
             'started_at' => null,
+            'started_at_jalali' => null,
+            'last_run_at' => null,
+            'last_run_at_jalali' => null,
             'log_file' => null
         ];
 
@@ -116,6 +119,20 @@ class ConfigFileService
         $configData['type'] = $runInfo['type'] ?? 'normal';
         $configData['started_at'] = $runInfo['started_at'] ?? null;
         $configData['log_file'] = $runInfo['log_file'] ?? null;
+
+        // تبدیل تاریخ شروع به شمسی
+        if ($configData['started_at']) {
+            $configData['started_at_jalali'] = \App\Helpers\JalaliHelper::toJalaliShort($configData['started_at']);
+        }
+
+        // دریافت آخرین تاریخ اجرا از تاریخچه
+        if (isset($runInfo['history']) && !empty($runInfo['history'])) {
+            $lastRun = $runInfo['history'][0]; // اولین آیتم آخرین اجرا است
+            $configData['last_run_at'] = $lastRun['started_at'] ?? null;
+            if ($configData['last_run_at']) {
+                $configData['last_run_at_jalali'] = \App\Helpers\JalaliHelper::toJalaliShort($configData['last_run_at']);
+            }
+        }
 
         // بررسی واقعی بودن وضعیت running
         if ($configData['status'] === 'running' && isset($runInfo['pid'])) {

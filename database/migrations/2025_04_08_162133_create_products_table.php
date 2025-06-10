@@ -13,7 +13,7 @@ class CreateProductsTable extends Migration
             $table->string('title');
             $table->string('price')->nullable();
             $table->string('product_id')->nullable();
-            $table->string('page_url')->unique();
+            $table->string('page_url', 767)->unique();
             $table->integer('availability')->default(0);
             $table->string('image')->nullable();
             $table->string('category')->nullable();

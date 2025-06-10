@@ -596,7 +596,8 @@ class ConfigBuilderService
             'product_id_method' => 'selector',
             'product_id_source' => 'product_page',
             'availability_mode' => 'priority_based',
-            'out_of_stock_button' => filter_var($request->input('out_of_stock_button', false), FILTER_VALIDATE_BOOLEAN),
+            // حذف شرط out_of_stock_button - همیشه true باشد در تست
+            'out_of_stock_button' => true,
             'product_id_fallback_script_patterns' => [
                 'product_id:\\s*\"(\\d+)\"',
                 'product_id:\\s*(\\d+)'
@@ -632,8 +633,8 @@ class ConfigBuilderService
                         'selector' => $this->processMultipleSelectors($request->input('availability_selector', [])),
                     ],
                     'out_of_stock' => [
-                        'type' => $request->input('out_of_stock_button') ? 'css' : null,
-                        'selector' => $request->input('out_of_stock_button') ? $this->processMultipleSelectors($request->input('out_of_stock_selector', [])) : [],
+                        'type' => 'css', // همیشه css باشد
+                        'selector' => $this->processMultipleSelectors($request->input('out_of_stock_selector', [])),
                     ],
                     'image' => [
                         'type' => 'css',
@@ -663,7 +664,7 @@ class ConfigBuilderService
             ],
         ];
     }
-
+    
     /**
      * پردازش سلکتورهای چندگانه برای تست محصول
      */

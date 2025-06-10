@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\DomCrawler\Crawler;
+use App\Http\Controllers\StartController;
 
 class LinkScraper
 {
@@ -14,19 +15,20 @@ class LinkScraper
     private const COLOR_PURPLE = "\033[1;95m";
     private const COLOR_BLUE = "\033[1;94m";
     private ProductDataProcessor $productProcessor;
-
+    private StartController $startController;
     private array $config;
     private Client $httpClient;
     private $outputCallback = null;
 
-    public function __construct(array $config, Client $httpClient)
+    public function __construct(array $config, Client $httpClient, StartController $startController)
     {
         $this->config = $config;
         $this->httpClient = $httpClient;
-
+        $this->startController = $startController;
         // اضافه کردن وابستگی به ProductDataProcessor
         $this->productProcessor = new ProductDataProcessor($config);
         $this->productProcessor->setOutputCallback([$this, 'handleOutput']);
+
     }
 
     public function handleOutput(string $message): void
@@ -128,9 +130,14 @@ class LinkScraper
                 foreach ($rawLinks as $link) {
                     $url = is_array($link) ? ($link['url'] ?? $link) : $link;
                     if ($url && !$this->isUnwantedDomain($url) && !in_array($url, array_column($allLinks, 'url'))) {
+                        $productId = is_array($link) && isset($link['product_id']) ? $link['product_id'] : '';
+                        if (empty($productId) && ($this->config['product_id_method'] ?? 'selector') === 'url') {
+                            $productId = $this->extractProductIdFromUrl($url);
+                        }
                         $allLinks[] = [
                             'url' => $url,
-                            'sourceUrl' => $productUrl
+                            'sourceUrl' => $productUrl,
+                            'product_id' => $productId
                         ];
                     }
                 }
@@ -252,7 +259,7 @@ class LinkScraper
         return null;
     }
 
-  public function scrapeMethodOneForUrl(string $baseUrl): array
+    public function scrapeMethodOneForUrl(string $baseUrl): array
     {
         if ($this->config['method_settings']['method_1']['pagination']['use_webdriver']) {
             return $this->scrapeWithPlaywright(1);
@@ -491,6 +498,7 @@ class LinkScraper
         $userAgent = addslashes($this->randomUserAgent());
         $container = addslashes($config['container'] ?? '');
         $baseUrl = addslashes($config['base_urls'][0] ?? '');
+        $productIdUrlPattern = addslashes($config['product_id_url_pattern'] ?? 'products/(\d+)'); // اضافه کردن الگوی product_id
 
         // تنظیمات صفحه‌بندی
         $paginationConfig = $config['method_settings']['method_2']['navigation']['pagination']['url'] ?? [];
@@ -514,7 +522,7 @@ class LinkScraper
             }
         }
 
-        // اسکریپت Playwright - مشابه متد 3 که کار می‌کند
+        // اسکریپت Playwright
         $playwrightScript = <<<'JAVASCRIPT'
 const { chromium } = require('playwright');
 
@@ -593,6 +601,7 @@ const { chromium } = require('playwright');
         const baseUrl = BASE_URL;
         const paginationMethod = PAGINATION_METHOD;
         const nextButtonSelector = NEXT_BUTTON_SELECTOR;
+        const productIdUrlPattern = PRODUCT_ID_URL_PATTERN; // اضافه کردن الگو
         let currentPage = 1;
         let hasMorePages = true;
 
@@ -650,7 +659,8 @@ const { chromium } = require('playwright');
                     productIdMethod,
                     urlFilter,
                     container,
-                    baseUrl
+                    baseUrl,
+                    productIdUrlPattern
                 } = args;
                 const links = [];
                 const elements = document.querySelectorAll(linkSel);
@@ -668,17 +678,17 @@ const { chromium } = require('playwright');
                         }
                         let productId = '';
                         if (productIdSource === 'product_links' && productIdFromLink) {
-                            productId = node.getAttribute(productIdFromLink) || 'unknown';
+                            productId = node.getAttribute(productIdFromLink) || '';
                         } else if (productIdSource === 'main_page' && productIdSel) {
                             const parent = container ? node.closest(container) : node.closest('div');
                             const productIdElement = parent ? parent.querySelector(productIdSel) : null;
-                            productId = productIdElement ? productIdElement.getAttribute(productIdAttr) : 'unknown';
+                            productId = productIdElement ? productIdElement.getAttribute(productIdAttr) : '';
                         } else if (productIdMethod === 'url') {
-                            const match = href.match(/product\/([A-Za-z0-9]+)/);
-                            productId = match ? match[1] : 'unknown';
-                        } else {
-                            productId = 'unknown';
-                        }
+    const pattern = new RegExp(productIdUrlPattern);
+    const match = fullUrl.match(pattern);
+    productId = match ? match[1] : '';
+    console.log(`Extracted product_id: "${productId}" from URL ${fullUrl} using pattern ${productIdUrlPattern}`);
+}
                         links.push({ url: fullUrl, image, product_id: productId });
                     }
                 });
@@ -696,7 +706,8 @@ const { chromium } = require('playwright');
                 productIdMethod: productIdMethod,
                 urlFilter: urlFilter,
                 container: container,
-                baseUrl: baseUrl
+                baseUrl: baseUrl,
+                productIdUrlPattern: productIdUrlPattern // اضافه کردن الگو
             });
 
             console.log(`Found ${currentPageLinks.length} links on page ${currentPage}`);
@@ -750,7 +761,7 @@ const { chromium } = require('playwright');
 })();
 JAVASCRIPT;
 
-        // جایگذاری مقادیر - مشابه متد 3
+        // جایگذاری مقادیر
         $playwrightScript = str_replace(
             [
                 'USER_AGENT', 'PRODUCTS_URL', 'MAX_PAGES', 'LINK_SELECTOR', 'LINK_ATTRIBUTE',
@@ -758,28 +769,31 @@ JAVASCRIPT;
                 'PRODUCT_ID_FROM_LINK', 'IMAGE_METHOD', 'PRODUCT_ID_SOURCE', 'PRODUCT_ID_METHOD',
                 'URL_FILTER', 'CONTAINER', 'BASE_URL', 'SCROLL_DELAY', 'PAGINATION_CONFIG',
                 'PAGINATION_TYPE', 'PAGINATION_PARAM', 'PAGINATION_SEPARATOR', 'PAGINATION_SUFFIX',
-                'USE_SAMPLE_URL', 'SAMPLE_URL', 'FORCE_TRAILING_SLASH', 'PAGINATION_METHOD', 'NEXT_BUTTON_SELECTOR'
+                'USE_SAMPLE_URL', 'SAMPLE_URL', 'FORCE_TRAILING_SLASH', 'PAGINATION_METHOD',
+                'NEXT_BUTTON_SELECTOR', 'PRODUCT_ID_URL_PATTERN' // اضافه کردن الگو
             ],
             [
-                json_encode($userAgent), json_encode($productUrl), $maxPages, json_encode($linkSelector), json_encode($linkAttribute),
-                json_encode($imageSelector), json_encode($imageAttribute), json_encode($productIdSelector), json_encode($productIdAttribute),
-                json_encode($productIdFromLink), json_encode($imageMethod), json_encode($productIdSource), json_encode($productIdMethod),
-                json_encode($urlFilter), json_encode($container), json_encode($baseUrl), $scrollDelay, $paginationConfigJson,
-                json_encode($paginationType), json_encode($paginationParam), json_encode($paginationSeparator), json_encode($paginationSuffix),
+                json_encode($userAgent), json_encode($productUrl), $maxPages, json_encode($linkSelector),
+                json_encode($linkAttribute), json_encode($imageSelector), json_encode($imageAttribute),
+                json_encode($productIdSelector), json_encode($productIdAttribute), json_encode($productIdFromLink),
+                json_encode($imageMethod), json_encode($productIdSource), json_encode($productIdMethod),
+                json_encode($urlFilter), json_encode($container), json_encode($baseUrl), $scrollDelay,
+                $paginationConfigJson, json_encode($paginationType), json_encode($paginationParam),
+                json_encode($paginationSeparator), json_encode($paginationSuffix),
                 $useSampleUrl ? 'true' : 'false', json_encode($sampleUrl), $forceTrailingSlash ? 'true' : 'false',
-                json_encode($paginationMethod), json_encode($nextButtonSelector)
+                json_encode($paginationMethod), json_encode($nextButtonSelector), json_encode($productIdUrlPattern)
             ],
             $playwrightScript
         );
 
-        // ذخیره اسکریپت موقت - مشابه متد 3
+        // ذخیره اسکریپت موقت
         $tempFileBase = tempnam(sys_get_temp_dir(), 'playwright_method2_');
         $tempFile = $tempFileBase . '.cjs';
         rename($tempFileBase, $tempFile);
         file_put_contents($tempFile, $playwrightScript);
         $this->log("Temporary script file created at: $tempFile", self::COLOR_GREEN);
 
-        // اجرای اسکریپت - مسیر درست مشابه متد 3
+        // اجرای اسکریپت
         $nodeModulesPath = base_path('node_modules');
         $this->log("Executing Playwright script: NODE_PATH=$nodeModulesPath node $tempFile", self::COLOR_GREEN);
 
@@ -845,7 +859,7 @@ JAVASCRIPT;
             return ['links' => [], 'pages_processed' => 0];
         }
 
-        // تجزیه خروجی - مشابه متد 3
+        // تجزیه خروجی
         preg_match('/\{.*\}/s', $output, $matches);
         if (!isset($matches[0])) {
             $this->log("Failed to parse Playwright output for {$productUrl}. Raw output: {$output}", self::COLOR_RED);
@@ -865,13 +879,12 @@ JAVASCRIPT;
             }
         }
 
-        // پردازش لینک‌ها - استفاده از وابستگی‌ها
+        // پردازش لینک‌ها
         $links = array_map(function ($link) use ($productUrl) {
             $url = $this->makeAbsoluteUrl($link['url'], $productUrl);
             $productId = $link['product_id'] ?? '';
 
             if ($productId === '' && ($this->config['product_id_method'] ?? 'selector') === 'url') {
-                // استفاده از متد محلی این کلاس
                 $productId = $this->extractProductIdFromUrl($url);
                 $this->log("Extracted product_id from URL: {$productId} for {$url}", self::COLOR_GREEN);
             }
@@ -908,7 +921,6 @@ JAVASCRIPT;
             return ['links' => [], 'pages_processed' => 0];
         }
 
-        // حلقه روی تمام products_urls
         foreach ($this->config['products_urls'] as $index => $productsUrl) {
             $normalizedUrl = $this->normalizeUrl($productsUrl);
             if (in_array($normalizedUrl, $processedUrls)) {
@@ -930,16 +942,28 @@ JAVASCRIPT;
             $positiveKeywords = json_encode($this->config['availability_keywords']['positive'] ?? []);
             $negativeKeywords = json_encode($this->config['availability_keywords']['negative'] ?? []);
 
-            // سلکتورهای صفحه محصول
-            $titleSelector = json_encode($this->config['selectors']['product_page']['title']['selector'] ?? '.styles__title___3F4_f');
-                        $priceSelector = json_encode($this->config['selectors']['product_page']['price']['selector'] ?? '.styles__final-price___1L1AM');
-                        $availabilitySelector = json_encode($this->config['selectors']['product_page']['availability']['selector'] ?? '#buy-button');
-                        $imageSelector = json_encode($this->config['selectors']['product_page']['image']['selector'] ?? 'img.styles__slide___1r6T7');
-                        $imageAttribute = json_encode($this->config['selectors']['product_page']['image']['attribute'] ?? 'src');
-                        $categorySelector = json_encode($this->config['selectors']['product_page']['category']['selector'] ?? 'a.styles__bread-crumb-item___3xa5Q:nth-child(3)');
-                        $guaranteeSelector = json_encode($this->config['selectors']['product_page']['guarantee']['selector'] ?? '');
-                        $productIdSelector = json_encode($this->config['selectors']['product_page']['product_id']['selector'] ?? 'head > meta:nth-child(9)');
-                        $productIdAttribute = json_encode($this->config['selectors']['product_page']['product_id']['attribute'] ?? 'content');
+            // سلکتورهای صفحه محصول (اصلاح برای پشتیبانی از آرایه)
+            $titleSelector = json_encode(is_array($this->config['selectors']['product_page']['title']['selector'] ?? [])
+                ? ($this->config['selectors']['product_page']['title']['selector'][0] ?? '.styles__title___3F4_f')
+                : ($this->config['selectors']['product_page']['title']['selector'] ?? '.styles__title___3F4_f'));
+            $priceSelector = json_encode(is_array($this->config['selectors']['product_page']['price']['selector'] ?? [])
+                ? ($this->config['selectors']['product_page']['price']['selector'][0] ?? '.styles__final-price___1L1AM')
+                : ($this->config['selectors']['product_page']['price']['selector'] ?? '.styles__final-price___1L1AM'));
+            $availabilitySelector = json_encode(is_array($this->config['selectors']['product_page']['availability']['selector'] ?? [])
+                ? ($this->config['selectors']['product_page']['availability']['selector'][0] ?? '#buy-button')
+                : ($this->config['selectors']['product_page']['availability']['selector'] ?? '#buy-button'));
+            $imageSelector = json_encode($this->config['selectors']['product_page']['image']['selector'] ?? '.dFxbiY > img:nth-child(1)');
+            $imageAttribute = json_encode($this->config['selectors']['product_page']['image']['attribute'] ?? 'src');
+            $categorySelector = json_encode(is_array($this->config['selectors']['product_page']['category']['selector'] ?? [])
+                ? ($this->config['selectors']['product_page']['category']['selector'][0] ?? 'a.styles__bread-crumb-item___3xa5Q:nth-child(3)')
+                : ($this->config['selectors']['product_page']['category']['selector'] ?? 'a.styles__bread-crumb-item___3xa5Q:nth-child(3)'));
+            $guaranteeSelector = json_encode($this->config['selectors']['product_page']['guarantee']['selector'] ?? '');
+            $productIdSelector = json_encode(is_array($this->config['selectors']['product_page']['product_id']['selector'] ?? [])
+                ? ($this->config['selectors']['product_page']['product_id']['selector'][0] ?? 'head > meta:nth-child(9)')
+                : ($this->config['selectors']['product_page']['product_id']['selector'] ?? 'head > meta:nth-child(9)'));
+            $productIdAttribute = json_encode(is_array($this->config['selectors']['product_page']['product_id']['attribute'] ?? [])
+                ? ($this->config['selectors']['product_page']['product_id']['attribute'][0] ?? 'content')
+                : ($this->config['selectors']['product_page']['product_id']['attribute'] ?? 'content'));
 
             // اضافه کردن تنظیمات product_id_method
             $productIdMethod = json_encode($this->config['product_id_method'] ?? 'selector');
@@ -1196,7 +1220,6 @@ const { chromium } = require('playwright');
             }
 
             console.log('Extracting product_id...');
-
             if (PRODUCT_ID_METHOD === 'url' || PRODUCT_ID_SOURCE === 'url') {
                 console.log('Using URL method for product_id extraction...');
                 const urlPattern = /product\/(\d+)/;
@@ -1406,12 +1429,14 @@ JAVASCRIPT;
                 if (!empty($productData['error'])) {
                     $this->log("Error processing product {$productData['url']}: {$productData['error']}", self::COLOR_RED);
                     $failedProducts++;
+                    $this->startController->saveFailedLink($productData['url'], "Error: {$productData['error']}");
                     continue;
                 }
 
                 if (empty($productData['title']) && empty($productData['price'])) {
                     $this->log("Product has no title or price: {$productData['url']}", self::COLOR_RED);
                     $failedProducts++;
+                    $this->startController->saveFailedLink($productData['url'], "Failed to extract product data");
                     continue;
                 }
 
@@ -1434,16 +1459,17 @@ JAVASCRIPT;
                 ];
 
                 // validation با استفاده از ProductDataProcessor
-               if ($this->productProcessor->validateProductData($processedData)) {
+                if ($this->productProcessor->validateProductData($processedData)) {
                     $this->log("✅ Product processed successfully: {$productData['url']}", self::COLOR_GREEN);
                     $this->successfulLinks[] = $productData['url'];
-                    // اضافه کردن ذخیره‌سازی به دیتابیس
-                   $this->productProcessor->saveProductToDatabase($processedData);
+                    $this->productProcessor->saveProductToDatabase($processedData);
+                    $successfulProducts++;
                 } else {
                     $maxRetries = $this->config['max_retries'] ?? 2;
                     $this->log("🔄 لینک ناموفق آپدیت شد (تلاش #$maxRetries): {$productData['url']}", self::COLOR_YELLOW);
                     $this->log("  └─ خطا: Failed to extract product data", self::COLOR_RED);
-                    $this->updateFailedLink($productData['url'], "Failed to extract product data");
+                    $this->startController->saveFailedLink($productData['url'], "Failed to extract product data");
+                    $failedProducts++;
                 }
             }
 
@@ -1454,7 +1480,7 @@ JAVASCRIPT;
             unlink($tempFile);
         }
 
-        $this->log("All products_urls processed. Total links: " . count($allLinks) . ", Total pages: $totalPagesProcessed", self::COLOR_GREEN);
+        $this->log("All products_urls processed successfully. Total links: " . count($allLinks) . ", Total pages: $totalPagesProcessed", self::COLOR_GREEN);
 
         return [
             'links' => array_unique($allLinks, SORT_REGULAR),
@@ -1512,26 +1538,36 @@ JAVASCRIPT;
 // متد extractProductIdFromUrl که در همین کلاس نیاز است
     private function extractProductIdFromUrl(string $url): string
     {
-        if (($this->config['product_id_method'] ?? 'selector') === 'url') {
-            $pattern = $this->config['product_id_url_pattern'] ?? 'products/(\d+)';
-            try {
-                if (preg_match("#$pattern#", $url, $matches)) {
-                    return $matches[1];
-                }
-            } catch (\Exception $e) {
-                // Pattern failed
-            }
+        if (($this->config['product_id_method'] ?? 'selector') !== 'url') {
+            return '';
+        }
 
-            $path = parse_url($url, PHP_URL_PATH);
-            $parts = explode('/', trim($path, '/'));
-            $productIndex = array_search('products', $parts);
-            if ($productIndex !== false && isset($parts[$productIndex + 1])) {
-                $potentialId = $parts[$productIndex + 1];
-                if (is_numeric($potentialId)) {
-                    return $potentialId;
-                }
+        $pattern = $this->config['product_id_url_pattern'] ?? 'products/(\d+)';
+        try {
+            if (preg_match("#$pattern#", $url, $matches)) {
+                $this->log("Extracted product_id: {$matches[1]} from URL: {$url}", self::COLOR_GREEN);
+                return $matches[1];
+            } else {
+                $this->log("No product_id matched for URL: {$url} with pattern: {$pattern}", self::COLOR_YELLOW);
+            }
+        } catch (\Exception $e) {
+            $this->log("Invalid pattern for product_id extraction: {$e->getMessage()}", self::COLOR_RED);
+        }
+
+        // فال‌بک اضافی برای URL‌های استاندارد
+        $path = parse_url($url, PHP_URL_PATH);
+        $parts = array_filter(explode('/', trim($path, '/')));
+        $parts = array_values($parts); // بازنشانی ایندکس‌ها
+        $productIndex = array_search('products', $parts);
+        if ($productIndex !== false && isset($parts[$productIndex + 1])) {
+            $potentialId = $parts[$productIndex + 1];
+            if (is_numeric($potentialId)) {
+                $this->log("Extracted fallback product_id: {$potentialId} from URL: {$url}", self::COLOR_GREEN);
+                return $potentialId;
             }
         }
+
+        $this->log("No product_id extracted from URL: {$url}", self::COLOR_YELLOW);
         return '';
     }
 
@@ -2062,3 +2098,4 @@ JAVASCRIPT;
         }
     }
 }
+

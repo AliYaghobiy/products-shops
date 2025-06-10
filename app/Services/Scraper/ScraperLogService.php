@@ -79,15 +79,18 @@ class ScraperLogService
     {
         $deletedCount = 0;
         $errorCount = 0;
+        $logDirectory = storage_path('logs'); // استفاده مستقیم از آدرس
 
-        if (file_exists($this->logDirectory)) {
+        if (file_exists($logDirectory)) {
             foreach ($this->logPatterns as $pattern) {
-                $files = glob($this->logDirectory . '/' . $pattern . '.log');
+                $files = glob($logDirectory . '/' . $pattern . '.log');
                 foreach ($files as $file) {
-                    if (is_file($file) && unlink($file)) {
-                        $deletedCount++;
-                    } else {
-                        $errorCount++;
+                    if (is_file($file) && basename($file) !== 'laravel.log') {
+                        if (unlink($file)) {
+                            $deletedCount++;
+                        } else {
+                            $errorCount++;
+                        }
                     }
                 }
             }

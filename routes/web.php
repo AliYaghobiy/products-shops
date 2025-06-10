@@ -34,7 +34,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/configs/{filename}/update', [ConfigController::class, 'updateScraper'])->name('configs.update-scraper'); // روت جدید اضافه شده
     Route::get('/configs/{filename}/logs', [ConfigController::class, 'showLogs'])->name('configs.logs');
-    Route::delete('/configs/logs/delete-all', [ConfigController::class, 'deleteAllLogs'])->name('configs.logs.deleteAll');
+ Route::delete('/configs/logs/delete-all', [ConfigController::class, 'deleteAllLogs'])->name('configs.logs.deleteAll');
     Route::delete('/configs/logs/delete-all-logs', [ConfigController::class, 'deleteConfigLogs'])->name('configs.logs.deleteAllLogs');
     Route::get('/configs/history', [ConfigController::class, 'history'])->name('configs.history');
     Route::get('/configs/log-content/{logfile}', [ConfigController::class, 'getLogContent'])->name('configs.log-content');
@@ -46,8 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/configs/{filename}/edit', [ConfigController::class, 'edit'])->name('configs.edit');
     Route::put('/configs/{filename}', [ConfigController::class, 'update'])->name('configs.update');
     Route::delete('/configs/{filename}', [ConfigController::class, 'destroy'])->name('configs.destroy');
-    Route::get('/api', [ApiController::class, 'index'])->name('api.index');
-    Route::get('/api/{store}', [ProductController::class, 'index'])->name('store.products');
+
 
 });
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
@@ -61,3 +60,5 @@ Route::get('/category/{slug}', function ($slug) {
 Route::get('/product/{slug}', function ($slug) {
     return view('test.product', compact('slug'));
 })->name('product.show');
+    Route::get('/api', [ApiController::class, 'index'])->name('api.index');
+    Route::get('/api/{store}', [ProductController::class, 'index'])->name('store.products');

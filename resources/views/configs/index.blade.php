@@ -26,7 +26,7 @@
                         },
                         method: {
                             1: '#e879f9',
-                            2: '#4ade80', 
+                            2: '#4ade80',
                             3: '#fb923c'
                         }
                     }
@@ -330,7 +330,7 @@
             $totalCount = count($configs);
             $stoppedCount = $totalCount - $runningCount;
         @endphp
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="stats-card">
                 <div class="text-2xl font-bold text-green-600 mb-1">{{ $runningCount }}</div>
@@ -357,7 +357,7 @@
                 <h2 class="text-xl font-bold text-center mb-6">
                     <span class="section-title">کانفیگ‌های فعال</span>
                 </h2>
-                
+
                 <div class="space-y-3">
                     @foreach($runningConfigs as $config)
                         <div class="config-row running-config">
@@ -372,14 +372,16 @@
                                     </span>
                                     <span class="running-badge">فعال</span>
                                 </div>
-                                
-                                <div class="flex items-center gap-4 text-sm text-gray-600">
-                                    <span><i class="fas fa-link ml-1"></i>{{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }} URL</span>
-                                    @if(isset($config['started_at']))
-                                        <span><i class="fas fa-clock ml-1"></i>{{ $config['started_at'] }}</span>
+
+                                <div>
+                                    <div class="font-bold text-lg">{{ $config['filename'] }}</div>
+                                    @if(isset($config['last_run_at_jalali']))
+                                        <div class="text-xs text-gray-500">آخرین اجرا: {{ $config['last_run_at_jalali'] }}</div>
+                                    @elseif(isset($config['started_at_jalali']) && $config['status'] === 'running')
+                                        <div class="text-xs text-gray-500">شروع: {{ $config['started_at_jalali'] }}</div>
                                     @endif
                                 </div>
-                                
+
                                 <div class="flex gap-2 flex-wrap">
                                     <form action="{{ route('configs.update-scraper', $config['filename']) }}" method="POST" class="inline">
                                         @csrf
@@ -423,7 +425,7 @@
                         $sortedConfigs = $configs;
                         usort($sortedConfigs, fn($a, $b) => ($a['content']['method'] ?? 0) <=> ($b['content']['method'] ?? 0));
                     @endphp
-                    
+
                     @foreach($sortedConfigs as $index => $config)
                         <div class="config-row {{ (isset($config['status']) && $config['status'] === 'running') ? 'running-config' : '' }}">
                             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
@@ -431,8 +433,10 @@
                                     <div class="text-gold-600 font-bold text-lg min-w-[30px]">{{ $index + 1 }}</div>
                                     <div>
                                         <div class="font-bold text-lg">{{ $config['filename'] }}</div>
-                                        @if(isset($config['started_at']))
-                                            <div class="text-xs text-gray-500">{{ $config['started_at'] }}</div>
+                                        @if(isset($config['last_run_at_jalali']))
+                                            <div class="text-xs text-gray-500">آخرین اجرا: {{ $config['last_run_at_jalali'] }}</div>
+                                        @elseif(isset($config['started_at_jalali']) && $config['status'] === 'running')
+                                            <div class="text-xs text-gray-500">شروع: {{ $config['started_at_jalali'] }}</div>
                                         @endif
                                     </div>
                                     <span class="method-badge-{{ $config['content']['method'] }}">
@@ -444,11 +448,16 @@
                                         <span class="stopped-badge">متوقف</span>
                                     @endif
                                 </div>
-                                
+
                                 <div class="flex items-center gap-4 text-sm text-gray-600">
                                     <span><i class="fas fa-link ml-1"></i>{{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }} URL</span>
+                                    @if(isset($config['started_at_jalali']) && $config['status'] === 'running')
+                                        <span title="شروع: {{ $config['started_at_jalali'] }}"><i class="fas fa-clock ml-1"></i>{{ $config['started_at_jalali'] }}</span>
+                                    @elseif(isset($config['last_run_at_jalali']))
+                                        <span title="آخرین اجرا: {{ $config['last_run_at_jalali'] }}"><i class="fas fa-history ml-1"></i>{{ $config['last_run_at_jalali'] }}</span>
+                                    @endif
                                 </div>
-                                
+
                                 <div class="flex gap-2 flex-wrap">
                                     @if(!isset($config['status']) || $config['status'] !== 'running')
                                         <form action="{{ route('configs.run', $config['filename']) }}" method="POST" class="inline">
@@ -459,7 +468,7 @@
                                             </button>
                                         </form>
                                     @endif
-                                    
+
                                     <form action="{{ route('configs.update-scraper', $config['filename']) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="btn btn-purple">
@@ -467,7 +476,7 @@
                                             اپدیت
                                         </button>
                                     </form>
-                                    
+
                                     @if(isset($config['status']) && $config['status'] === 'running')
                                         <form action="{{ route('configs.stop', $config['filename']) }}" method="POST" class="inline">
                                             @csrf
@@ -477,7 +486,7 @@
                                             </button>
                                         </form>
                                     @endif
-                                    
+
                                     <a href="{{ route('configs.edit', $config['filename']) }}" class="btn btn-warning">
                                         <i class="fas fa-edit"></i>
                                         ویرایش
@@ -512,7 +521,7 @@
             @endif
         </div>
 
-        <!-- Delete All Logs -->
+         <!-- Delete All Logs -->
         <div class="text-center mt-8">
             <form action="{{ route('configs.logs.deleteAll') }}" method="POST" onsubmit="return confirm('آیا از حذف تمامی لاگ‌ها اطمینان دارید؟')">
                 @csrf
