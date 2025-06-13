@@ -42,11 +42,18 @@ class ConfigController extends Controller
     /**
      * نمایش لیست کانفیگ‌ها
      */
-    public function index()
-    {
-        $configs = $this->fileService->getAllConfigs();
-        return view('configs.index', compact('configs'));
-    }
+   public function index()
+        {
+            $configs = $this->fileService->getAllConfigs();
+    
+            // اضافه کردن آمار برای هر کانفیگ
+            foreach ($configs as &$config) {
+                $stats = $this->logService->getConfigStats($config['filename']);
+                $config['stats'] = $stats;
+            }
+    
+            return view('configs.index', compact('configs'));
+        }
 
     /**
      * نمایش فرم ایجاد کانفیگ جدید

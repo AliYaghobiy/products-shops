@@ -13,7 +13,7 @@ class AdminUserSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email' => 'SarebanK@email.com',
-            'password' => Hash::make('4-Cw}l@JE,EQY!{LPbwGGT6(y'),
+            'password' => Hash::make('X(X>4MLeOt+3^zs6z>6]{Y8ld'),
         ]);
     }
 }

@@ -4,7 +4,9 @@ namespace App\Services\Config;
 
 use Exception;
 use Illuminate\Support\Facades\Storage;
-use App\Helpers\JalaliHelper;
+use Carbon\Carbon;
+use App\Helpers\PersianDateHelper;
+
 /**
  * سرویس مدیریت فایل‌های کانفیگ
  */
@@ -73,7 +75,7 @@ class ConfigFileService
 
     public function getRunningConfigs()
     {
-        $configs = $this->fileService->getAllConfigs();
+        $configs = $this->getAllConfigs();
         $runningConfigs = array_filter($configs, function ($config) {
             return $config['status'] === 'running';
         });
@@ -94,10 +96,8 @@ class ConfigFileService
             'status' => 'stopped',
             'type' => 'normal',
             'started_at' => null,
-            'started_at_jalali' => null,
-            'last_run_at' => null,
-            'last_run_at_jalali' => null,
-            'log_file' => null
+            'log_file' => null,
+            'last_run_date' => null
         ];
 
         $runFilePath = 'private/runs/' . $filename . '.json';
@@ -105,8 +105,44 @@ class ConfigFileService
             $configData = $this->updateConfigStatus($configData, $runFilePath, $filename);
         }
 
+        // اضافه کردن منطق رنگ‌بندی
+        $configData['dot_class'] = $this->getDotClass($configData);
+
         return $configData;
     }
+
+    /**
+     * تعیین کلاس رنگ دایره بر اساس آخرین اجرا
+     */
+    private function getDotClass(array $configData): string
+    {
+        // اگر در حال اجرا است، سبز
+        if ($configData['status'] === 'running') {
+            return 'green';
+        }
+
+        // اگر تاریخ آخرین اجرا موجود نیست، قرمز
+        if (!$configData['last_run_date']) {
+            return 'red';
+        }
+
+        try {
+            // استفاده از Helper شمسی
+            if (PersianDateHelper::isToday($configData['last_run_date'])) {
+                return 'green';
+            }
+
+            if (PersianDateHelper::isYesterday($configData['last_run_date'])) {
+                return 'yellow';
+            }
+
+            return 'red';
+
+        } catch (Exception $e) {
+            return 'red';
+        }
+    }
+
 
     /**
      * به‌روزرسانی وضعیت کانفیگ
@@ -120,18 +156,13 @@ class ConfigFileService
         $configData['started_at'] = $runInfo['started_at'] ?? null;
         $configData['log_file'] = $runInfo['log_file'] ?? null;
 
-        // تبدیل تاریخ شروع به شمسی
-        if ($configData['started_at']) {
-            $configData['started_at_jalali'] = \App\Helpers\JalaliHelper::toJalaliShort($configData['started_at']);
-        }
-
-        // دریافت آخرین تاریخ اجرا از تاریخچه
-        if (isset($runInfo['history']) && !empty($runInfo['history'])) {
-            $lastRun = $runInfo['history'][0]; // اولین آیتم آخرین اجرا است
-            $configData['last_run_at'] = $lastRun['started_at'] ?? null;
-            if ($configData['last_run_at']) {
-                $configData['last_run_at_jalali'] = \App\Helpers\JalaliHelper::toJalaliShort($configData['last_run_at']);
-            }
+        // اضافه کردن تاریخ آخرین اجرا
+        if (isset($runInfo['history']) && is_array($runInfo['history']) && !empty($runInfo['history'])) {
+            // آخرین اجرا از تاریخچه
+            $configData['last_run_date'] = $runInfo['history'][0]['started_at'] ?? null;
+        } elseif (isset($runInfo['started_at'])) {
+            // اجرای فعلی
+            $configData['last_run_date'] = $runInfo['started_at'];
         }
 
         // بررسی واقعی بودن وضعیت running
@@ -156,15 +187,14 @@ class ConfigFileService
         exec($processCommand, $output);
 
         if (empty($output)) {
-            $configData['status'] = 'stopped'; // تغییر از 'crashed' به 'stopped'
-            $runInfo['status'] = 'stopped';    // تغییر از 'crashed' به 'stopped'
+            $configData['status'] = 'stopped';
+            $runInfo['status'] = 'stopped';
             $runInfo['stopped_at'] = date('Y-m-d H:i:s');
             Storage::put($runFilePath, json_encode($runInfo, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
 
         return $configData;
     }
-
 
     /**
      * بررسی اجرای پروسه

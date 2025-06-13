@@ -29,6 +29,28 @@ class ProductDataProcessor
         $this->outputCallback = $callback;
     }
 
+    private function filterUnwantedCategories(string $category): string
+    {
+        $unwantedCategories = [
+            'دسته بندی نشده',
+            'بدون دسته بندی',
+            'بدون دستهبندی'
+        ];
+
+        // تبدیل به حروف کوچک برای مقایسه دقیق‌تر
+        $categoryLower = mb_strtolower(trim($category));
+
+        foreach ($unwantedCategories as $unwanted) {
+            if ($categoryLower === mb_strtolower($unwanted)) {
+                $this->log("Category '$category' filtered out as unwanted", self::COLOR_YELLOW);
+                return ''; // برگردان رشته خالی
+            }
+        }
+
+        return $category; // اگر مشکلی نبود همون دسته‌بندی رو برگردان
+    }
+
+// تغییرات در متد extractProductData
     public function extractProductData(string $url, ?string $body = null, ?string $mainPageImage = null, ?string $mainPageProductId = null): ?array
     {
         $data = [
@@ -58,7 +80,7 @@ class ProductDataProcessor
         $productSelectors = $this->config['selectors']['product_page'] ?? [];
 
         if (isset($this->config['set_category']) && !empty($this->config['set_category'])) {
-            $data['category'] = $this->config['set_category'];
+            $data['category'] = $this->filterUnwantedCategories($this->config['set_category']);
             $this->log("Using preset category from config: {$data['category']}", self::COLOR_GREEN);
         }
 
@@ -83,23 +105,20 @@ class ProductDataProcessor
                     }
                 }
                 elseif ($field === 'availability') {
-                    // ابتدا چک کنیم آیا out_of_stock_button فعال است یا نه
                     $outOfStockButton = $this->config['out_of_stock_button'] ?? false;
                     $outOfStockSelector = $this->config['selectors']['product_page']['out_of_stock'] ?? null;
 
                     if ($outOfStockButton && $outOfStockSelector) {
                         $this->log("Checking out_of_stock selector first due to out_of_stock_button=true", self::COLOR_CYAN);
 
-                        // بررسی اولویت: out_of_stock selector
                         $outOfStockResult = $this->checkOutOfStockWithPriority($crawler, $outOfStockSelector);
                         if ($outOfStockResult === 0) {
                             $this->log("Product marked as unavailable due to out_of_stock selector", self::COLOR_RED);
                             $data[$field] = 0;
-                            continue; // به فیلد بعدی برو
+                            continue;
                         }
                     }
 
-                    // اگر out_of_stock نبود، بررسی معمولی availability
                     $transform = $this->config['data_transformers'][$field] ?? null;
                     $data[$field] = $transform && method_exists($this, $transform) ? (int)$this->$transform($value, $crawler) : (!empty($value) ? 1 : 0);
 
@@ -111,7 +130,8 @@ class ProductDataProcessor
                 } elseif ($field === 'image') {
                     $data[$field] = $this->makeAbsoluteUrl($value);
                 } elseif ($field === 'category' && ($this->config['category_method'] ?? 'selector') === 'selector' && !isset($this->config['set_category'])) {
-                    $data[$field] = $this->extractCategoriesFromSelectors($crawler, $selector);
+                    $extractedCategory = $this->extractCategoriesFromSelectors($crawler, $selector);
+                    $data[$field] = $this->filterUnwantedCategories($extractedCategory); // اعمال فیلتر
                 } else {
                     $transform = $this->config['data_transformers'][$field] ?? null;
                     $data[$field] = $transform && method_exists($this, $transform) ? (string)$this->$transform($value) : (string)$value;
@@ -123,7 +143,8 @@ class ProductDataProcessor
 
         if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
             $wordCount = $this->config['category_word_count'] ?? 1;
-            $data['category'] = $this->extractCategoryFromTitle($data['title'], $wordCount);
+            $extractedCategory = $this->extractCategoryFromTitle($data['title'], $wordCount);
+            $data['category'] = $this->filterUnwantedCategories($extractedCategory); // اعمال فیلتر
         }
 
         // اگر availability هنوز null است، fallback را اجرا کن
@@ -232,11 +253,8 @@ class ProductDataProcessor
         $arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
         $price = str_replace($arabicNumbers, $englishNumbers, $price);
 
-        // تبدیل جداکننده فارسی به انگلیسی برای پردازش یکسان
-        $price = str_replace('٫', ',', $price);
-
         // حذف تمام کاراکترهای غیرضروری و نگهداری فقط اعداد و جداکننده‌ها
-        $price = preg_replace('/[^\d.,]/u', '', $price);
+        $price = preg_replace('/[^\d.,٫]/u', '', $price);
 
         // حذف فاصله‌های اضافی
         $price = trim($price);
@@ -247,14 +265,10 @@ class ProductDataProcessor
         }
 
         // تشخیص الگوی قیمت
-        // ابتدا بررسی می‌کنیم آیا فرمت هزارگان است یا نه
-        if (preg_match('/^\d{1,3}([.,]\d{3})+$/', $price)) {
-            // این یک عدد با فرمت هزارگان است - جداکننده‌ها را حذف می‌کنیم
-            $price = str_replace([',', '.'], '', $price);
-            return (int)$price;
-        }
+        // اگر فقط یک نقطه یا کاما در انتها وجود دارد و بعدش سه رقم یا کمتر -> جداکننده هزارگان
+        // اگر نقطه یا کاما در وسط و بعدش بیش از سه رقم -> احتمالاً اعشار
 
-        // اگر فرمت هزارگان نیست، بررسی اعشار
+        // ابتدا تمام نقاط و کاماها را پیدا کنیم
         $lastDotPos = strrpos($price, '.');
         $lastCommaPos = strrpos($price, ',');
         $lastSeparatorPos = max($lastDotPos, $lastCommaPos);
@@ -263,13 +277,13 @@ class ProductDataProcessor
             $afterSeparator = substr($price, $lastSeparatorPos + 1);
             $beforeSeparator = substr($price, 0, $lastSeparatorPos);
 
-            // اگر بعد از آخرین جداکننده بیش از 3 رقم باشد، احتمالاً اعشار نیست
-            if (strlen($afterSeparator) > 3) {
-                // همه جداکننده‌ها را حذف می‌کنیم
-                $price = str_replace([',', '.'], '', $price);
+            // اگر بعد از آخرین جداکننده 3 رقم یا کمتر باشد، احتمالاً جداکننده هزارگان است
+            if (strlen($afterSeparator) <= 3) {
+                // حذف تمام جداکننده‌های هزارگان
+                $price = str_replace([',', '.', '٫'], '', $price);
             } else {
                 // احتمالاً اعشار است - فقط آخرین جداکننده را حفظ می‌کنیم
-                $beforeSeparator = str_replace([',', '.'], '', $beforeSeparator);
+                $beforeSeparator = str_replace([',', '.', '٫'], '', $beforeSeparator);
                 $price = $beforeSeparator . '.' . $afterSeparator;
             }
         }
@@ -330,39 +344,40 @@ class ProductDataProcessor
         $price = str_replace($persianNumbers, $englishNumbers, $price);
         $price = str_replace($arabicNumbers, $englishNumbers, $price);
 
-        // تبدیل جداکننده فارسی به انگلیسی
-        $price = str_replace('٫', ',', $price);
-
         // حذف کاراکترهای اضافی ولی حفظ جداکننده‌ها برای فرمت
-        $price = preg_replace('/[^\d.,\s]/u', '', $price);
+        $price = preg_replace('/[^\d.,٫\s]/u', '', $price);
 
         // حذف فاصله‌های اضافی
         $price = preg_replace('/\s+/', '', trim($price));
 
         // اگر فقط جداکننده باشد، خالی برگردان
-        if (preg_match('/^[.,\s]*$/', $price)) {
+        if (preg_match('/^[.,٫\s]*$/', $price)) {
             return '';
         }
 
         // حذف جداکننده‌های ابتدا و انتها
-        $price = trim($price, '., ');
+        $price = trim($price, '.,٫ ');
 
         // اگر خالی شد، خالی برگردان
         if (empty($price)) {
             return '';
         }
 
+        // برای حفظ فرمت، فقط اعداد را تمیز می‌کنیم و جداکننده‌ها را حفظ می‌کنیم
+        // اما اگر pattern مشخص هزارگان باشد (مثل 281.000) آن را اصلاح می‌کنیم
+
         // تشخیص الگوی هزارگان (عددی که هر سه رقم یک جداکننده دارد)
-        if (preg_match('/^\d{1,3}([.,]\d{3})+$/', $price)) {
+        if (preg_match('/^\d{1,3}([.,٫]\d{3})+$/', $price)) {
             // این یک عدد با فرمت هزارگان است - جداکننده‌ها را حذف می‌کنیم
-            $cleanNumber = str_replace([',', '.'], '', $price);
+            $price = str_replace([',', '.', '٫'], '', $price);
 
             // دوباره فرمت هزارگان اضافه می‌کنیم
-            return number_format((int)$cleanNumber);
+            return number_format((int)$price);
         }
 
         return $price;
     }
+
 
     public function parseAvailability(string $value, Crawler $crawler): int
     {
@@ -375,7 +390,7 @@ class ProductDataProcessor
 
         $this->log("Starting availability detection with value: '$value'", self::COLOR_CYAN);
 
-        // Priority 0: Check unpriced keywords in the extracted value
+        // Priority 0: Check unpriced keywords
         if (!empty($value)) {
             foreach ($unpricedKeywords as $keyword) {
                 if (stripos($value, $keyword) !== false) {
@@ -385,8 +400,8 @@ class ProductDataProcessor
             }
         }
 
-        // Priority 1: Check out-of-stock selector (only if not already checked in extractProductData)
-        if ($outOfStockButton && !isset($this->outOfStockAlreadyChecked)) {
+        // Priority 1: Check out-of-stock selector
+        if ($outOfStockButton) {
             $outOfStockResult = $this->checkOutOfStockWithPriority($crawler, $outOfStockSelector);
             if ($outOfStockResult === 0) {
                 $this->log("Final decision: Product unavailable due to out-of-stock selector", self::COLOR_RED);
@@ -394,34 +409,18 @@ class ProductDataProcessor
             }
         }
 
-        // Priority 2: Check availability selectors with text content
+        // Priority 2: Check availability selectors
         $availabilityStatus = $this->checkMultipleAvailabilitySelectors($crawler, $availabilitySelector, $positiveKeywords, $negativeKeywords, $unpricedKeywords);
         if ($availabilityStatus !== null) {
             $this->log("Final decision: Product availability set to " . ($availabilityStatus ? 'Available' : 'Unavailable'), $availabilityStatus ? self::COLOR_GREEN : self::COLOR_RED);
             return $availabilityStatus;
         }
 
-        // Priority 3: Check the extracted value for keywords
-        if (!empty($value)) {
-            foreach ($negativeKeywords as $keyword) {
-                if (stripos($value, $keyword) !== false) {
-                    $this->log("Product unavailable due to negative keyword: '$keyword' in value", self::COLOR_RED);
-                    return 0;
-                }
-            }
-
-            foreach ($positiveKeywords as $keyword) {
-                if (stripos($value, $keyword) !== false) {
-                    $this->log("Product available due to positive keyword: '$keyword' in value", self::COLOR_GREEN);
-                    return 1;
-                }
-            }
-        }
-
         $fallback = $this->config['default_availability'] ?? 0;
         $this->log("No clear availability indicators found, using fallback: " . ($fallback ? 'Available' : 'Unavailable'), $fallback ? self::COLOR_GREEN : self::COLOR_RED);
         return $fallback;
     }
+
     public function cleanOff(string $text): string
     {
         $text = trim($text);
@@ -784,49 +783,35 @@ class ProductDataProcessor
 
         $selectors = is_array($stockSelector['selector']) ? $stockSelector['selector'] : [$stockSelector['selector']];
 
-        $this->log("Checking availability selectors: " . json_encode($selectors), self::COLOR_CYAN);
-
         foreach ($selectors as $index => $selector) {
-            try {
-                $elements = $crawler->filter($selector);
-                $this->log("Availability selector '$selector' found " . $elements->count() . " elements", self::COLOR_CYAN);
+            $elements = $this->getElements($crawler, ['selector' => $selector, 'type' => $stockSelector['type'] ?? 'css']);
 
-                if ($elements->count() > 0) {
-                    $stockText = trim($elements->first()->text());
-                    $this->log("Availability text found: '$stockText'", self::COLOR_YELLOW);
+            if ($elements->count() > 0) {
+                $stockText = $this->extractData($crawler, ['selector' => $selector, 'type' => $stockSelector['type'] ?? 'css'], 'availability');
 
-                    if (!empty($stockText)) {
-                        // Check unpriced keywords
-                        foreach ($unpricedKeywords as $keyword) {
-                            if (stripos($stockText, $keyword) !== false) {
-                                $this->log("✅ Product available due to unpriced keyword: '$keyword'", self::COLOR_GREEN);
-                                return 1;
-                            }
+                if (!empty($stockText)) {
+                    foreach ($unpricedKeywords as $keyword) {
+                        if (stripos($stockText, $keyword) !== false) {
+                            return 1;
                         }
-
-                        // Check negative keywords
-                        foreach ($negativeKeywords as $keyword) {
-                            if (stripos($stockText, $keyword) !== false) {
-                                $this->log("❌ Product unavailable due to negative keyword: '$keyword'", self::COLOR_RED);
-                                return 0;
-                            }
-                        }
-
-                        // Check positive keywords
-                        foreach ($positiveKeywords as $keyword) {
-                            if (stripos($stockText, $keyword) !== false) {
-                                $this->log("✅ Product available due to positive keyword: '$keyword'", self::COLOR_GREEN);
-                                return 1;
-                            }
-                        }
-                    } else {
-                        // Element exists but no text - might be a button or icon
-                        $this->log("✅ Availability element found with no text (assuming available)", self::COLOR_GREEN);
-                        return 1;
                     }
+
+                    foreach ($negativeKeywords as $keyword) {
+                        if (stripos($stockText, $keyword) !== false) {
+                            return 0;
+                        }
+                    }
+
+                    foreach ($positiveKeywords as $keyword) {
+                        if (stripos($stockText, $keyword) !== false) {
+                            return 1;
+                        }
+                    }
+
+                    return null;
+                } else {
+                    return null;
                 }
-            } catch (\Exception $e) {
-                $this->log("Error checking availability selector '$selector': " . $e->getMessage(), self::COLOR_RED);
             }
         }
 
@@ -842,21 +827,13 @@ class ProductDataProcessor
         $selectors = is_array($outOfStockSelector['selector']) ? $outOfStockSelector['selector'] : [$outOfStockSelector['selector']];
 
         foreach ($selectors as $index => $selector) {
-            try {
-                $elements = $crawler->filter($selector);
-                $this->log("Checking out_of_stock selector '$selector': {$elements->count()} elements found", self::COLOR_CYAN);
+            $elements = $this->getElements($crawler, ['selector' => $selector, 'type' => $outOfStockSelector['type'] ?? 'css']);
 
-                if ($elements->count() > 0) {
-                    $this->log("✅ Out of stock element found with selector: '$selector'", self::COLOR_RED);
-                    return 0; // Product is unavailable
-                }
-            } catch (\Exception $e) {
-                $this->log("Error checking out_of_stock selector '$selector': {$e->getMessage()}", self::COLOR_RED);
-                continue;
+            if ($elements->count() > 0) {
+                return 0; // Product is unavailable
             }
         }
 
-        $this->log("No out_of_stock elements found", self::COLOR_GREEN);
         return null;
     }
 
@@ -1111,4 +1088,3 @@ class ProductDataProcessor
         }, false);
     }
 }
-

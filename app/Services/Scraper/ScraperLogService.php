@@ -3,6 +3,7 @@
 namespace App\Services\Scraper;
 
 use Exception;
+use App\Helpers\PersianDateHelper;
 
 /**
  * سرویس مدیریت لاگ‌های اسکرپر
@@ -79,18 +80,15 @@ class ScraperLogService
     {
         $deletedCount = 0;
         $errorCount = 0;
-        $logDirectory = storage_path('logs'); // استفاده مستقیم از آدرس
 
-        if (file_exists($logDirectory)) {
+        if (file_exists(storage_path('logs'))) {
             foreach ($this->logPatterns as $pattern) {
-                $files = glob($logDirectory . '/' . $pattern . '.log');
+                $files = glob(storage_path('logs') . '/' . $pattern . '.log');
                 foreach ($files as $file) {
-                    if (is_file($file) && basename($file) !== 'laravel.log') {
-                        if (unlink($file)) {
-                            $deletedCount++;
-                        } else {
-                            $errorCount++;
-                        }
+                    if (is_file($file) && unlink($file)) {
+                        $deletedCount++;
+                    } else {
+                        $errorCount++;
                     }
                 }
             }
@@ -166,6 +164,99 @@ class ScraperLogService
                 'type' => 'info',
                 'message' => 'هیچ فایل لاگ مرتبطی یافت نشد.'
             ];
+        }
+    }
+
+
+// اضافه کردن این متدها به کلاس ScraperLogService
+
+    /**
+     * دریافت آمار کانفیگ از آخرین لاگ
+     */
+    public function getConfigStats(string $filename): array
+    {
+        $logFiles = $this->getLogFiles($filename);
+
+        if (empty($logFiles)) {
+            return [
+                'total_products' => 0,
+                'total_links' => 0,
+                'last_run_duration' => null,
+                'last_run_date' => null
+            ];
+        }
+
+        // آخرین فایل لاگ
+        $latestLogFile = $logFiles[0];
+        $content = $this->getLogContent($latestLogFile['filename']);
+
+        return $this->parseLogStats($content, $latestLogFile['date']);
+    }
+
+    /**
+     * تجزیه آمار از محتوای لاگ
+     */
+    private function parseLogStats(string $content, string $date): array
+    {
+        $stats = [
+            'total_products' => 0,
+            'total_links' => 0,
+            'last_run_duration' => null,
+            'last_run_date' => $date
+        ];
+
+        $lines = explode("\n", $content);
+        $startTime = null;
+        $endTime = null;
+
+        foreach ($lines as $line) {
+            // استخراج تعداد محصولات
+            if (preg_match('/محصول (\d+)/', $line, $matches)) {
+                $stats['total_products'] = max($stats['total_products'], (int)$matches[1]);
+            }
+
+            // استخراج تعداد لینک‌ها
+            if (preg_match('/تعداد لینک.*?(\d+)/', $line, $matches)) {
+                $stats['total_links'] += (int)$matches[1];
+            }
+
+            // استخراج زمان شروع
+            if (preg_match('/شروع اسکرپ/', $line) && preg_match('/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/', $line, $matches)) {
+                $startTime = $matches[1];
+            }
+
+            // استخراج زمان پایان
+            if (preg_match('/پایان اسکرپ|تکمیل شد/', $line) && preg_match('/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/', $line, $matches)) {
+                $endTime = $matches[1];
+            }
+        }
+
+        // محاسبه مدت زمان اجرا
+        if ($startTime && $endTime) {
+            $start = strtotime($startTime);
+            $end = strtotime($endTime);
+            $duration = $end - $start;
+            $stats['last_run_duration'] = $this->formatDuration($duration);
+        }
+
+        return $stats;
+    }
+
+    /**
+     * فرمت کردن مدت زمان
+     */
+    private function formatDuration(int $seconds): string
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $seconds = $seconds % 60;
+
+        if ($hours > 0) {
+            return sprintf('%d ساعت و %d دقیقه', $hours, $minutes);
+        } elseif ($minutes > 0) {
+            return sprintf('%d دقیقه و %d ثانیه', $minutes, $seconds);
+        } else {
+            return sprintf('%d ثانیه', $seconds);
         }
     }
 }

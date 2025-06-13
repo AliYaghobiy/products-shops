@@ -3,6 +3,7 @@ namespace App\Services\Scraper;
 
 use Illuminate\Support\Facades\Storage;
 use Exception;
+use App\Helpers\PersianDateHelper;
 
 /**
  * سرویس مدیریت پروسه‌های اسکرپر
@@ -99,7 +100,26 @@ class ScraperProcessService
     private function updateStoppedStatus(array &$runInfo, string $runFilePath, string $scraperType): void
     {
         $runInfo['status'] = 'stopped';
-        $runInfo['stopped_at'] = date('Y-m-d H:i:s');
+        $runInfo['stopped_at'] = PersianDateHelper::now();
+
+        // به‌روزرسانی تاریخچه
+        if (!isset($runInfo['history'])) {
+            $runInfo['history'] = [];
+        }
+
+        // اضافه کردن اجرای فعلی به تاریخچه
+        $currentRun = [
+            'started_at' => $runInfo['started_at'] ?? date('Y-m-d H:i:s'),
+            'stopped_at' => $runInfo['stopped_at'],
+            'status' => 'stopped',
+            'type' => $runInfo['type'] ?? 'normal'
+        ];
+
+        // اضافه کردن به ابتدای آرایه تاریخچه
+        array_unshift($runInfo['history'], $currentRun);
+
+        // نگه داشتن فقط 10 اجرای آخر
+        $runInfo['history'] = array_slice($runInfo['history'], 0, 10);
 
         Storage::put($runFilePath, json_encode($runInfo, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
@@ -108,7 +128,7 @@ class ScraperProcessService
             $logPath = storage_path('logs/scrapers/' . $runInfo['log_file']);
             if (file_exists($logPath)) {
                 $typeText = $scraperType === 'update' ? 'اپدیت' : 'معمولی';
-                $stopMessage = "\n[" . date('Y-m-d H:i:s') . "] اسکرپر {$typeText} به صورت دستی متوقف شد.\n";
+                $stopMessage = "\n[" . PersianDateHelper::now() . "] اسکرپر {$typeText} به صورت دستی متوقف شد.\n";
                 file_put_contents($logPath, $stopMessage, FILE_APPEND);
             }
         }
