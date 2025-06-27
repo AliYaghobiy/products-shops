@@ -18,6 +18,7 @@ class Product extends Model
         'category',
         'off',
         'guarantee',
+        'brand', // اضافه کردن فیلد جدید
     ];
 
     protected $casts = [

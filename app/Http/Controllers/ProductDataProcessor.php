@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FailedLink;
 use App\Models\Product;
 use Symfony\Component\DomCrawler\Crawler;
+use App\Services\BrandDetectionService;
 
 class ProductDataProcessor
 {
@@ -15,12 +16,15 @@ class ProductDataProcessor
     private const COLOR_PURPLE = "\033[1;95m";
     private const COLOR_CYAN = "\033[1;36m";
     private const COLOR_GRAY = "\033[1;90m";
+    private BrandDetectionService $brandDetectionService;
 
     private array $config;
     private $outputCallback = null;
 
     public function __construct(array $config)
     {
+        $this->brandDetectionService = new BrandDetectionService();
+        $this->brandDetectionService->setOutputCallback([$this, 'log']);
         $this->config = $config;
     }
 
@@ -62,7 +66,8 @@ class ProductDataProcessor
             'image' => $mainPageImage ?? '',
             'category' => '',
             'off' => 0,
-            'guarantee' => ''
+            'guarantee' => '',
+            'brand' => '' // اضافه کردن فیلد جدید
         ];
 
         if ($body === null) {
@@ -83,6 +88,7 @@ class ProductDataProcessor
             $data['category'] = $this->filterUnwantedCategories($this->config['set_category']);
             $this->log("Using preset category from config: {$data['category']}", self::COLOR_GREEN);
         }
+
 
         foreach ($productSelectors as $field => $selector) {
             if (!empty($selector['selector']) && array_key_exists($field, $data)) {
@@ -131,7 +137,10 @@ class ProductDataProcessor
                     $data[$field] = $this->makeAbsoluteUrl($value);
                 } elseif ($field === 'category' && ($this->config['category_method'] ?? 'selector') === 'selector' && !isset($this->config['set_category'])) {
                     $extractedCategory = $this->extractCategoriesFromSelectors($crawler, $selector);
-                    $data[$field] = $this->filterUnwantedCategories($extractedCategory); // اعمال فیلتر
+                    $data[$field] = $this->filterUnwantedCategories($extractedCategory);
+                } elseif ($field === 'brand') {
+                    // پردازش فیلد brand جدید
+                    $data[$field] = $this->processBrandField($crawler, $selector, $data['title']);
                 } else {
                     $transform = $this->config['data_transformers'][$field] ?? null;
                     $data[$field] = $transform && method_exists($this, $transform) ? (string)$this->$transform($value) : (string)$value;
@@ -139,6 +148,11 @@ class ProductDataProcessor
 
                 $this->log("Extracted $field: \"{$data[$field]}\" for $url", self::COLOR_GREEN);
             }
+        }
+
+        // اگر برند از سلکتور استخراج نشد، از عنوان محصول استخراج کن
+        if (empty($data['brand']) && !empty($data['title'])) {
+            $data['brand'] = $this->detectBrandFromTitle($data['title']);
         }
 
         if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
@@ -198,6 +212,54 @@ class ProductDataProcessor
         return true;
     }
 
+    // 5. اضافه کردن متد جدید برای پردازش فیلد brand
+    private function processBrandField(Crawler $crawler, array $selector, ?string $title = null): string
+    {
+        $brandMethod = $this->config['brand_method'] ?? 'selector';
+
+        if ($brandMethod === 'selector' && !empty($selector['selector'])) {
+            // استخراج برند از سلکتور
+            $elements = $this->getElements($crawler, $selector);
+            if ($elements->count() > 0) {
+                $brandText = trim($elements->text());
+                if (!empty($brandText)) {
+                    // تشخیص برند از متن استخراج شده
+                    $detectedBrand = $this->brandDetectionService->detectBrandFromText($brandText);
+                    if ($detectedBrand) {
+                        $this->log("🏷️ Brand detected from selector: $detectedBrand", self::COLOR_GREEN);
+                        return $detectedBrand;
+                    }
+                    $this->log("⚠️ No brand matched from selector text: $brandText", self::COLOR_YELLOW);
+                }
+            }
+        } elseif ($brandMethod === 'title' && $title) {
+            // استخراج برند از عنوان محصول
+            return $this->detectBrandFromTitle($title);
+        }
+
+        return '';
+    }
+
+// 6. اضافه کردن متد جدید برای تشخیص برند از عنوان
+    private function detectBrandFromTitle(string $title): string
+    {
+        if (empty($title)) {
+            return '';
+        }
+
+        $this->log("🔍 Attempting to detect brand from title: " . substr($title, 0, 50) . "...", self::COLOR_BLUE);
+
+        $detectedBrand = $this->brandDetectionService->detectBrandFromText($title);
+
+        if ($detectedBrand) {
+            $this->log("✅ Brand detected from title: $detectedBrand", self::COLOR_GREEN);
+            return $detectedBrand;
+        } else {
+            $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
+            return '';
+        }
+    }
+
     public function saveProductToDatabase(array $productData): void
     {
         try {
@@ -211,6 +273,7 @@ class ProductDataProcessor
                 'image' => $productData['image'] ?? '',
                 'guarantee' => $productData['guarantee'] ?? '',
                 'category' => $productData['category'] ?? '',
+                'brand' => $productData['brand'] ?? '', // اضافه کردن فیلد جدید
                 'updated_at' => now(),
             ];
 
@@ -852,11 +915,10 @@ class ProductDataProcessor
             return 0;
         }
     }
-
     private function detectProductChanges($existingProduct, array $newData): array
     {
         $changes = [];
-        $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category'];
+        $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category', 'brand']; // اضافه کردن brand
 
         foreach ($fieldsToCheck as $field) {
             $oldValue = $existingProduct->$field;
@@ -870,6 +932,7 @@ class ProductDataProcessor
         return $changes;
     }
 
+
     public function logProduct(array $product, string $action = 'PROCESSED', array $extraInfo = []): void
     {
         $availability = (int)($product['availability'] ?? 0) ? 'موجود' : 'ناموجود';
@@ -880,6 +943,7 @@ class ProductDataProcessor
         $price = $product['price'] ?? 'N/A';
         $title = $product['title'] ?? 'N/A';
         $category = $product['category'] ?? 'N/A';
+        $brand = $product['brand'] ?? 'N/A'; // اضافه کردن brand
 
         $actionConfig = $this->getActionConfig($action);
 
@@ -891,24 +955,24 @@ class ProductDataProcessor
             }
         }
 
-        // Generate table
-        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Availability', 'Discount', 'Image', 'Guarantee'];
+        // Generate table with brand field
+        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Brand', 'Availability', 'Discount', 'Image', 'Guarantee']; // اضافه کردن Brand
         $rows = [[
             $productId,
-            mb_substr($title, 0, 40) . (mb_strlen($title) > 40 ? '...' : ''),
+            mb_substr($title, 0, 30) . (mb_strlen($title) > 30 ? '...' : ''),
             $price,
-            mb_substr($category, 0, 30) . (mb_strlen($category) > 30 ? '...' : ''),
+            mb_substr($category, 0, 20) . (mb_strlen($category) > 20 ? '...' : ''),
+            mb_substr($brand, 0, 15) . (mb_strlen($brand) > 15 ? '...' : ''), // اضافه کردن brand
             $availability,
             $discount,
             $imageStatus,
-            mb_substr($guaranteeStatus, 0, 20) . (mb_strlen($guaranteeStatus) > 20 ? '...' : '')
+            mb_substr($guaranteeStatus, 0, 15) . (mb_strlen($guaranteeStatus) > 15 ? '...' : '')
         ]];
 
         $table = $this->generateAsciiTable($headers, $rows);
         $this->log($table, null);
         $this->log("", null);
     }
-
     private function getActionConfig(string $action): array
     {
         $configs = [
