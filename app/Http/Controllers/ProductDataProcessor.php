@@ -23,8 +23,7 @@ class ProductDataProcessor
 
     public function __construct(array $config)
     {
-        $this->brandDetectionService = new BrandDetectionService();
-        $this->brandDetectionService->setOutputCallback([$this, 'log']);
+        $this->brandDetectionService = new BrandDetectionService($this);
         $this->config = $config;
     }
 

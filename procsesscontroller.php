@@ -339,7 +339,7 @@ class ProductDataProcessor
 
         return $price;
     }
-   
+
     public function parseAvailability(string $value, Crawler $crawler): int
     {
         $outOfStockButton = $this->config['out_of_stock_button'] ?? false;
@@ -1012,7 +1012,7 @@ class ProductDataProcessor
         }
     }
 
-    private function log(string $message, ?string $color = null): void
+    public function log(string $message, ?string $color = null): void
     {
         $colorReset = "\033[0m";
         $formattedMessage = $color ? $color . $message . $colorReset : $message;

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ProductDataProcessor;
 
 class BrandDetectionService
 {
@@ -10,7 +11,6 @@ class BrandDetectionService
     private const COLOR_YELLOW = "\033[1;93m";
     private const COLOR_BLUE = "\033[1;94m";
     private $outputCallback = null;
-
     public function setOutputCallback(callable $callback): void
     {
         $this->outputCallback = $callback;
@@ -198,8 +198,13 @@ class BrandDetectionService
         $colorReset = "\033[0m";
         $formattedMessage = $color ? $color . $message . $colorReset : $message;
 
+        // استفاده مستقیم از callback تنظیم‌شده
         if ($this->outputCallback) {
             call_user_func($this->outputCallback, $formattedMessage);
+        } else {
+            // لاگ پیش‌فرض به فایل
+            $logFile = storage_path('logs/scraper_' . date('Ymd') . '.log');
+            file_put_contents($logFile, "[" . date('Y-m-d H:i:s') . "] $message\n", FILE_APPEND);
         }
     }
 }
