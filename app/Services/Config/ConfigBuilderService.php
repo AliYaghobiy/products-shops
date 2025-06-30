@@ -107,6 +107,10 @@ class ConfigBuilderService
                     'type' => $request->input('selectors.product_page.title.type'),
                     'selector' => $request->input('selectors.product_page.title.selector'),
                 ],
+                'brand' => [
+                    'type' => $request->input('selectors.product_page.brand.type'),
+                    'selector' => $request->input('selectors.product_page.brand.selector'),
+                ],
                 'category' => [
                     'type' => $request->input('selectors.product_page.category.type'),
                     'selector' => $this->processCategorySelectors($request),
@@ -619,6 +623,10 @@ class ConfigBuilderService
                         'type' => 'css',
                         'selector' => $request->input('title_selector'),
                     ],
+                    'brand' => [
+                        'type' => 'css',
+                        'selector' => $request->input('brand_selector'),
+                    ],
                     'price' => [
                         'type' => 'css',
                         'selector' => $this->processMultipleSelectors($request->input('price_selector', [])),
@@ -664,7 +672,7 @@ class ConfigBuilderService
             ],
         ];
     }
-    
+
     /**
      * پردازش سلکتورهای چندگانه برای تست محصول
      */

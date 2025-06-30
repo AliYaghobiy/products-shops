@@ -870,6 +870,13 @@
                                    value="{{ old('selectors.product_page.title.selector', $content['selectors']['product_page']['title']['selector'] ?? '') }}">
                         </div>
                         <div class="form-group">
+                            <label class="label">سلکتور برند</label>
+                            <input type="hidden" name="selectors[product_page][brand][type]" value="css">
+                            <input type="text" name="selectors[product_page][brand][selector]" class="input"
+                                   placeholder=".product-brand"
+                                   value="{{ old('selectors.product_page.brand.selector', $content['selectors']['product_page']['brand']['selector'] ?? '') }}">
+                        </div>
+                        <div class="form-group">
                             <label class="label">سلکتور تصویر</label>
                             <input type="hidden" name="selectors[product_page][image][type]" value="css">
                             <input type="text" name="selectors[product_page][image][selector]" class="input"

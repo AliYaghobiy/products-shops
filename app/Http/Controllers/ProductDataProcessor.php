@@ -16,20 +16,28 @@ class ProductDataProcessor
     private const COLOR_PURPLE = "\033[1;95m";
     private const COLOR_CYAN = "\033[1;36m";
     private const COLOR_GRAY = "\033[1;90m";
-    private BrandDetectionService $brandDetectionService;
 
+    private BrandDetectionService $brandDetectionService;
     private array $config;
     private $outputCallback = null;
 
     public function __construct(array $config)
     {
-        $this->brandDetectionService = new BrandDetectionService($this);
         $this->config = $config;
+
+        // ایجاد سرویس تشخیص برند و تنظیم callback
+        $this->brandDetectionService = new BrandDetectionService();
+        $this->brandDetectionService->setOutputCallback([$this, 'log']);
     }
 
     public function setOutputCallback(callable $callback): void
     {
         $this->outputCallback = $callback;
+
+        // اطمینان از تنظیم callback برای BrandDetectionService نیز
+        if (isset($this->brandDetectionService)) {
+            $this->brandDetectionService->setOutputCallback([$this, 'log']);
+        }
     }
 
     private function filterUnwantedCategories(string $category): string
@@ -53,7 +61,7 @@ class ProductDataProcessor
         return $category; // اگر مشکلی نبود همون دسته‌بندی رو برگردان
     }
 
-// تغییرات در متد extractProductData
+    // تغییرات در متد extractProductData
     public function extractProductData(string $url, ?string $body = null, ?string $mainPageImage = null, ?string $mainPageProductId = null): ?array
     {
         $data = [
@@ -87,7 +95,6 @@ class ProductDataProcessor
             $data['category'] = $this->filterUnwantedCategories($this->config['set_category']);
             $this->log("Using preset category from config: {$data['category']}", self::COLOR_GREEN);
         }
-
 
         foreach ($productSelectors as $field => $selector) {
             if (!empty($selector['selector']) && array_key_exists($field, $data)) {
@@ -149,9 +156,16 @@ class ProductDataProcessor
             }
         }
 
-        // اگر برند از سلکتور استخراج نشد، از عنوان محصول استخراج کن
+        // تشخیص برند از عنوان محصول (اگر هنوز پیدا نشده)
         if (empty($data['brand']) && !empty($data['title'])) {
-            $data['brand'] = $this->detectBrandFromTitle($data['title']);
+            $this->log("🔍 No brand found in selectors, attempting to detect from title", self::COLOR_BLUE);
+            $detectedBrand = $this->detectBrandFromTitle($data['title']);
+            if ($detectedBrand) {
+                $data['brand'] = $detectedBrand;
+                $this->log("✅ Brand detected from title: {$detectedBrand}", self::COLOR_GREEN);
+            } else {
+                $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
+            }
         }
 
         if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
@@ -181,6 +195,54 @@ class ProductDataProcessor
 
         return $data;
     }
+
+    private function detectBrandFromTitle(string $title): string
+    {
+        if (empty($title)) {
+            return '';
+        }
+
+        $this->log("🔍 Attempting to detect brand from title: " . substr($title, 0, 50) . "...", self::COLOR_BLUE);
+
+        $detectedBrand = $this->brandDetectionService->detectBrandFromText($title);
+
+        if ($detectedBrand) {
+            $this->log("✅ Brand detected from title: $detectedBrand", self::COLOR_GREEN);
+            return $detectedBrand;
+        } else {
+            $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
+            return '';
+        }
+    }
+
+    private function processBrandField(Crawler $crawler, array $selector, ?string $title = null): string
+    {
+        $brandMethod = $this->config['brand_method'] ?? 'selector';
+
+        if ($brandMethod === 'selector' && !empty($selector['selector'])) {
+            // استخراج برند از سلکتور
+            $elements = $this->getElements($crawler, $selector);
+            if ($elements->count() > 0) {
+                $brandText = trim($elements->text());
+                if (!empty($brandText)) {
+                    // تشخیص برند از متن استخراج شده
+                    $detectedBrand = $this->brandDetectionService->detectBrandFromText($brandText);
+                    if ($detectedBrand) {
+                        $this->log("🏷️ Brand detected from selector: $detectedBrand", self::COLOR_GREEN);
+                        return $detectedBrand;
+                    }
+                    $this->log("⚠️ No brand matched from selector text: $brandText", self::COLOR_YELLOW);
+                }
+            }
+        } elseif ($brandMethod === 'title' && $title) {
+            // استخراج برند از عنوان محصول
+            return $this->detectBrandFromTitle($title);
+        }
+
+        return '';
+    }
+
+    // باقی متدها بدون تغییر...
     public function validateProductData(array $productData): bool
     {
         if (empty($productData['title'])) {
@@ -209,54 +271,6 @@ class ProductDataProcessor
 
         $this->log("Product data validated successfully for URL: {$productData['page_url']}", self::COLOR_GREEN);
         return true;
-    }
-
-    // 5. اضافه کردن متد جدید برای پردازش فیلد brand
-    private function processBrandField(Crawler $crawler, array $selector, ?string $title = null): string
-    {
-        $brandMethod = $this->config['brand_method'] ?? 'selector';
-
-        if ($brandMethod === 'selector' && !empty($selector['selector'])) {
-            // استخراج برند از سلکتور
-            $elements = $this->getElements($crawler, $selector);
-            if ($elements->count() > 0) {
-                $brandText = trim($elements->text());
-                if (!empty($brandText)) {
-                    // تشخیص برند از متن استخراج شده
-                    $detectedBrand = $this->brandDetectionService->detectBrandFromText($brandText);
-                    if ($detectedBrand) {
-                        $this->log("🏷️ Brand detected from selector: $detectedBrand", self::COLOR_GREEN);
-                        return $detectedBrand;
-                    }
-                    $this->log("⚠️ No brand matched from selector text: $brandText", self::COLOR_YELLOW);
-                }
-            }
-        } elseif ($brandMethod === 'title' && $title) {
-            // استخراج برند از عنوان محصول
-            return $this->detectBrandFromTitle($title);
-        }
-
-        return '';
-    }
-
-// 6. اضافه کردن متد جدید برای تشخیص برند از عنوان
-    private function detectBrandFromTitle(string $title): string
-    {
-        if (empty($title)) {
-            return '';
-        }
-
-        $this->log("🔍 Attempting to detect brand from title: " . substr($title, 0, 50) . "...", self::COLOR_BLUE);
-
-        $detectedBrand = $this->brandDetectionService->detectBrandFromText($title);
-
-        if ($detectedBrand) {
-            $this->log("✅ Brand detected from title: $detectedBrand", self::COLOR_GREEN);
-            return $detectedBrand;
-        } else {
-            $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
-            return '';
-        }
     }
 
     public function saveProductToDatabase(array $productData): void
@@ -297,6 +311,7 @@ class ProductDataProcessor
         }
     }
 
+    // باقی متدها یکسان باقی می‌مانند...
     public function cleanPrice(string $price): int
     {
         if (empty(trim($price))) {
@@ -439,7 +454,6 @@ class ProductDataProcessor
 
         return $price;
     }
-
 
     public function parseAvailability(string $value, Crawler $crawler): int
     {
@@ -914,10 +928,11 @@ class ProductDataProcessor
             return 0;
         }
     }
+
     private function detectProductChanges($existingProduct, array $newData): array
     {
         $changes = [];
-        $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category', 'brand']; // اضافه کردن brand
+        $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category', 'brand'];
 
         foreach ($fieldsToCheck as $field) {
             $oldValue = $existingProduct->$field;
@@ -931,7 +946,6 @@ class ProductDataProcessor
         return $changes;
     }
 
-
     public function logProduct(array $product, string $action = 'PROCESSED', array $extraInfo = []): void
     {
         $availability = (int)($product['availability'] ?? 0) ? 'موجود' : 'ناموجود';
@@ -942,7 +956,7 @@ class ProductDataProcessor
         $price = $product['price'] ?? 'N/A';
         $title = $product['title'] ?? 'N/A';
         $category = $product['category'] ?? 'N/A';
-        $brand = $product['brand'] ?? 'N/A'; // اضافه کردن brand
+        $brand = $product['brand'] ?? 'N/A';
 
         $actionConfig = $this->getActionConfig($action);
 
@@ -955,13 +969,13 @@ class ProductDataProcessor
         }
 
         // Generate table with brand field
-        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Brand', 'Availability', 'Discount', 'Image', 'Guarantee']; // اضافه کردن Brand
+        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Brand', 'Availability', 'Discount', 'Image', 'Guarantee'];
         $rows = [[
             $productId,
             mb_substr($title, 0, 30) . (mb_strlen($title) > 30 ? '...' : ''),
             $price,
             mb_substr($category, 0, 20) . (mb_strlen($category) > 20 ? '...' : ''),
-            mb_substr($brand, 0, 15) . (mb_strlen($brand) > 15 ? '...' : ''), // اضافه کردن brand
+            mb_substr($brand, 0, 15) . (mb_strlen($brand) > 15 ? '...' : ''),
             $availability,
             $discount,
             $imageStatus,
@@ -972,6 +986,7 @@ class ProductDataProcessor
         $this->log($table, null);
         $this->log("", null);
     }
+
     private function getActionConfig(string $action): array
     {
         $configs = [
@@ -1114,7 +1129,7 @@ class ProductDataProcessor
         }
     }
 
-    private function log(string $message, ?string $color = null): void
+    public function log(string $message, ?string $color = null): void
     {
         $colorReset = "\033[0m";
         $formattedMessage = $color ? $color . $message . $colorReset : $message;

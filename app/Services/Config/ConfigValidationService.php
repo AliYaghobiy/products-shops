@@ -171,6 +171,7 @@ class ConfigValidationService
         $rules = [
             'product_url' => 'required|url',
             'title_selector' => 'required|string',
+            'brand_selector' => 'required|string',
 
             // قوانین برای سلکتورهای چندگانه
             'price_selector' => 'required|array|min:1',

@@ -488,6 +488,16 @@
                                placeholder=".product-title" required>
                     </div>
 
+                    <div class="form-group">
+                        <label for="brand_selector">
+                            سلکتور برند <span class="required">*</span>
+                        </label>
+                        <input type="text" name="brand_selector" id="brand_selector"
+                               value=".elementor-element-e499a81 > div:nth-child(1) > h1:nth-child(1)"
+                               class="input-field"
+                               placeholder=".product-brand" required>
+                    </div>
+
                     <!-- سلکتورهای قیمت -->
                     <div class="form-group">
                         <label>
@@ -889,6 +899,12 @@
                                             <span class="text-blue-600">{{ $product['title'] }}</span>
                                         </div>
                                     @endif
+                                    @if(!empty($product['brand']))
+                                        <div>
+                                            <strong>برند:</strong>
+                                            <span class="text-blue-600">{{ $product['brand'] }}</span>
+                                        </div>
+                                    @endif
                                     @if(!empty($product['price']))
                                         <div>
                                             <strong>قیمت:</strong>
@@ -1221,6 +1237,7 @@
                             <h5 class="font-bold text-lg mb-2">محصول ${index + 1}</h5>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 ${product.title ? `<div><strong>عنوان:</strong> <span class="text-blue-600">${product.title}</span></div>` : ''}
+                                ${product.brand ? `<div><strong>برند:</strong> <span class="text-blue-600">${product.brand}</span></div>` : ''}
                                 ${product.price ? `<div><strong>قیمت:</strong> <span class="text-green-600">${product.price}</span></div>` : ''}
                                 ${typeof product.availability !== 'undefined' ? `
                                     <div><strong>موجودی:</strong>
