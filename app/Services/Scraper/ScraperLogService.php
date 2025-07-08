@@ -12,11 +12,15 @@ class ScraperLogService
 {
     private string $logDirectory;
     private array $logPatterns;
+    private int $maxFileSize;
+    private int $maxLines;
 
     public function __construct()
     {
         $this->logDirectory = storage_path('logs/scrapers');
         $this->logPatterns = ['scraper*', 'playwright_method3_*', 'playwright_*'];
+        $this->maxFileSize = 50 * 1024 * 1024; // 50MB
+        $this->maxLines = 10000; // حداکثر 10 هزار خط
     }
 
     /**
@@ -32,13 +36,17 @@ class ScraperLogService
             foreach ($allFiles as $file) {
                 if (strpos($file, $filename . '_') === 0 && pathinfo($file, PATHINFO_EXTENSION) === 'log') {
                     $datePart = str_replace($filename . '_', '', pathinfo($file, PATHINFO_FILENAME));
+                    $filePath = $this->logDirectory . '/' . $file;
+                    $fileSize = filesize($filePath);
 
                     $logFiles[] = [
                         'filename' => $file,
                         'date' => $datePart,
-                        'full_path' => $this->logDirectory . '/' . $file,
-                        'size' => filesize($this->logDirectory . '/' . $file),
-                        'last_modified' => filemtime($this->logDirectory . '/' . $file)
+                        'full_path' => $filePath,
+                        'size' => $fileSize,
+                        'size_formatted' => $this->formatFileSize($fileSize),
+                        'last_modified' => filemtime($filePath),
+                        'is_large' => $fileSize > $this->maxFileSize
                     ];
                 }
             }
@@ -53,7 +61,7 @@ class ScraperLogService
     }
 
     /**
-     * دریافت محتوای فایل لاگ
+     * دریافت محتوای فایل لاگ با مدیریت حافظه
      */
     public function getLogContent(string $logfile): string
     {
@@ -63,6 +71,14 @@ class ScraperLogService
             throw new Exception('فایل لاگ یافت نشد.');
         }
 
+        $fileSize = filesize($logPath);
+        
+        // بررسی اندازه فایل
+        if ($fileSize > $this->maxFileSize) {
+            return $this->getLogContentSafely($logPath, $fileSize);
+        }
+
+        // برای فایل‌های کوچک از روش معمولی استفاده کنید
         $content = file_get_contents($logPath);
 
         // حذف BOM در صورت وجود
@@ -71,6 +87,142 @@ class ScraperLogService
         }
 
         return $content;
+    }
+
+    /**
+     * دریافت ایمن محتوای فایل‌های بزرگ
+     */
+    private function getLogContentSafely(string $logPath, int $fileSize): string
+    {
+        $handle = fopen($logPath, 'r');
+        if (!$handle) {
+            throw new Exception('خطا در باز کردن فایل لاگ.');
+        }
+
+        $content = '';
+        $lineCount = 0;
+        $totalLines = 0;
+        
+        // شمارش کل خطوط
+        while (!feof($handle)) {
+            fgets($handle);
+            $totalLines++;
+        }
+        
+        // بازگشت به ابتدای فایل
+        rewind($handle);
+
+        // اگر خطوط زیاد است، فقط آخرین خطوط را بخوانید
+        if ($totalLines > $this->maxLines) {
+            $skipLines = $totalLines - $this->maxLines;
+            
+            // پرش به خطوط مورد نظر
+            for ($i = 0; $i < $skipLines; $i++) {
+                fgets($handle);
+            }
+            
+            $content = "⚠️ فایل لاگ بزرگ است - نمایش آخرین {$this->maxLines} خط از کل {$totalLines} خط\n";
+            $content .= str_repeat("=", 80) . "\n\n";
+        }
+
+        // خواندن خطوط مورد نظر
+        while (!feof($handle) && $lineCount < $this->maxLines) {
+            $line = fgets($handle);
+            if ($line !== false) {
+                $content .= $line;
+                $lineCount++;
+            }
+        }
+
+        fclose($handle);
+
+        // حذف BOM در صورت وجود
+        if (substr($content, 0, 3) === "\xEF\xBB\xBF") {
+            $content = substr($content, 3);
+        }
+
+        return $content;
+    }
+
+    /**
+     * دریافت آمار کانفیگ از آخرین لاگ با مدیریت حافظه
+     */
+    public function getConfigStats(string $filename): array
+    {
+        $logFiles = $this->getLogFiles($filename);
+
+        if (empty($logFiles)) {
+            return [
+                'total_products' => 0,
+                'total_links' => 0,
+                'last_run_duration' => null,
+                'last_run_date' => null
+            ];
+        }
+
+        // آخرین فایل لاگ
+        $latestLogFile = $logFiles[0];
+        
+        // برای آمار، فقط آخرین قسمت فایل را بخوانید
+        $content = $this->getLogContentForStats($latestLogFile['full_path']);
+
+        return $this->parseLogStats($content, $latestLogFile['date']);
+    }
+
+    /**
+     * خواندن محتوای لاگ برای آمار (فقط آخرین قسمت)
+     */
+    private function getLogContentForStats(string $logPath): string
+    {
+        if (!file_exists($logPath)) {
+            return '';
+        }
+
+        $fileSize = filesize($logPath);
+        
+        // برای فایل‌های کوچک
+        if ($fileSize < $this->maxFileSize / 10) {
+            return file_get_contents($logPath);
+        }
+
+        // برای فایل‌های بزرگ، فقط آخرین 1000 خط
+        $handle = fopen($logPath, 'r');
+        if (!$handle) {
+            return '';
+        }
+
+        $lines = [];
+        $maxStatsLines = 1000;
+
+        while (!feof($handle)) {
+            $line = fgets($handle);
+            if ($line !== false) {
+                $lines[] = $line;
+                
+                // نگه داشتن فقط آخرین خطوط
+                if (count($lines) > $maxStatsLines) {
+                    array_shift($lines);
+                }
+            }
+        }
+
+        fclose($handle);
+        return implode('', $lines);
+    }
+
+    /**
+     * فرمت کردن اندازه فایل
+     */
+    private function formatFileSize(int $bytes): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+
+        $bytes /= pow(1024, $pow);
+
+        return round($bytes, 2) . ' ' . $units[$pow];
     }
 
     /**
@@ -165,32 +317,6 @@ class ScraperLogService
                 'message' => 'هیچ فایل لاگ مرتبطی یافت نشد.'
             ];
         }
-    }
-
-
-// اضافه کردن این متدها به کلاس ScraperLogService
-
-    /**
-     * دریافت آمار کانفیگ از آخرین لاگ
-     */
-    public function getConfigStats(string $filename): array
-    {
-        $logFiles = $this->getLogFiles($filename);
-
-        if (empty($logFiles)) {
-            return [
-                'total_products' => 0,
-                'total_links' => 0,
-                'last_run_duration' => null,
-                'last_run_date' => null
-            ];
-        }
-
-        // آخرین فایل لاگ
-        $latestLogFile = $logFiles[0];
-        $content = $this->getLogContent($latestLogFile['filename']);
-
-        return $this->parseLogStats($content, $latestLogFile['date']);
     }
 
     /**

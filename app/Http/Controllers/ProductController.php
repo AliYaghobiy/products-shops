@@ -47,6 +47,7 @@ class ProductController extends Controller
             'availability',
             'image',
             'category',
+            'brand',
             'off',
             'guarantee'
         ])
@@ -78,6 +79,7 @@ class ProductController extends Controller
                     'image' => $product->image,
                     'guarantee' => $product->guarantee,
                     'category' => $product->category,
+                    'brand' => $product->brand,
                 ];
             })->all()
         ];

@@ -37,11 +37,9 @@ class BrandDetectionService
     public function detectBrandFromText(string $text): ?string
     {
         if (empty(trim($text))) {
-            $this->log("🔍 متن خالی برای تشخیص برند ارائه شد", self::COLOR_YELLOW);
             return null;
         }
 
-        $this->log("🔍 شروع تشخیص برند از متن: " . substr($text, 0, 100) . "...", self::COLOR_BLUE);
 
         try {
             if (!$this->checkDatabaseAvailability()) {
@@ -55,13 +53,10 @@ class BrandDetectionService
                 $this->log("⚠️ هیچ برندی در دیتابیس یافت نشد", self::COLOR_YELLOW);
                 return null;
             }
-
-            $this->log("📊 تعداد برندهای موجود در دیتابیس: " . count($brands), self::COLOR_BLUE);
-
+            
             // ابتدا تطابق دقیق را بررسی کن
             $exactMatch = $this->findExactMatch($text, $brands);
             if ($exactMatch) {
-                $this->log("🎯 تطابق دقیق یافت شد: " . $exactMatch['name'], self::COLOR_GREEN);
                 return $exactMatch['name'];
             }
 
@@ -69,15 +64,12 @@ class BrandDetectionService
             $detectedBrand = $this->findBestMatchingBrand($text, $brands);
 
             if ($detectedBrand) {
-                $this->log("✅ برند تشخیص داده شد: " . $detectedBrand['name'], self::COLOR_GREEN);
                 return $detectedBrand['name'];
             } else {
-                $this->log("❌ هیچ برند مطابقی یافت نشد", self::COLOR_YELLOW);
                 return null;
             }
 
         } catch (\Exception $e) {
-            $this->log("💥 خطا در تشخیص برند: " . $e->getMessage(), self::COLOR_RED);
             return null;
         }
     }
@@ -90,8 +82,6 @@ class BrandDetectionService
         $normalizedText = $this->normalizeText($text);
         $textWords = $this->extractValidWords($normalizedText);
 
-        $this->log("🎯 جستجوی تطابق دقیق در کلمات: " . implode(', ', $textWords), self::COLOR_CYAN);
-
         foreach ($brands as $brand) {
             // بررسی تطابق دقیق نام اصلی
             if (!empty($brand['name'])) {
@@ -99,7 +89,6 @@ class BrandDetectionService
                 $brandWords = $this->extractValidWords($brandName);
 
                 if ($this->isExactWordMatch($textWords, $brandWords)) {
-                    $this->log("🎯 تطابق دقیق نام برند: " . $brand['name'], self::COLOR_GREEN);
                     return $brand;
                 }
             }
@@ -110,7 +99,6 @@ class BrandDetectionService
                 $brandSeoWords = $this->extractValidWords($brandNameSeo);
 
                 if ($this->isExactWordMatch($textWords, $brandSeoWords)) {
-                    $this->log("🎯 تطابق دقیق نام SEO برند: " . $brand['nameSeo'], self::COLOR_GREEN);
                     return $brand;
                 }
             }
@@ -121,7 +109,6 @@ class BrandDetectionService
                 $brandSlugWords = $this->extractValidWords($brandSlug);
 
                 if ($this->isExactWordMatch($textWords, $brandSlugWords)) {
-                    $this->log("🎯 تطابق دقیق slug برند: " . $brand['slug'], self::COLOR_GREEN);
                     return $brand;
                 }
             }
@@ -133,14 +120,12 @@ class BrandDetectionService
                     $normalizedKeyword = $this->normalizeText($keyword);
                     $keywordWords = $this->extractValidWords($normalizedKeyword);
                     if ($this->isExactWordMatch($textWords, $keywordWords)) {
-                        $this->log("🎯 تطابق دقیق کلمه کلیدی: " . $keyword, self::COLOR_GREEN);
                         return $brand;
                     }
                 }
             }
         }
 
-        $this->log("❌ هیچ تطابق دقیقی یافت نشد", self::COLOR_YELLOW);
         return null;
     }
 
@@ -172,11 +157,9 @@ class BrandDetectionService
         // برای برندهای چندکلمه‌ای، فقط دنباله کاملاً پیوسته و به ترتیب پذیرفته می‌شود
         $sequentialMatch = $this->hasSequentialMatch($textWords, $brandWords);
         if ($sequentialMatch) {
-            $this->log("✅ تطابق دنباله‌ای پیوسته یافت شد: " . implode(' ', $brandWords), self::COLOR_GREEN);
             return true;
         }
 
-        $this->log("❌ تطابق دقیق رد شد - کلمات برند به ترتیب و بدون فاصله یافت نشدند", self::COLOR_RED);
         return false;
     }
 
@@ -215,9 +198,6 @@ class BrandDetectionService
 
         $isClose = $maxDistance <= $maxAllowedDistance;
 
-        $this->log("📏 بررسی فاصله کلمات برند - حداکثر فاصله: {$maxDistance}, حد مجاز: {$maxAllowedDistance}, نتیجه: " . ($isClose ? "نزدیک" : "دور"),
-            $isClose ? self::COLOR_GREEN : self::COLOR_RED);
-
         return $isClose;
     }
 
@@ -244,13 +224,8 @@ class BrandDetectionService
                 }
             }
 
-            if ($isSequentialMatch) {
-                $this->log("🎯 دنباله کاملاً پیوسته یافت شد در موقعیت {$i}: " . implode(' ', array_slice($textWords, $i, $brandWordsCount)), self::COLOR_GREEN);
-                return true;
-            }
         }
 
-        $this->log("❌ دنباله پیوسته یافت نشد - کلمات برند به ترتیب و بدون فاصله وجود ندارند", self::COLOR_RED);
         return false;
     }
 
@@ -261,7 +236,6 @@ class BrandDetectionService
     {
         foreach ($textWords as $textWord) {
             if ($brandWord === $textWord) {
-                $this->log("✅ تطابق تک کلمه: '$brandWord'", self::COLOR_GREEN);
                 return true;
             }
         }
@@ -324,7 +298,6 @@ class BrandDetectionService
 
         // اگر همه کلمات برند یافت شدند
         if (count($foundWords) === $brandWordsCount) {
-            $this->log("🎯 دنباله با فاصله یافت شد: " . implode(' ', $foundWords), self::COLOR_BLUE);
             return true;
         }
 
@@ -386,13 +359,10 @@ class BrandDetectionService
                 ->toArray();
 
             $this->brandsCache = $brands;
-            $this->log("📚 برندها از دیتابیس (اتصال: {$this->brandConnection}) بارگذاری شدند", self::COLOR_BLUE);
-            $this->log("📊 تعداد برندهای بارگذاری شده: " . count($brands), self::COLOR_BLUE);
 
             return $brands;
 
         } catch (\Exception $e) {
-            $this->log("❌ خطا در دریافت برندها از دیتابیس: " . $e->getMessage(), self::COLOR_RED);
             $this->isDatabaseAvailable = false;
             $this->brandsCache = [];
             return [];
@@ -408,8 +378,6 @@ class BrandDetectionService
         $bestMatch = null;
         $highestScore = 0;
         $detailedScores = [];
-
-        $this->log("🔍 شروع تحلیل دقیق برندها...", self::COLOR_BLUE);
 
         foreach ($brands as $brand) {
             $score = $this->calculateAdvancedBrandScore($text, $brand);
@@ -430,22 +398,13 @@ class BrandDetectionService
         usort($detailedScores, function ($a, $b) {
             return $b['score'] <=> $a['score'];
         });
-
-        $topScores = array_slice($detailedScores, 0, 5);
-        $this->log("🏆 بهترین امتیازات:", self::COLOR_PURPLE);
-        foreach ($topScores as $i => $score) {
-            $icon = $i === 0 ? '🥇' : ($i === 1 ? '🥈' : ($i === 2 ? '🥉' : '📊'));
-            $this->log("  {$icon} " . ($i + 1) . ". {$score['brand']}: {$score['score']}", self::COLOR_PURPLE);
-        }
-
+        
         // آستانه تطابق متحرک یا پذیرش تطابق کامل
         $dynamicThreshold = $this->calculateDynamicThreshold($highestScore);
         if ($highestScore >= 1.0 || $highestScore >= $dynamicThreshold) {
-            $this->log("📈 امتیاز تطابق: " . round($highestScore, 4) . " (آستانه: " . $dynamicThreshold . ") - برند: " . $bestMatch['name'], self::COLOR_GREEN);
             return $bestMatch;
         }
 
-        $this->log("📉 بالاترین امتیاز (" . round($highestScore, 4) . ") کمتر از آستانه محاسبه شده (" . $dynamicThreshold . ")", self::COLOR_YELLOW);
         return null;
     }
 
@@ -475,8 +434,6 @@ class BrandDetectionService
         $totalScore = 0;
         $maxPossibleScore = 0;
 
-        $this->log("🔍 تحلیل برند: " . $brand['name'], self::COLOR_CYAN);
-
         // امتیاز نام اصلی (وزن: 4)
         if (!empty($brand['name'])) {
             $nameScore = $this->calculatePreciseMatch($text, $brand['name'], 'name');
@@ -484,9 +441,6 @@ class BrandDetectionService
             $totalScore += $weightedScore;
             $maxPossibleScore += 4;
 
-            if ($nameScore > 0) {
-                $this->log("  📝 نام اصلی: {$nameScore} × 4 = {$weightedScore}", self::COLOR_WHITE);
-            }
         }
 
         // امتیاز نام SEO (وزن: 3.5)
@@ -495,10 +449,6 @@ class BrandDetectionService
             $weightedScore = $nameSeoScore * 3.5;
             $totalScore += $weightedScore;
             $maxPossibleScore += 3.5;
-
-            if ($nameSeoScore > 0) {
-                $this->log("  📝 نام SEO: {$nameSeoScore} × 3.5 = {$weightedScore}", self::COLOR_WHITE);
-            }
         }
 
         // امتیاز slug (وزن: 3)
@@ -507,10 +457,6 @@ class BrandDetectionService
             $weightedScore = $slugScore * 3;
             $totalScore += $weightedScore;
             $maxPossibleScore += 3;
-
-            if ($slugScore > 0) {
-                $this->log("  📝 Slug: {$slugScore} × 3 = {$weightedScore}", self::COLOR_WHITE);
-            }
         }
 
         // امتیاز کلمات کلیدی (وزن: 2)
@@ -519,10 +465,6 @@ class BrandDetectionService
             $weightedScore = $keywordScore * 2;
             $totalScore += $weightedScore;
             $maxPossibleScore += 2;
-
-            if ($keywordScore > 0) {
-                $this->log("  📝 کلمات کلیدی: {$keywordScore} × 2 = {$weightedScore}", self::COLOR_WHITE);
-            }
         }
 
         // امتیاز توضیحات (وزن: 1)
@@ -531,10 +473,6 @@ class BrandDetectionService
             $weightedScore = $bodyScore * 1;
             $totalScore += $weightedScore;
             $maxPossibleScore += 1;
-
-            if ($bodyScore > 0) {
-                $this->log("  📝 توضیحات: {$bodyScore} × 1 = {$weightedScore}", self::COLOR_WHITE);
-            }
         }
 
         // امتیاز توضیحات SEO (وزن: 0.5)
@@ -543,16 +481,11 @@ class BrandDetectionService
             $weightedScore = $bodySeoScore * 0.5;
             $totalScore += $weightedScore;
             $maxPossibleScore += 0.5;
-
-            if ($bodySeoScore > 0) {
-                $this->log("  📝 توضیحات SEO: {$bodySeoScore} × 0.5 = {$weightedScore}", self::COLOR_WHITE);
-            }
         }
 
         // نرمال‌سازی امتیاز
         $finalScore = $maxPossibleScore > 0 ? $totalScore / $maxPossibleScore : 0;
 
-        $this->log("  📊 امتیاز نهایی: {$totalScore}/{$maxPossibleScore} = " . round($finalScore, 4), self::COLOR_CYAN);
 
         return $finalScore;
     }
@@ -571,9 +504,6 @@ class BrandDetectionService
         if (empty($brandWords)) {
             return 0;
         }
-
-        $this->log("    🔍 بررسی {$fieldType}: '" . $brandValue . "'", self::COLOR_YELLOW);
-        $this->log("    📝 کلمات برند: " . implode(', ', $brandWords), self::COLOR_YELLOW);
 
         // اگر برند تک‌کلمه‌ای است، منطق قبلی را اجرا کن
         if (count($brandWords) == 1) {
@@ -599,22 +529,14 @@ class BrandDetectionService
                 }
             }
 
-            if ($bestWordScore >= self::FUZZY_MATCH_THRESHOLD) {
-                $this->log("    ✅ تطابق '{$brandWord}' با '{$bestMatchWord}': " . round($bestWordScore, 3), self::COLOR_GREEN);
-            } else {
-                $this->log("    ❌ عدم تطابق '{$brandWord}'", self::COLOR_RED);
-            }
-
             return $bestWordScore;
         }
 
         // برای برندهای چندکلمه‌ای، فقط دنباله پیوسته و به ترتیب پذیرفته می‌شود
         if ($this->hasSequentialMatch($textWords, $brandWords)) {
-            $this->log("    ✅ تطابق دنباله‌ای پیوسته برای '{$brandValue}': " . implode(' ', $brandWords), self::COLOR_GREEN);
             return 1.0;
         }
 
-        $this->log("    ❌ عدم تطابق دنباله‌ای برای '{$brandValue}' - کلمات به ترتیب و بدون فاصله یافت نشدند", self::COLOR_RED);
         return 0;
     }
 
@@ -629,8 +551,6 @@ class BrandDetectionService
         if (empty($keywordList)) {
             return 0;
         }
-
-        $this->log("    🔍 بررسی کلمات کلیدی: " . implode(', ', $keywordList), self::COLOR_YELLOW);
 
         $matches = 0;
         $totalKeywords = count($keywordList);
@@ -650,14 +570,12 @@ class BrandDetectionService
             if ($this->isCompleteWordMatch($normalizedText, $normalizedKeyword)) {
                 $matches += 1.0;
                 $keywordFound = true;
-                $this->log("    ✅ کلمه کلیدی کامل: '{$keyword}'", self::COLOR_GREEN);
             } else {
                 // جستجوی تطابق در کلمات جداگانه
                 foreach ($textWords as $textWord) {
                     if ($normalizedKeyword === $textWord) {
                         $matches += 1.0;
                         $keywordFound = true;
-                        $this->log("    ✅ کلمه کلیدی در کلمات: '{$keyword}'", self::COLOR_GREEN);
                         break;
                     }
 
@@ -667,16 +585,12 @@ class BrandDetectionService
                         if ($similarity >= self::FUZZY_MATCH_THRESHOLD) {
                             $matches += $similarity;
                             $keywordFound = true;
-                            $this->log("    🔍 کلمه کلیدی فازی: '{$keyword}' ~ '{$textWord}' (" . round($similarity, 3) . ")", self::COLOR_BLUE);
                             break;
                         }
                     }
                 }
             }
 
-            if (!$keywordFound) {
-                $this->log("    ❌ کلمه کلیدی یافت نشد: '{$keyword}'", self::COLOR_RED);
-            }
         }
 
         return $totalKeywords > 0 ? min($matches / $totalKeywords, 1.0) : 0;

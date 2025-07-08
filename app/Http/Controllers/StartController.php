@@ -80,6 +80,7 @@ class StartController
         }
 
         $this->httpClient = new Client([
+
             'timeout' => $this->config['timeout'] ?? 120,
             'verify' => $this->config['verify_ssl'] ?? false,
             'headers' => [

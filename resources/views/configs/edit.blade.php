@@ -1058,7 +1058,7 @@
                                     @foreach ($productIdAttributes as $attribute)
                                         <div class="flex-row">
                                             <input type="text" name="selectors[product_page][product_id][attribute][]"
-                                                   class="input" placeholder="data-id" required
+                                                   class="input" placeholder="data-id"
                                                    value="{{ $attribute }}">
                                             <button type="button" class="btn btn-primary add-product-id-attr">+</button>
                                             <button type="button" class="btn btn-danger remove-product-id-attr">−

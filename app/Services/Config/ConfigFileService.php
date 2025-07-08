@@ -42,35 +42,63 @@ class ConfigFileService
      */
     public function getAllConfigs(): array
     {
-        $files = Storage::files('private');
-        $configs = [];
+        try {
+            $files = Storage::files('private');
+            $configs = [];
 
-        foreach ($files as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) === 'json') {
-                $filename = pathinfo($file, PATHINFO_FILENAME);
-                $configData = $this->buildConfigData($filename, $file);
-                $configs[] = $configData;
+            foreach ($files as $file) {
+                if (pathinfo($file, PATHINFO_EXTENSION) === 'json') {
+                    $filename = pathinfo($file, PATHINFO_FILENAME);
+                    
+                    // بررسی اندازه فایل قبل از خواندن
+                    $filePath = Storage::path($file);
+                    $fileSize = filesize($filePath);
+                    
+                    // اگر فایل بزرگتر از 10MB باشد، آن را نادیده بگیریم یا به صورت ساده بخوانیم
+                    if ($fileSize > 10 * 1024 * 1024) {
+                        Log::warning("فایل کانفیگ بزرگ تشخیص داده شد: {$filename} ({$fileSize} bytes)");
+                        continue;
+                    }
+                    
+                    try {
+                        $configData = $this->buildConfigData($filename, $file);
+                        $configs[] = $configData;
+                    } catch (Exception $e) {
+                        Log::error("خطا در خواندن کانفیگ {$filename}: " . $e->getMessage());
+                        // ادامه دادن به فایل بعدی
+                        continue;
+                    }
+                }
             }
+
+            // مرتب‌سازی بر اساس آخرین تاریخ ایجاد/ویرایش و سپس تاریخ اجرا
+            usort($configs, function ($a, $b) {
+                try {
+                    // اولویت اول: فایل‌های تازه ایجاد شده یا ویرایش شده
+                    $aFileTime = Storage::lastModified('private/' . $a['filename'] . '.json');
+                    $bFileTime = Storage::lastModified('private/' . $b['filename'] . '.json');
+
+                    // اگر تفاوت زمان ویرایش کمتر از 5 دقیقه باشد، بر اساس تاریخ اجرا مرتب کن
+                    if (abs($aFileTime - $bFileTime) < 300) { // 5 دقیقه = 300 ثانیه
+                        $aStarted = $a['started_at'] ?? '0000-00-00 00:00:00';
+                        $bStarted = $b['started_at'] ?? '0000-00-00 00:00:00';
+                        return strcmp($bStarted, $aStarted);
+                    }
+
+                    // در غیر این صورت بر اساس آخرین ویرایش
+                    return $bFileTime <=> $aFileTime;
+                } catch (Exception $e) {
+                    Log::error("خطا در مرتب‌سازی کانفیگ‌ها: " . $e->getMessage());
+                    return 0;
+                }
+            });
+
+            return $configs;
+            
+        } catch (Exception $e) {
+            Log::error("خطا در دریافت لیست کانفیگ‌ها: " . $e->getMessage());
+            return [];
         }
-
-        // مرتب‌سازی بر اساس آخرین تاریخ ایجاد/ویرایش و سپس تاریخ اجرا
-        usort($configs, function ($a, $b) {
-            // اولویت اول: فایل‌های تازه ایجاد شده یا ویرایش شده
-            $aFileTime = Storage::lastModified('private/' . $a['filename'] . '.json');
-            $bFileTime = Storage::lastModified('private/' . $b['filename'] . '.json');
-
-            // اگر تفاوت زمان ویرایش کمتر از 5 دقیقه باشد، بر اساس تاریخ اجرا مرتب کن
-            if (abs($aFileTime - $bFileTime) < 300) { // 5 دقیقه = 300 ثانیه
-                $aStarted = $a['started_at'] ?? '0000-00-00 00:00:00';
-                $bStarted = $b['started_at'] ?? '0000-00-00 00:00:00';
-                return strcmp($bStarted, $aStarted);
-            }
-
-            // در غیر این صورت بر اساس آخرین ویرایش
-            return $bFileTime <=> $aFileTime;
-        });
-
-        return $configs;
     }
 
     public function getRunningConfigs()
