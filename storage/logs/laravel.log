@@ -1043,3 +1043,33 @@
 [2025-07-08 03:08:04] local.ERROR: Invalid database name: config.env  
 [2025-07-08 03:08:04] local.ERROR: Database connection error for store config.env: نام دیتابیس نامعتبر است: config.env  
 [2025-07-08 03:08:04] local.ERROR: Failed to check tables in database sareban_torob: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'availability' in 'where clause' (Connection: dynamic, SQL: select count(*) as aggregate from `products` where `availability` = 1)  
+[2025-07-08 07:29:56] local.ERROR: Failed to check tables in database sareban_torob: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'availability' in 'where clause' (Connection: dynamic, SQL: select count(*) as aggregate from `products` where `availability` = 1)  
+[2025-07-08 07:50:00] local.ERROR: Command "view:cleara" is not defined.
+
+Did you mean one of these?
+    cache:clear
+    config:clear
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    view:cache
+    view:clear {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"view:cleara\" is not defined.
+
+Did you mean one of these?
+    cache:clear
+    config:clear
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    view:cache
+    view:clear at /var/www/github/products-shops/vendor/symfony/console/Application.php:726)
+[stacktrace]
+#0 /var/www/github/products-shops/vendor/symfony/console/Application.php(284): Symfony\\Component\\Console\\Application->find()
+#1 /var/www/github/products-shops/vendor/symfony/console/Application.php(193): Symfony\\Component\\Console\\Application->doRun()
+#2 /var/www/github/products-shops/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(197): Symfony\\Component\\Console\\Application->run()
+#3 /var/www/github/products-shops/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1234): Illuminate\\Foundation\\Console\\Kernel->handle()
+#4 /var/www/github/products-shops/artisan(16): Illuminate\\Foundation\\Application->handleCommand()
+#5 {main}
+"} 

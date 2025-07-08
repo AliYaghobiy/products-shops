@@ -40,6 +40,58 @@ class ProductDataProcessor
         }
     }
 
+    private function fixCorruptedText(string $text): string
+    {
+        if (empty($text)) {
+            return $text;
+        }
+
+        // تشخیص متن خراب شده - الگوهای بیشتر
+        if (strpos($text, 'Ø') !== false || strpos($text, 'Û') !== false ||
+            strpos($text, 'Ù') !== false || strpos($text, 'Ú') !== false ||
+            strpos($text, 'ÃÂ') !== false || preg_match('/Ù[Ø-Û]/', $text)) {
+
+            // روش‌های مختلف تصحیح
+            $methods = [
+                // روش 1: فقط utf8_decode
+                function($t) { return @utf8_decode($t); },
+
+                // روش 2: دوبار decode
+                function($t) { return @utf8_decode(utf8_decode($t)); },
+
+                // روش 3: با iconv
+                function($t) { return @iconv('UTF-8', 'ISO-8859-1//IGNORE', $t); },
+
+                // روش 4: با mb_convert
+                function($t) { return @mb_convert_encoding($t, 'ISO-8859-1', 'UTF-8'); },
+
+                // روش 5: برای دسته‌بندی خاص
+                function($t) { return @iconv('ISO-8859-1', 'UTF-8', utf8_decode($t)); },
+            ];
+
+            foreach ($methods as $method) {
+                $result = $method($text);
+                if ($result && $this->isPersianText($result)) {
+                    $this->log("🔧 Fixed corrupted text: '{$text}' → '{$result}'", self::COLOR_PURPLE);
+                    return $result;
+                }
+            }
+        }
+
+        return $text;
+    }
+
+    /**
+     * بررسی اینکه آیا متن فارسی معتبر است
+     */
+    private function isPersianText(string $text): bool
+    {
+        // اگر شامل حروف فارسی باشد و شامل کاراکترهای خراب نباشد
+        return preg_match('/[\x{0600}-\x{06FF}]/u', $text) &&
+            strpos($text, 'Ø') === false &&
+            strpos($text, 'ÃÂ') === false;
+    }
+
     private function filterUnwantedCategories(string $category): string
     {
         $unwantedCategories = [
@@ -102,8 +154,10 @@ class ProductDataProcessor
                 $this->log("Raw $field extracted: '$value'", self::COLOR_YELLOW);
 
                 if ($field === 'title') {
-                    $data[$field] = $this->applyTitlePrefix($value, $url);
-                } elseif ($field === 'price') {
+                    $cleanTitle = $this->fixCorruptedText($value);
+                    $data[$field] = $this->applyTitlePrefix($cleanTitle, $url);
+                }
+                elseif ($field === 'price') {
                     $rawPrice = $this->extractPriceWithPriority($crawler, $selector);
 
                     if ($this->config['keep_price_format'] ?? false) {
@@ -143,7 +197,8 @@ class ProductDataProcessor
                     $data[$field] = $this->makeAbsoluteUrl($value);
                 } elseif ($field === 'category' && ($this->config['category_method'] ?? 'selector') === 'selector' && !isset($this->config['set_category'])) {
                     $extractedCategory = $this->extractCategoriesFromSelectors($crawler, $selector);
-                    $data[$field] = $this->filterUnwantedCategories($extractedCategory);
+                    $cleanCategory = $this->fixCorruptedText($extractedCategory);
+                    $data[$field] = $this->filterUnwantedCategories($cleanCategory);
                 } elseif ($field === 'brand') {
                     // پردازش فیلد brand جدید
                     $data[$field] = $this->processBrandField($crawler, $selector, $data['title']);
@@ -167,11 +222,11 @@ class ProductDataProcessor
                 $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
             }
         }
-
         if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
             $wordCount = $this->config['category_word_count'] ?? 1;
             $extractedCategory = $this->extractCategoryFromTitle($data['title'], $wordCount);
-            $data['category'] = $this->filterUnwantedCategories($extractedCategory); // اعمال فیلتر
+            $cleanCategory = $this->fixCorruptedText($extractedCategory);
+            $data['category'] = $this->filterUnwantedCategories($cleanCategory);
         }
 
         // اگر availability هنوز null است، fallback را اجرا کن
@@ -192,11 +247,12 @@ class ProductDataProcessor
             $this->saveFailedLink($url, "No valid data extracted");
             return null;
         }
-
+// تصحیح نهایی category فقط
+        $data['category'] = $this->fixCorruptedText($data['category']);
         return $data;
     }
 
-    private function detectBrandFromTitle(string $title): string
+    public function detectBrandFromTitle(string $title): string
     {
         if (empty($title)) {
             return '';
@@ -710,6 +766,8 @@ class ProductDataProcessor
                             : trim($element->text());
 
                         if (!empty($categoryText)) {
+                            // اینجا فیلتر اضافه کن!
+                            $categoryText = $this->fixCorruptedText($categoryText);
                             $categoryText = $this->cleanCategoryText($categoryText);
                             if (!empty($categoryText)) {
                                 $categories[] = $categoryText;

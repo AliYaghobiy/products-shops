@@ -314,9 +314,6 @@ class LinkScraper
 
     public function scrapeMethodOneForUrl(string $baseUrl): array
     {
-        if ($this->config['method_settings']['method_1']['pagination']['use_webdriver']) {
-            return $this->scrapeWithPlaywright(1);
-        }
 
         $links = [];
         $currentPage = 1;
@@ -513,628 +510,6 @@ class LinkScraper
         return [
             'links' => array_unique($links, SORT_REGULAR),
             'pages_processed' => $pagesProcessed
-        ];
-    }
-
-
-    public function scrapeWithPlaywright(int $method, string $productUrl = ''): array
-    {
-        if ($method !== 2) {
-            $this->log("Playwright is only supported for method 2", self::COLOR_RED);
-            return ['links' => [], 'pages_processed' => 0];
-        }
-
-        $this->log("Starting Playwright scraping process for URL: $productUrl...", self::COLOR_GREEN);
-
-        set_time_limit(300);
-        ini_set('memory_limit', '512M');
-
-        $config = $this->config;
-        $maxPages = $config['method_settings']['method_2']['navigation']['max_pages'] ?? 10;
-        $scrollDelay = $config['method_settings']['method_2']['navigation']['scroll_delay'] ?? 3000;
-        $paginationMethod = $config['method_settings']['method_2']['navigation']['pagination']['method'] ?? 'url';
-        $this->log("Pagination method: $paginationMethod", self::COLOR_YELLOW);
-
-        $linkSelector = addslashes($config['selectors']['main_page']['product_links']['selector'] ?? '');
-        $linkAttribute = addslashes($config['selectors']['main_page']['product_links']['attribute'] ?? 'href');
-        $imageSelector = addslashes($config['selectors']['main_page']['image']['selector'] ?? '');
-        $imageAttribute = addslashes($config['selectors']['main_page']['image']['attribute'] ?? 'src');
-        $productIdSelector = addslashes($config['selectors']['main_page']['product_id']['selector'] ?? '');
-        $productIdAttribute = addslashes($config['selectors']['main_page']['product_id']['attribute'] ?? 'data-product_id');
-        $productIdFromLink = addslashes($config['selectors']['main_page']['product_links']['product_id'] ?? '');
-        $imageMethod = addslashes($config['image_method'] ?? 'main_page');
-        $productIdSource = addslashes($config['product_id_source'] ?? 'main_page');
-        $productIdMethod = addslashes($config['product_id_method'] ?? 'selector');
-        $urlFilter = addslashes($config['selectors']['main_page']['product_links']['url_filter'] ?? '');
-        $userAgent = addslashes($this->randomUserAgent());
-        $container = addslashes($config['container'] ?? '');
-        $baseUrl = addslashes($config['base_urls'][0] ?? '');
-        $productIdUrlPattern = addslashes($config['product_id_url_pattern'] ?? 'products/(\d+)');
-
-        $paginationConfig = $config['method_settings']['method_2']['navigation']['pagination']['url'] ?? [];
-        $paginationType = addslashes($paginationConfig['type'] ?? 'query');
-        $paginationParam = addslashes($paginationConfig['parameter'] ?? 'page');
-        $paginationSeparator = addslashes($paginationConfig['separator'] ?? '=');
-        $paginationSuffix = addslashes($paginationConfig['suffix'] ?? '');
-        $useSampleUrl = $paginationConfig['use_sample_url'] ?? false;
-        $sampleUrl = addslashes($paginationConfig['sample_url'] ?? '');
-        $forceTrailingSlash = $paginationConfig['force_trailing_slash'] ?? false;
-        $paginationConfigJson = json_encode($paginationConfig, JSON_UNESCAPED_SLASHES);
-
-        $nextButtonSelector = '';
-        if ($paginationMethod === 'next_button') {
-            $nextButtonSelector = addslashes($config['method_settings']['method_2']['navigation']['pagination']['next_button']['selector'] ?? '');
-            $this->log("Next button selector: $nextButtonSelector", self::COLOR_YELLOW);
-            if (empty($nextButtonSelector)) {
-                $this->log("Next button selector is required for pagination method 'next_button'", self::COLOR_RED);
-                return ['links' => [], 'pages_processed' => 0];
-            }
-        }
-
-        $playwrightScript = <<<'JAVASCRIPT'
-const { chromium } = require('playwright');
-
-(async () => {
-    let allLinks = [];
-    let pagesProcessed = 0;
-    let consoleLogs = [];
-    let browser = null;
-    let context = null;
-    let page = null;
-    let pageNumber = 1;
-    const seenLinks = new Set();
-
-    const initializeBrowser = async () => {
-        console.log('Launching headless Chrome browser...');
-        browser = await chromium.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--disable-extensions']
-        });
-
-        console.log('Creating new browser context...');
-        context = await browser.newContext({
-            userAgent: USER_AGENT,
-            viewport: { width: 1920, height: 1080 },
-            bypassCSP: true,
-            ignoreHTTPSErrors: true
-        });
-
-        console.log('Creating new page...');
-        page = await context.newPage();
-
-        browser.on('disconnected', () => {
-            console.log('Browser disconnected unexpectedly.');
-            consoleLogs.push('Browser disconnected unexpectedly.');
-        });
-    };
-
-    const closeBrowser = async () => {
-        if (browser) {
-            console.log('Closing browser...');
-            await browser.close().catch((e) => console.log(`Error closing browser: ${e.message}`));
-            browser = null;
-            console.log('Browser closed.');
-        }
-    };
-
-    const buildPaginationUrl = (baseUrl, pageNum) => {
-        let url = baseUrl.replace(/\/$/, '');
-        const config = PAGINATION_CONFIG;
-        const param = PAGINATION_PARAM;
-        const separator = PAGINATION_SEPARATOR;
-        const type = PAGINATION_TYPE;
-        const suffix = PAGINATION_SUFFIX;
-        const useSampleUrl = USE_SAMPLE_URL;
-        const sampleUrl = SAMPLE_URL;
-        const forceTrailingSlash = FORCE_TRAILING_SLASH;
-
-        if (useSampleUrl && sampleUrl && pageNum > 1) {
-            const pattern = sampleUrl.replace(new RegExp(`${param}${separator}\\d+`), `${param}${separator}${pageNum}`);
-            return pattern;
-        }
-
-        if (pageNum === 1 && !suffix) {
-            return forceTrailingSlash && type === 'path' ? `${url}/` : url;
-        }
-
-        if (type === 'query') {
-            return `${url}?${param}${separator}${pageNum}${suffix}`;
-        } else if (type === 'path') {
-            return forceTrailingSlash ? `${url}/${param}${separator}${pageNum}${suffix}/` : `${url}/${param}${separator}${pageNum}${suffix}`;
-        }
-        return `${url}?page=${pageNum}`;
-    };
-
-    const scrollPage = async () => {
-        for (let i = 0; i < 3; i++) {
-            await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-            console.log(`Scroll ${i + 1} completed.`);
-            await page.waitForTimeout(SCROLL_DELAY);
-        }
-    };
-
-    const extractLinks = async () => {
-        console.log('Waiting for product links to appear (max 30s)...');
-        await page.waitForSelector(LINK_SELECTOR, { timeout: 30000 }).catch((e) => {
-            console.log(`Error waiting for links: ${e.message}`);
-            consoleLogs.push(`Error waiting for links on page ${pageNumber}: ${e.message}`);
-        });
-
-        const links = await page.$$eval(LINK_SELECTOR, (elements, args) => {
-            const {
-                linkAttr,
-                imageSel,
-                imageAttr,
-                productIdSel,
-                productIdAttr,
-                productIdFromLink,
-                imageMethod,
-                productIdSource,
-                productIdMethod,
-                urlFilter,
-                container,
-                baseUrl,
-                productIdUrlPattern
-            } = args;
-            const linkData = [];
-            elements.forEach((element, index) => {
-                let href = element.getAttribute(linkAttr);
-                if (href && !href.startsWith('javascript:') && !href.startsWith('#') && (!urlFilter || urlFilter.test(href))) {
-                    const fullUrl = href.startsWith('http') ? href : new URL(href, baseUrl).href;
-                    let image = '';
-                    if (imageSel && imageMethod === 'main_page') {
-                        const parent = container ? element.closest(container) : element.closest('div');
-                        const imageElement = parent ? parent.querySelector(imageSel) : null;
-                        image = imageElement ? imageElement.getAttribute(imageAttr) : '';
-                    }
-                    let productId = '';
-                    if (productIdSource === 'product_links' && productIdFromLink) {
-                        productId = element.getAttribute(productIdFromLink) || '';
-                    } else if (productIdSource === 'main_page' && productIdSel) {
-                        const parent = container ? element.closest(container) : element.closest('div');
-                        const productIdElement = parent ? parent.querySelector(productIdSel) : null;
-                        productId = productIdElement ? productIdElement.getAttribute(productIdAttr) : '';
-                    } else if (productIdMethod === 'url') {
-                        const pattern = new RegExp(productIdUrlPattern);
-                        const match = fullUrl.match(pattern);
-                        productId = match ? match[1] : '';
-                        console.log(`Extracted product_id: "${productId}" from URL ${fullUrl} using pattern ${productIdUrlPattern}`);
-                    }
-                    linkData.push({ url: fullUrl, image, product_id: productId });
-                    console.log(`Found link ${index + 1}: ${fullUrl}`);
-                }
-            });
-            return linkData;
-        }, {
-            linkAttr: LINK_ATTRIBUTE,
-            imageSel: IMAGE_SELECTOR,
-            imageAttr: IMAGE_ATTRIBUTE,
-            productIdSel: PRODUCT_ID_SELECTOR,
-            productIdAttr: PRODUCT_ID_ATTRIBUTE,
-            productIdFromLink: PRODUCT_ID_FROM_LINK,
-            imageMethod: IMAGE_METHOD,
-            productIdSource: PRODUCT_ID_SOURCE,
-            productIdMethod: PRODUCT_ID_METHOD,
-            urlFilter: URL_FILTER ? new RegExp(URL_FILTER) : null,
-            container: CONTAINER,
-            baseUrl: BASE_URL,
-            productIdUrlPattern: PRODUCT_ID_URL_PATTERN
-        });
-
-        const newLinks = [];
-        for (const link of links) {
-            if (!seenLinks.has(link.url)) {
-                seenLinks.add(link.url);
-                newLinks.push(link);
-                console.log(`Added new link: ${link.url}`);
-            } else {
-                console.log(`Skipped duplicate link: ${link.url}`);
-                consoleLogs.push(`Skipped duplicate link on page ${pageNumber}: ${link.url}`);
-            }
-        }
-
-        console.log(`Extracted ${newLinks.length} new product links from page ${pageNumber}.`);
-        return newLinks;
-    };
-
-    const checkAndClickNextButton = async () => {
-        console.log('Checking for "Next Page" button...');
-
-        // ابتدا اسکرول کن تا محتوا بارگذاری شود
-        await scrollPage();
-        await page.waitForTimeout(2000);
-
-        // چک کن آیا دکمه وجود دارد
-        const nextButtonExists = await page.$(NEXT_BUTTON_SELECTOR);
-        if (!nextButtonExists) {
-            console.log('No "Next Page" button found. Stopping pagination.');
-            return false;
-        }
-
-        // بررسی وضعیت دکمه
-        const buttonInfo = await nextButtonExists.evaluate(el => {
-            const style = window.getComputedStyle(el);
-            const rect = el.getBoundingClientRect();
-            return {
-                display: style.display,
-                visibility: style.visibility,
-                opacity: style.opacity,
-                disabled: el.disabled,
-                hidden: el.hidden,
-                offsetHeight: el.offsetHeight,
-                offsetWidth: el.offsetWidth,
-                boundingBox: {
-                    width: rect.width,
-                    height: rect.height,
-                    top: rect.top,
-                    left: rect.left
-                }
-            };
-        });
-
-        console.log('Button info:', JSON.stringify(buttonInfo));
-
-        // اگر دکمه مخفی است، سعی کن محتوای بیشتری بارگذاری کنی
-        if (buttonInfo.display === 'none' || buttonInfo.visibility === 'hidden' ||
-            buttonInfo.opacity === '0' || buttonInfo.offsetHeight === 0) {
-
-            console.log('Button is hidden, attempting to trigger content loading...');
-
-            // اسکرول بیشتر کن
-            await page.evaluate(() => {
-                window.scrollTo(0, document.body.scrollHeight);
-            });
-            await page.waitForTimeout(3000);
-
-            // منتظر درخواست‌های شبکه باش
-            await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {
-                console.log('Network idle timeout, continuing...');
-            });
-
-            // دوباره چک کن
-            const updatedButton = await page.$(NEXT_BUTTON_SELECTOR);
-            if (!updatedButton) {
-                console.log('Button disappeared after scroll. No more content.');
-                return false;
-            }
-
-            const updatedButtonInfo = await updatedButton.evaluate(el => {
-                const style = window.getComputedStyle(el);
-                return {
-                    display: style.display,
-                    visibility: style.visibility,
-                    opacity: style.opacity,
-                    offsetHeight: el.offsetHeight
-                };
-            });
-
-            console.log('Updated button info:', JSON.stringify(updatedButtonInfo));
-
-            if (updatedButtonInfo.display === 'none' || updatedButtonInfo.visibility === 'hidden' ||
-                updatedButtonInfo.opacity === '0' || updatedButtonInfo.offsetHeight === 0) {
-                console.log('Button still hidden after scroll. No more content available.');
-                return false;
-            }
-        }
-
-        // اگر دکمه غیرفعال است
-        if (buttonInfo.disabled) {
-            console.log('Next button is disabled. Stopping pagination.');
-            return false;
-        }
-
-        // تلاش برای کلیک کردن
-        console.log('Attempting to click "Next Page" button...');
-
-        for (let attempt = 1; attempt <= 3; attempt++) {
-            try {
-                // دریافت مرجع جدید دکمه
-                const freshNextButton = await page.$(NEXT_BUTTON_SELECTOR);
-                if (!freshNextButton) {
-                    console.log(`Next button not found on attempt ${attempt}`);
-                    return false;
-                }
-
-                // اسکرول به دکمه و مرئی کردن آن
-                await freshNextButton.scrollIntoViewIfNeeded();
-                await page.waitForTimeout(1000);
-
-                // مجبور کردن دکمه به نمایش (در صورت نیاز)
-                await freshNextButton.evaluate(el => {
-                    if (el.style.display === 'none') {
-                        el.style.display = 'block';
-                    }
-                    if (el.style.visibility === 'hidden') {
-                        el.style.visibility = 'visible';
-                    }
-                    if (el.style.opacity === '0') {
-                        el.style.opacity = '1';
-                    }
-                });
-                await page.waitForTimeout(500);
-
-                // بررسی نوع دکمه
-                const buttonType = await freshNextButton.evaluate(el => {
-                    return {
-                        tagName: el.tagName.toLowerCase(),
-                        type: el.type,
-                        hasOnClick: el.onclick !== null || el.getAttribute('onclick') !== null,
-                        href: el.href
-                    };
-                });
-
-                console.log(`Button type info:`, JSON.stringify(buttonType));
-
-                // کلیک کردن بر اساس نوع دکمه
-                if (buttonType.hasOnClick || buttonType.tagName === 'button' ||
-                    (buttonType.tagName === 'input' && buttonType.type === 'button')) {
-
-                    // دکمه AJAX - فقط کلیک کن و منتظر بارگذاری محتوا باش
-                    await freshNextButton.click();
-                    console.log('Clicked AJAX button, waiting for content...');
-
-                    // منتظر بارگذاری محتوای جدید
-                    await page.waitForTimeout(5000);
-
-                    // منتظر آرام شدن شبکه
-                    await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {
-                        console.log('Network idle timeout after AJAX click, continuing...');
-                    });
-
-                } else {
-                    // دکمه ناوبری - منتظر تغییر صفحه
-                    const navigationPromise = page.waitForNavigation({
-                        waitUntil: 'domcontentloaded',
-                        timeout: 60000
-                    }).catch(() => {
-                        console.log('Navigation timeout, might be AJAX...');
-                    });
-
-                    await freshNextButton.click();
-                    await navigationPromise;
-                    console.log('Navigation completed.');
-                }
-
-                console.log(`Successfully clicked next button on attempt ${attempt}`);
-                return true;
-
-            } catch (error) {
-                console.log(`Attempt ${attempt} failed: ${error.message}`);
-
-                if (attempt < 3) {
-                    await page.waitForTimeout(3000 * attempt);
-
-                    // تلاش برای بازنشانی وضعیت صفحه
-                    try {
-                        await page.reload({ waitUntil: 'domcontentloaded', timeout: 30000 });
-                        await page.waitForTimeout(2000);
-                    } catch (reloadError) {
-                        console.log('Failed to reload page:', reloadError.message);
-                    }
-                }
-            }
-        }
-
-        console.log('Failed to click next button after 3 attempts.');
-        return false;
-    };
-
-    try {
-        await initializeBrowser();
-
-        while (pageNumber <= MAX_PAGES) {
-            console.log(`Processing page ${pageNumber}...`);
-            let pageUrl = PRODUCTS_URL;
-
-            if (PAGINATION_METHOD === 'url') {
-                pageUrl = buildPaginationUrl(PRODUCTS_URL, pageNumber);
-                console.log(`Navigating to page: ${pageUrl}...`);
-
-                let success = false;
-                for (let attempt = 1; attempt <= 3; attempt++) {
-                    try {
-                        await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 180000 });
-                        success = true;
-                        break;
-                    } catch (error) {
-                        console.log(`Attempt ${attempt} failed to load page ${pageNumber}: ${error.message}`);
-                        if (attempt === 3) {
-                            console.log(`Failed to load page ${pageNumber} after 3 attempts`);
-                            break;
-                        }
-                        await page.waitForTimeout(5000 * attempt);
-                    }
-                }
-
-                if (!success) break;
-
-                console.log('Page navigation completed.');
-                allLinks.push(...await extractLinks());
-                await page.waitForTimeout(5000);
-
-            } else if (PAGINATION_METHOD === 'next_button') {
-
-                if (pageNumber === 1) {
-                    console.log(`Navigating to main page: ${pageUrl}...`);
-                    let success = false;
-                    for (let attempt = 1; attempt <= 3; attempt++) {
-                        try {
-                            await page.goto(pageUrl, { waitUntil: 'domcontentloaded', timeout: 180000 });
-                            success = true;
-                            break;
-                        } catch (error) {
-                            console.log(`Attempt ${attempt} failed to load main page: ${error.message}`);
-                            if (attempt === 3) {
-                                console.log(`Failed to load main page after 3 attempts`);
-                                break;
-                            }
-                            await page.waitForTimeout(5000 * attempt);
-                        }
-                    }
-                    if (!success) break;
-                    console.log('Main page navigation completed.');
-                }
-
-                // استخراج لینک‌ها
-                allLinks.push(...await extractLinks());
-
-                // بررسی و کلیک دکمه بعدی
-                const clickSuccess = await checkAndClickNextButton();
-                if (!clickSuccess) {
-                    console.log('No more pages available. Stopping pagination.');
-                    break;
-                }
-
-                // منتظر بارگذاری محتوای جدید
-                await page.waitForTimeout(3000);
-            }
-
-            pageNumber++;
-            pagesProcessed++;
-        }
-
-        console.log(`Total unique links extracted: ${allLinks.length}`);
-
-    } catch (error) {
-        console.error(`Error occurred: ${error.message}`);
-        consoleLogs.push(`Error: ${error.message}`);
-    } finally {
-        await closeBrowser();
-        console.log('Final result:', JSON.stringify({ links: allLinks, pagesProcessed, consoleLogs }));
-    }
-})();
-JAVASCRIPT;
-
-        $playwrightScript = str_replace(
-            [
-                'USER_AGENT', 'PRODUCTS_URL', 'MAX_PAGES', 'LINK_SELECTOR', 'LINK_ATTRIBUTE',
-                'IMAGE_SELECTOR', 'IMAGE_ATTRIBUTE', 'PRODUCT_ID_SELECTOR', 'PRODUCT_ID_ATTRIBUTE',
-                'PRODUCT_ID_FROM_LINK', 'IMAGE_METHOD', 'PRODUCT_ID_SOURCE', 'PRODUCT_ID_METHOD',
-                'URL_FILTER', 'CONTAINER', 'BASE_URL', 'SCROLL_DELAY', 'PAGINATION_CONFIG',
-                'PAGINATION_TYPE', 'PAGINATION_PARAM', 'PAGINATION_SEPARATOR', 'PAGINATION_SUFFIX',
-                'USE_SAMPLE_URL', 'SAMPLE_URL', 'FORCE_TRAILING_SLASH', 'PAGINATION_METHOD',
-                'NEXT_BUTTON_SELECTOR', 'PRODUCT_ID_URL_PATTERN'
-            ],
-            [
-                json_encode($userAgent), json_encode($productUrl), $maxPages, json_encode($linkSelector),
-                json_encode($linkAttribute), json_encode($imageSelector), json_encode($imageAttribute),
-                json_encode($productIdSelector), json_encode($productIdAttribute), json_encode($productIdFromLink),
-                json_encode($imageMethod), json_encode($productIdSource), json_encode($productIdMethod),
-                json_encode($urlFilter), json_encode($container), json_encode($baseUrl), $scrollDelay,
-                $paginationConfigJson, json_encode($paginationType), json_encode($paginationParam),
-                json_encode($paginationSeparator), json_encode($paginationSuffix),
-                $useSampleUrl ? 'true' : 'false', json_encode($sampleUrl), $forceTrailingSlash ? 'true' : 'false',
-                json_encode($paginationMethod), json_encode($nextButtonSelector), json_encode($productIdUrlPattern)
-            ],
-            $playwrightScript
-        );
-
-        $tempFileBase = tempnam(sys_get_temp_dir(), 'playwright_method2_');
-        $tempFile = $tempFileBase . '.cjs';
-        rename($tempFileBase, $tempFile);
-        file_put_contents($tempFile, $playwrightScript);
-        $this->log("Temporary script file created at: $tempFile", self::COLOR_GREEN);
-
-        $nodeModulesPath = base_path('node_modules');
-        $this->log("Executing Playwright script: NODE_PATH=$nodeModulesPath node $tempFile", self::COLOR_GREEN);
-
-        $command = "NODE_PATH=$nodeModulesPath node $tempFile 2>&1";
-        $descriptors = [
-            0 => ['pipe', 'r'],
-            1 => ['pipe', 'w'],
-            2 => ['pipe', 'w']
-        ];
-        $process = proc_open($command, $descriptors, $pipes);
-
-        if (!is_resource($process)) {
-            $this->log("Failed to start Playwright script process.", self::COLOR_RED);
-            unlink($tempFile);
-            return ['links' => [], 'pages_processed' => 0];
-        }
-
-        $output = '';
-        $errorOutput = '';
-        $logFile = storage_path('logs/playwright_method2_' . date('Ymd_His') . '.log');
-
-        while (!feof($pipes[1])) {
-            $line = fgets($pipes[1]);
-            if ($line !== false) {
-                $output .= $line;
-                if (!preg_match('/^\s*\{.*"links":.*\}/', $line)) {
-                    $this->log("Playwright output: " . trim($line), self::COLOR_YELLOW);
-                }
-                if (file_exists(dirname($logFile))) {
-                    file_put_contents($logFile, "[STDOUT] " . trim($line) . PHP_EOL, FILE_APPEND);
-                }
-            }
-        }
-
-        while (!feof($pipes[2])) {
-            $errorLine = fgets($pipes[2]);
-            if ($errorLine !== false) {
-                $errorOutput .= $errorLine;
-                $this->log("Playwright error: " . trim($errorLine), self::COLOR_RED);
-                if (file_exists(dirname($logFile))) {
-                    file_put_contents($logFile, "[STDERR] " . trim($errorLine) . PHP_EOL, FILE_APPEND);
-                }
-            }
-        }
-
-        fclose($pipes[0]);
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-        $returnCode = proc_close($process);
-
-        $this->log("Playwright script execution completed with return code: $returnCode", self::COLOR_GREEN);
-
-        if (file_exists($tempFile)) {
-            unlink($tempFile);
-        }
-
-        if (!empty($errorOutput)) {
-            $this->log("Playwright errors detected: {$errorOutput}", self::COLOR_RED);
-            return ['links' => [], 'pages_processed' => 0];
-        }
-
-        preg_match('/Final result: ({.*})/', $output, $matches);
-        if (!isset($matches[1])) {
-            $this->log("Failed to parse Playwright output for {$productUrl}. Raw output: {$output}", self::COLOR_RED);
-            return ['links' => [], 'pages_processed' => 0];
-        }
-
-        $result = json_decode($matches[1], true);
-        if (!$result || !isset($result['links'])) {
-            $this->log("Invalid Playwright output format for {$productUrl}.", self::COLOR_RED);
-            return ['links' => [], 'pages_processed' => 0];
-        }
-
-        if (isset($result['console_logs']) && is_array($result['console_logs'])) {
-            foreach ($result['console_logs'] as $log) {
-                $this->log("Playwright console log: {$log}", self::COLOR_YELLOW);
-            }
-        }
-
-        $links = array_map(function ($link) use ($productUrl) {
-            $url = $this->makeAbsoluteUrl($link['url'], $productUrl);
-            $productId = $link['product_id'] ?? '';
-
-            if ($productId === '' && ($this->config['product_id_method'] ?? 'selector') === 'url') {
-                $productId = $this->extractProductIdFromUrl($url);
-                $this->log("Extracted product_id from URL: {$productId} for {$url}", self::COLOR_GREEN);
-            }
-
-            return [
-                'url' => $url,
-                'image' => $link['image'] ? $this->makeAbsoluteUrl($link['image'], $productUrl) : '',
-                'product_id' => $productId
-            ];
-        }, $result['links']);
-
-        $this->log("Found " . count($links) . " unique links for {$productUrl}.", self::COLOR_GREEN);
-
-        return [
-            'links' => array_unique($links, SORT_REGULAR),
-            'pages_processed' => $result['pagesProcessed'] ?? 0
         ];
     }
 
@@ -1364,7 +739,8 @@ const { chromium } = require('playwright');
             category: '',
             guarantee: '',
             product_id: '',
-            brand: '', // اضافه کردن فیلد brand
+            raw_brand_text: '', // متن خام برند از selector
+            brand: '', // برند نهایی (خالی می‌گذاریم تا در PHP پردازش شود)
             error: ''
         };
 
@@ -1482,21 +858,27 @@ const { chromium } = require('playwright');
                 productData.product_id = match ? match[1] : '';
                 console.log(`Extracted product_id from URL (fallback): ${productData.product_id}`);
             }
-console.log('Extracting brand...');
-if (BRAND_SELECTOR && BRAND_SELECTOR.trim() !== '') {
-    console.log('Waiting for brand selector...');
-    await page.waitForSelector(BRAND_SELECTOR, { timeout: 20000 }).catch((e) => {
-        console.log(`Brand selector not found: ${e.message}`);
-    });
-    productData.brand = await page.evaluate((selector) => {
-        const element = document.querySelector(selector);
-        return element ? element.textContent.trim() : '';
-    }, BRAND_SELECTOR);
-    console.log(`Extracted brand: ${productData.brand}`);
-} else {
-    console.log('No brand selector provided. Skipping brand extraction.');
-    productData.brand = '';
-}
+
+            // استخراج متن خام برند (بدون پردازش)
+            console.log('Extracting raw brand text...');
+            if (BRAND_SELECTOR && BRAND_SELECTOR.trim() !== '') {
+                console.log('Waiting for brand selector...');
+                await page.waitForSelector(BRAND_SELECTOR, { timeout: 20000 }).catch((e) => {
+                    console.log(`Brand selector not found: ${e.message}`);
+                });
+                productData.raw_brand_text = await page.evaluate((selector) => {
+                    const element = document.querySelector(selector);
+                    return element ? element.textContent.trim() : '';
+                }, BRAND_SELECTOR);
+                console.log(`Extracted raw brand text: ${productData.raw_brand_text}`);
+            } else {
+                console.log('No brand selector provided. Raw brand text will be empty.');
+                productData.raw_brand_text = '';
+            }
+
+            // Note: برند نهایی در PHP پردازش خواهد شد
+            console.log('Brand processing will be done in PHP using BrandDetectionService');
+
             allProducts.push(productData);
             console.log(`Processed product ${index + 1}: ${absoluteLink}`);
 
@@ -1581,7 +963,7 @@ JAVASCRIPT;
                     'NEXT_BUTTON_SELECTOR', 'SCROLL_DELAY', 'TITLE_SELECTOR', 'PRICE_SELECTOR',
                     'AVAILABILITY_SELECTOR', 'IMAGE_SELECTOR', 'IMAGE_ATTRIBUTE', 'CATEGORY_SELECTOR',
                     'GUARANTEE_SELECTOR', 'PRODUCT_ID_SELECTOR', 'PRODUCT_ID_ATTRIBUTE',
-                    'PRODUCT_ID_METHOD', 'PRODUCT_ID_SOURCE', 'BRAND_SELECTOR', 'BASEURL', 'POSITIVE_KEYWORDS', // اضافه کردن BRAND_SELECTOR
+                    'PRODUCT_ID_METHOD', 'PRODUCT_ID_SOURCE', 'BRAND_SELECTOR', 'BASEURL', 'POSITIVE_KEYWORDS',
                     'NEGATIVE_KEYWORDS', 'PAGINATION_METHOD', 'PAGINATION_CONFIG', 'SCROOL'
                 ],
                 [
@@ -1590,7 +972,7 @@ JAVASCRIPT;
                     $scrollDelay, $titleSelector, $priceSelector, $availabilitySelector,
                     $imageSelector, $imageAttribute, $categorySelector, $guaranteeSelector,
                     $productIdSelector, $productIdAttribute, $productIdMethod, $productIdSource,
-                    $brandSelector, $baseurl, $positiveKeywords, // اضافه کردن $brandSelector
+                    $brandSelector, $baseurl, $positiveKeywords,
                     $negativeKeywords, $paginationMethod, $paginationConfigJson, $scrool
                 ],
                 $playwrightScript
@@ -1706,20 +1088,45 @@ JAVASCRIPT;
                         ? $this->extractCategoryFromTitle($productData['title'], $this->config['category_word_count'] ?? 1)
                         : $productData['category'] ?? '',
                     'guarantee' => $this->productProcessor->cleanGuarantee($productData['guarantee'] ?? ''),
-                    'brand' => $productData['brand'] ?? '', // اضافه کردن فیلد brand
+                    'brand' => '', // ابتدا خالی می‌گذاریم
                     'product_id' => $productData['product_id'] ?? '',
                     'off' => (int)$this->productProcessor->cleanOff($productData['off'] ?? '0')
                 ];
 
-                if (empty($processedData['brand']) && !empty($processedData['title'])) {
-                    $this->log("🔍 No brand found in selectors, attempting to detect from title", self::COLOR_BLUE);
+                // 🔥 پردازش برند با سیستم تشخیص هوشمند
+                $rawBrandText = $productData['raw_brand_text'] ?? '';
+                $detectedBrand = '';
+
+                // اولویت اول: تشخیص از متن خام برند (اگر وجود دارد)
+                if (!empty($rawBrandText)) {
+                    $this->log("🏷️ Processing brand from selector text: $rawBrandText", self::COLOR_BLUE);
+                    $detectedBrand = $this->productProcessor->detectBrandFromTitle($rawBrandText);
+                    if ($detectedBrand) {
+                        $this->log("✅ Brand detected from selector: $detectedBrand", self::COLOR_GREEN);
+                    } else {
+                        $this->log("⚠️ No brand matched from selector text: $rawBrandText", self::COLOR_YELLOW);
+                    }
+                }
+
+                // اولویت دوم: اگر برند از selector پیدا نشد، از عنوان محصول تشخیص بده
+                if (empty($detectedBrand) && !empty($processedData['title'])) {
+                    $this->log("🔍 No brand found in selector, attempting to detect from title", self::COLOR_BLUE);
                     $detectedBrand = $this->productProcessor->detectBrandFromTitle($processedData['title']);
                     if ($detectedBrand) {
-                        $processedData['brand'] = $detectedBrand;
-                        $this->log("✅ Brand detected from title: {$detectedBrand}", self::COLOR_GREEN);
+                        $this->log("✅ Brand detected from title: $detectedBrand", self::COLOR_GREEN);
                     } else {
                         $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
                     }
+                }
+
+                // تنظیم برند نهایی
+                $processedData['brand'] = $detectedBrand;
+
+                // لاگ نتیجه نهایی تشخیص برند
+                if (!empty($processedData['brand'])) {
+                    $this->log("🏆 Final brand result: {$processedData['brand']} for {$productData['url']}", self::COLOR_GREEN);
+                } else {
+                    $this->log("⚠️ No brand detected for: {$productData['url']}", self::COLOR_YELLOW);
                 }
 
                 // validation با استفاده از ProductDataProcessor

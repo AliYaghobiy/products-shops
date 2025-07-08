@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FailedLink;
 use App\Models\Product;
 use Symfony\Component\DomCrawler\Crawler;
+use App\Services\BrandDetectionService;
 
 class ProductDataProcessor
 {
@@ -16,19 +17,51 @@ class ProductDataProcessor
     private const COLOR_CYAN = "\033[1;36m";
     private const COLOR_GRAY = "\033[1;90m";
 
+    private BrandDetectionService $brandDetectionService;
     private array $config;
     private $outputCallback = null;
 
     public function __construct(array $config)
     {
         $this->config = $config;
+
+        // ایجاد سرویس تشخیص برند و تنظیم callback
+        $this->brandDetectionService = new BrandDetectionService();
+        $this->brandDetectionService->setOutputCallback([$this, 'log']);
     }
 
     public function setOutputCallback(callable $callback): void
     {
         $this->outputCallback = $callback;
+
+        // اطمینان از تنظیم callback برای BrandDetectionService نیز
+        if (isset($this->brandDetectionService)) {
+            $this->brandDetectionService->setOutputCallback([$this, 'log']);
+        }
     }
 
+    private function filterUnwantedCategories(string $category): string
+    {
+        $unwantedCategories = [
+            'دسته بندی نشده',
+            'بدون دسته بندی',
+            'بدون دستهبندی'
+        ];
+
+        // تبدیل به حروف کوچک برای مقایسه دقیق‌تر
+        $categoryLower = mb_strtolower(trim($category));
+
+        foreach ($unwantedCategories as $unwanted) {
+            if ($categoryLower === mb_strtolower($unwanted)) {
+                $this->log("Category '$category' filtered out as unwanted", self::COLOR_YELLOW);
+                return ''; // برگردان رشته خالی
+            }
+        }
+
+        return $category; // اگر مشکلی نبود همون دسته‌بندی رو برگردان
+    }
+
+    // تغییرات در متد extractProductData
     public function extractProductData(string $url, ?string $body = null, ?string $mainPageImage = null, ?string $mainPageProductId = null): ?array
     {
         $data = [
@@ -40,7 +73,8 @@ class ProductDataProcessor
             'image' => $mainPageImage ?? '',
             'category' => '',
             'off' => 0,
-            'guarantee' => ''
+            'guarantee' => '',
+            'brand' => '' // اضافه کردن فیلد جدید
         ];
 
         if ($body === null) {
@@ -49,11 +83,16 @@ class ProductDataProcessor
             return null;
         }
 
+        if (empty($data['product_id']) && ($this->config['product_id_method'] ?? 'selector') === 'url') {
+            $data['product_id'] = $this->extractProductIdFromUrl($url, '', new Crawler());
+            $this->log("Extracted product_id: \"{$data['product_id']}\" for $url", self::COLOR_GREEN);
+        }
+
         $crawler = new Crawler($body);
         $productSelectors = $this->config['selectors']['product_page'] ?? [];
 
         if (isset($this->config['set_category']) && !empty($this->config['set_category'])) {
-            $data['category'] = $this->config['set_category'];
+            $data['category'] = $this->filterUnwantedCategories($this->config['set_category']);
             $this->log("Using preset category from config: {$data['category']}", self::COLOR_GREEN);
         }
 
@@ -76,9 +115,25 @@ class ProductDataProcessor
                     if (empty($data[$field]) && !($this->config['keep_price_format'] ?? false)) {
                         $data[$field] = '0';
                     }
-                } elseif ($field === 'availability') {
+                }
+                elseif ($field === 'availability') {
+                    $outOfStockButton = $this->config['out_of_stock_button'] ?? false;
+                    $outOfStockSelector = $this->config['selectors']['product_page']['out_of_stock'] ?? null;
+
+                    if ($outOfStockButton && $outOfStockSelector) {
+                        $this->log("Checking out_of_stock selector first due to out_of_stock_button=true", self::COLOR_CYAN);
+
+                        $outOfStockResult = $this->checkOutOfStockWithPriority($crawler, $outOfStockSelector);
+                        if ($outOfStockResult === 0) {
+                            $this->log("Product marked as unavailable due to out_of_stock selector", self::COLOR_RED);
+                            $data[$field] = 0;
+                            continue;
+                        }
+                    }
+
                     $transform = $this->config['data_transformers'][$field] ?? null;
                     $data[$field] = $transform && method_exists($this, $transform) ? (int)$this->$transform($value, $crawler) : (!empty($value) ? 1 : 0);
+
                 } elseif ($field === 'off') {
                     $transform = $this->config['data_transformers'][$field] ?? null;
                     $data[$field] = $transform && method_exists($this, $transform) ? $this->$transform($value) : (preg_match('/\d+/', $value, $matches) ? (int)$matches[0] : 0);
@@ -87,7 +142,11 @@ class ProductDataProcessor
                 } elseif ($field === 'image') {
                     $data[$field] = $this->makeAbsoluteUrl($value);
                 } elseif ($field === 'category' && ($this->config['category_method'] ?? 'selector') === 'selector' && !isset($this->config['set_category'])) {
-                    $data[$field] = $this->extractCategoriesFromSelectors($crawler, $selector);
+                    $extractedCategory = $this->extractCategoriesFromSelectors($crawler, $selector);
+                    $data[$field] = $this->filterUnwantedCategories($extractedCategory);
+                } elseif ($field === 'brand') {
+                    // پردازش فیلد brand جدید
+                    $data[$field] = $this->processBrandField($crawler, $selector, $data['title']);
                 } else {
                     $transform = $this->config['data_transformers'][$field] ?? null;
                     $data[$field] = $transform && method_exists($this, $transform) ? (string)$this->$transform($value) : (string)$value;
@@ -97,11 +156,25 @@ class ProductDataProcessor
             }
         }
 
-        if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
-            $wordCount = $this->config['category_word_count'] ?? 1;
-            $data['category'] = $this->extractCategoryFromTitle($data['title'], $wordCount);
+        // تشخیص برند از عنوان محصول (اگر هنوز پیدا نشده)
+        if (empty($data['brand']) && !empty($data['title'])) {
+            $this->log("🔍 No brand found in selectors, attempting to detect from title", self::COLOR_BLUE);
+            $detectedBrand = $this->detectBrandFromTitle($data['title']);
+            if ($detectedBrand) {
+                $data['brand'] = $detectedBrand;
+                $this->log("✅ Brand detected from title: {$detectedBrand}", self::COLOR_GREEN);
+            } else {
+                $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
+            }
         }
 
+        if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
+            $wordCount = $this->config['category_word_count'] ?? 1;
+            $extractedCategory = $this->extractCategoryFromTitle($data['title'], $wordCount);
+            $data['category'] = $this->filterUnwantedCategories($extractedCategory); // اعمال فیلتر
+        }
+
+        // اگر availability هنوز null است، fallback را اجرا کن
         if ($data['availability'] === null) {
             $data['availability'] = $this->processAvailabilityFallback($crawler, $data);
         }
@@ -123,6 +196,53 @@ class ProductDataProcessor
         return $data;
     }
 
+    public function detectBrandFromTitle(string $title): string
+    {
+        if (empty($title)) {
+            return '';
+        }
+
+        $this->log("🔍 Attempting to detect brand from title: " . substr($title, 0, 50) . "...", self::COLOR_BLUE);
+
+        $detectedBrand = $this->brandDetectionService->detectBrandFromText($title);
+
+        if ($detectedBrand) {
+            $this->log("✅ Brand detected from title: $detectedBrand", self::COLOR_GREEN);
+            return $detectedBrand;
+        } else {
+            $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
+            return '';
+        }
+    }
+
+    private function processBrandField(Crawler $crawler, array $selector, ?string $title = null): string
+    {
+        $brandMethod = $this->config['brand_method'] ?? 'selector';
+
+        if ($brandMethod === 'selector' && !empty($selector['selector'])) {
+            // استخراج برند از سلکتور
+            $elements = $this->getElements($crawler, $selector);
+            if ($elements->count() > 0) {
+                $brandText = trim($elements->text());
+                if (!empty($brandText)) {
+                    // تشخیص برند از متن استخراج شده
+                    $detectedBrand = $this->brandDetectionService->detectBrandFromText($brandText);
+                    if ($detectedBrand) {
+                        $this->log("🏷️ Brand detected from selector: $detectedBrand", self::COLOR_GREEN);
+                        return $detectedBrand;
+                    }
+                    $this->log("⚠️ No brand matched from selector text: $brandText", self::COLOR_YELLOW);
+                }
+            }
+        } elseif ($brandMethod === 'title' && $title) {
+            // استخراج برند از عنوان محصول
+            return $this->detectBrandFromTitle($title);
+        }
+
+        return '';
+    }
+
+    // باقی متدها بدون تغییر...
     public function validateProductData(array $productData): bool
     {
         if (empty($productData['title'])) {
@@ -166,6 +286,7 @@ class ProductDataProcessor
                 'image' => $productData['image'] ?? '',
                 'guarantee' => $productData['guarantee'] ?? '',
                 'category' => $productData['category'] ?? '',
+                'brand' => $productData['brand'] ?? '', // اضافه کردن فیلد جدید
                 'updated_at' => now(),
             ];
 
@@ -190,6 +311,7 @@ class ProductDataProcessor
         }
     }
 
+    // باقی متدها یکسان باقی می‌مانند...
     public function cleanPrice(string $price): int
     {
         if (empty(trim($price))) {
@@ -208,11 +330,8 @@ class ProductDataProcessor
         $arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
         $price = str_replace($arabicNumbers, $englishNumbers, $price);
 
-        // تبدیل جداکننده فارسی به انگلیسی برای پردازش یکسان
-        $price = str_replace('٫', ',', $price);
-
         // حذف تمام کاراکترهای غیرضروری و نگهداری فقط اعداد و جداکننده‌ها
-        $price = preg_replace('/[^\d.,]/u', '', $price);
+        $price = preg_replace('/[^\d.,٫]/u', '', $price);
 
         // حذف فاصله‌های اضافی
         $price = trim($price);
@@ -223,14 +342,10 @@ class ProductDataProcessor
         }
 
         // تشخیص الگوی قیمت
-        // ابتدا بررسی می‌کنیم آیا فرمت هزارگان است یا نه
-        if (preg_match('/^\d{1,3}([.,]\d{3})+$/', $price)) {
-            // این یک عدد با فرمت هزارگان است - جداکننده‌ها را حذف می‌کنیم
-            $price = str_replace([',', '.'], '', $price);
-            return (int)$price;
-        }
+        // اگر فقط یک نقطه یا کاما در انتها وجود دارد و بعدش سه رقم یا کمتر -> جداکننده هزارگان
+        // اگر نقطه یا کاما در وسط و بعدش بیش از سه رقم -> احتمالاً اعشار
 
-        // اگر فرمت هزارگان نیست، بررسی اعشار
+        // ابتدا تمام نقاط و کاماها را پیدا کنیم
         $lastDotPos = strrpos($price, '.');
         $lastCommaPos = strrpos($price, ',');
         $lastSeparatorPos = max($lastDotPos, $lastCommaPos);
@@ -239,13 +354,13 @@ class ProductDataProcessor
             $afterSeparator = substr($price, $lastSeparatorPos + 1);
             $beforeSeparator = substr($price, 0, $lastSeparatorPos);
 
-            // اگر بعد از آخرین جداکننده بیش از 3 رقم باشد، احتمالاً اعشار نیست
-            if (strlen($afterSeparator) > 3) {
-                // همه جداکننده‌ها را حذف می‌کنیم
-                $price = str_replace([',', '.'], '', $price);
+            // اگر بعد از آخرین جداکننده 3 رقم یا کمتر باشد، احتمالاً جداکننده هزارگان است
+            if (strlen($afterSeparator) <= 3) {
+                // حذف تمام جداکننده‌های هزارگان
+                $price = str_replace([',', '.', '٫'], '', $price);
             } else {
                 // احتمالاً اعشار است - فقط آخرین جداکننده را حفظ می‌کنیم
-                $beforeSeparator = str_replace([',', '.'], '', $beforeSeparator);
+                $beforeSeparator = str_replace([',', '.', '٫'], '', $beforeSeparator);
                 $price = $beforeSeparator . '.' . $afterSeparator;
             }
         }
@@ -306,35 +421,35 @@ class ProductDataProcessor
         $price = str_replace($persianNumbers, $englishNumbers, $price);
         $price = str_replace($arabicNumbers, $englishNumbers, $price);
 
-        // تبدیل جداکننده فارسی به انگلیسی
-        $price = str_replace('٫', ',', $price);
-
         // حذف کاراکترهای اضافی ولی حفظ جداکننده‌ها برای فرمت
-        $price = preg_replace('/[^\d.,\s]/u', '', $price);
+        $price = preg_replace('/[^\d.,٫\s]/u', '', $price);
 
         // حذف فاصله‌های اضافی
         $price = preg_replace('/\s+/', '', trim($price));
 
         // اگر فقط جداکننده باشد، خالی برگردان
-        if (preg_match('/^[.,\s]*$/', $price)) {
+        if (preg_match('/^[.,٫\s]*$/', $price)) {
             return '';
         }
 
         // حذف جداکننده‌های ابتدا و انتها
-        $price = trim($price, '., ');
+        $price = trim($price, '.,٫ ');
 
         // اگر خالی شد، خالی برگردان
         if (empty($price)) {
             return '';
         }
 
+        // برای حفظ فرمت، فقط اعداد را تمیز می‌کنیم و جداکننده‌ها را حفظ می‌کنیم
+        // اما اگر pattern مشخص هزارگان باشد (مثل 281.000) آن را اصلاح می‌کنیم
+
         // تشخیص الگوی هزارگان (عددی که هر سه رقم یک جداکننده دارد)
-        if (preg_match('/^\d{1,3}([.,]\d{3})+$/', $price)) {
+        if (preg_match('/^\d{1,3}([.,٫]\d{3})+$/', $price)) {
             // این یک عدد با فرمت هزارگان است - جداکننده‌ها را حذف می‌کنیم
-            $cleanNumber = str_replace([',', '.'], '', $price);
+            $price = str_replace([',', '.', '٫'], '', $price);
 
             // دوباره فرمت هزارگان اضافه می‌کنیم
-            return number_format((int)$cleanNumber);
+            return number_format((int)$price);
         }
 
         return $price;
@@ -817,7 +932,7 @@ class ProductDataProcessor
     private function detectProductChanges($existingProduct, array $newData): array
     {
         $changes = [];
-        $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category'];
+        $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category', 'brand'];
 
         foreach ($fieldsToCheck as $field) {
             $oldValue = $existingProduct->$field;
@@ -841,6 +956,7 @@ class ProductDataProcessor
         $price = $product['price'] ?? 'N/A';
         $title = $product['title'] ?? 'N/A';
         $category = $product['category'] ?? 'N/A';
+        $brand = $product['brand'] ?? 'N/A';
 
         $actionConfig = $this->getActionConfig($action);
 
@@ -852,17 +968,18 @@ class ProductDataProcessor
             }
         }
 
-        // Generate table
-        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Availability', 'Discount', 'Image', 'Guarantee'];
+        // Generate table with brand field
+        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Brand', 'Availability', 'Discount', 'Image', 'Guarantee'];
         $rows = [[
             $productId,
-            mb_substr($title, 0, 40) . (mb_strlen($title) > 40 ? '...' : ''),
+            mb_substr($title, 0, 30) . (mb_strlen($title) > 30 ? '...' : ''),
             $price,
-            mb_substr($category, 0, 30) . (mb_strlen($category) > 30 ? '...' : ''),
+            mb_substr($category, 0, 20) . (mb_strlen($category) > 20 ? '...' : ''),
+            mb_substr($brand, 0, 15) . (mb_strlen($brand) > 15 ? '...' : ''),
             $availability,
             $discount,
             $imageStatus,
-            mb_substr($guaranteeStatus, 0, 20) . (mb_strlen($guaranteeStatus) > 20 ? '...' : '')
+            mb_substr($guaranteeStatus, 0, 15) . (mb_strlen($guaranteeStatus) > 15 ? '...' : '')
         ]];
 
         $table = $this->generateAsciiTable($headers, $rows);
