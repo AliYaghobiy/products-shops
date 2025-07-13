@@ -10,6 +10,8 @@ use App\Services\Scraper\ScraperLogService;
 use App\Services\Scraper\ScraperProcessService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Storage;
 
 class ConfigController extends Controller
 {
@@ -42,18 +44,18 @@ class ConfigController extends Controller
     /**
      * نمایش لیست کانفیگ‌ها
      */
-   public function index()
-        {
-            $configs = $this->fileService->getAllConfigs();
-    
-            // اضافه کردن آمار برای هر کانفیگ
-            foreach ($configs as &$config) {
-                $stats = $this->logService->getConfigStats($config['filename']);
-                $config['stats'] = $stats;
-            }
-    
-            return view('configs.index', compact('configs'));
+    public function index()
+    {
+        $configs = $this->fileService->getAllConfigs();
+
+        // اضافه کردن آمار برای هر کانفیگ
+        foreach ($configs as &$config) {
+            $stats = $this->logService->getConfigStats($config['filename']);
+            $config['stats'] = $stats;
         }
+
+        return view('configs.index', compact('configs'));
+    }
 
     /**
      * نمایش فرم ایجاد کانفیگ جدید
@@ -62,6 +64,76 @@ class ConfigController extends Controller
     {
         return view('configs.create');
     }
+
+
+
+    public function testDatabase(string $filename)
+    {
+        try {
+            // پیدا کردن فایل کانفیگ با استفاده از Storage
+            $configFilePath = 'private/' . $filename . '.json';
+
+            if (!Storage::exists($configFilePath)) {
+                return redirect()->back()->with('error', 'فایل کانفیگ یافت نشد: ' . $filename);
+            }
+
+            $config = json_decode(Storage::get($configFilePath), true);
+
+            if (!$config) {
+                return redirect()->back()->with('error', 'خطا در خواندن فایل کانفیگ.');
+            }
+
+            // استخراج نام دیتابیس دقیقاً مثل کد اصلی
+            $baseUrl = $config['base_urls'][0] ?? '';
+            if (empty($baseUrl)) {
+                return redirect()->back()->with('error', 'URL پایه در کانفیگ تعریف نشده است.');
+            }
+
+            $host = parse_url($baseUrl, PHP_URL_HOST);
+            if (!$host) {
+                return redirect()->back()->with('error', 'URL پایه نامعتبر است: ' . $baseUrl);
+            }
+
+            // دقیقاً مثل کد اصلی
+            $host = preg_replace('/^www\./', '', $host);
+            $databaseName = str_replace('.', '_', $host);
+
+            // اجرای کامند تست
+            $process = new Process([
+                'php',
+                base_path('artisan'),
+                'test:database',
+                $databaseName
+            ]);
+
+            $process->setTimeout(60);
+            $process->run();
+
+            $output = $process->getOutput();
+            $errorOutput = $process->getErrorOutput();
+
+            // بررسی موفقیت اجرا
+            if ($process->isSuccessful()) {
+                return view('configs.database-test', [
+                    'filename' => $filename,
+                    'database_name' => $databaseName,
+                    'output' => $output,
+                    'success' => true
+                ]);
+            } else {
+                return view('configs.database-test', [
+                    'filename' => $filename,
+                    'database_name' => $databaseName,
+                    'output' => $errorOutput ?: $output,
+                    'success' => false
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'خطا در تست دیتابیس: ' . $e->getMessage());
+        }
+    }
+
 
     /**
      * ذخیره کانفیگ جدید

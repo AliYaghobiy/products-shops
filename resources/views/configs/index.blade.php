@@ -734,6 +734,10 @@
                                         توقف
                                     </button>
                                 </form>
+                                <a href="{{ route('configs.test-database', $config['filename']) }}" class="btn btn-info">
+                                    <i class="fas fa-database"></i>
+                                    تست دیتابیس
+                                </a>
                                 <a href="{{ route('configs.edit', $config['filename']) }}" class="btn btn-warning">
                                     <i class="fas fa-edit"></i>
                                     ویرایش
@@ -857,6 +861,10 @@
                                 <a href="{{ route('configs.logs', $config['filename']) }}" class="btn btn-info">
                                     <i class="fas fa-file-alt"></i>
                                     لاگ‌ها
+                                </a>
+                                <a href="{{ route('configs.test-database', $config['filename']) }}" class="btn btn-info">
+                                    <i class="fas fa-database"></i>
+                                    تست دیتابیس
                                 </a>
                                 <form action="{{ route('configs.destroy', $config['filename']) }}" method="POST" class="inline" onsubmit="return confirm('آیا از حذف این کانفیگ اطمینان دارید؟')">
                                     @csrf

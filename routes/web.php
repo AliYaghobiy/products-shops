@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/configs/{filename}/edit', [ConfigController::class, 'edit'])->name('configs.edit');
     Route::put('/configs/{filename}', [ConfigController::class, 'update'])->name('configs.update');
     Route::delete('/configs/{filename}', [ConfigController::class, 'destroy'])->name('configs.destroy');
-
+    Route::get('/configs/{filename}/test-database', [ConfigController::class, 'testDatabase'])->name('configs.test-database');
 
 });
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
