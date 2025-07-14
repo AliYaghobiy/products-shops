@@ -710,12 +710,21 @@
                                 <span class="running-badge">فعال</span>
                             </div>
 
+                            <!-- بخش نمایش تعداد URL ها و pagination -->
                             <div class="flex items-center gap-4 text-sm text-gray-600">
-                                <span><i class="fas fa-link ml-1"></i>{{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }} URL</span>
-                                @if(isset($config['started_at']))
-                                    <div class="text-xs text-gray-500">
-                                        {{ PersianDateHelper::toPersian($config['started_at']) }}
-                                    </div>
+    <span>
+        <i class="fas fa-link ml-1"></i>
+        {{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }}
+    </span>
+                                @php
+                                    $methodKey = 'method_' . $config['content']['method'];
+                                    $maxPages = $config['content']['method_settings'][$methodKey]['pagination']['max_pages'] ?? 0;
+                                @endphp
+                                @if($maxPages > 0)
+                                    <span>
+            <i class="fas fa-file-alt ml-1"></i>
+            {{ $maxPages }} 
+        </span>
                                 @endif
                             </div>
 
@@ -820,8 +829,22 @@
                                 @endif
                             </div>
 
+                            <!-- بخش نمایش تعداد URL ها و pagination -->
                             <div class="flex items-center gap-4 text-sm text-gray-600">
-                                <span><i class="fas fa-link ml-1"></i>{{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }} URL</span>
+    <span>
+        <i class="fas fa-link ml-1"></i>
+        {{ count($config['content']['base_urls']) + count($config['content']['products_urls']) }}
+    </span>
+                                @php
+                                    $methodKey = 'method_' . $config['content']['method'];
+                                    $maxPages = $config['content']['method_settings'][$methodKey]['pagination']['max_pages'] ?? 0;
+                                @endphp
+                                @if($maxPages > 0)
+                                    <span>
+            <i class="fas fa-file-alt ml-1"></i>
+            {{ $maxPages }} 
+        </span>
+                                @endif
                             </div>
 
                             <!-- باقی دکمه‌ها بدون تغییر -->
