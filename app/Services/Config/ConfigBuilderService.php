@@ -134,8 +134,8 @@ class ConfigBuilderService
                 ],
                 'image' => [
                     'type' => $request->input('selectors.product_page.image.type'),
-                    'selector' => $request->input('selectors.product_page.image.selector'),
-                    'attribute' => $request->input('selectors.product_page.image.attribute'),
+                    'selector' => $this->processImageSelectors($request),
+                    'attribute' => $this->processImageAttributes($request),
                 ],
                 'off' => [
                     'type' => $request->input('selectors.product_page.off.type'),
@@ -242,6 +242,43 @@ class ConfigBuilderService
 
         if ($request->has('selectors.product_page.product_id.attribute_single')) {
             $singleAttribute = trim($request->input('selectors.product_page.product_id.attribute_single'));
+            return !empty($singleAttribute) ? $singleAttribute : null;
+        }
+
+        return null;
+    }
+
+    private function processImageSelectors(Request $request)
+    {
+        if ($request->has('selectors.product_page.image.selector') &&
+            is_array($request->input('selectors.product_page.image.selector'))) {
+
+            $selectors = array_filter($request->input('selectors.product_page.image.selector'));
+            return !empty($selectors) ? array_values($selectors) : null;
+        }
+
+        if ($request->has('selectors.product_page.image.selector_single')) {
+            $singleSelector = trim($request->input('selectors.product_page.image.selector_single'));
+            return !empty($singleSelector) ? $singleSelector : null;
+        }
+
+        return null;
+    }
+
+    /**
+     * پردازش attribute های product_id
+     */
+    private function processImageAttributes(Request $request)
+    {
+        if ($request->has('selectors.product_page.image.attribute') &&
+            is_array($request->input('selectors.product_page.image.attribute'))) {
+
+            $attributes = array_filter($request->input('selectors.product_page.image.attribute'));
+            return !empty($attributes) ? array_values($attributes) : null;
+        }
+
+        if ($request->has('selectors.product_page.image.attribute_single')) {
+            $singleAttribute = trim($request->input('selectors.product_page.image.attribute_single'));
             return !empty($singleAttribute) ? $singleAttribute : null;
         }
 
@@ -421,6 +458,7 @@ class ConfigBuilderService
         $this->fixOutOfStockSelectors($content);
         $this->fixPriceSelectors($content);
         $this->fixProductIdSelectors($content);
+        $this->fixImageSelectors($content);
         $this->fixOtherSelectors($content);
 
         return $content;
@@ -535,6 +573,39 @@ class ConfigBuilderService
             } else {
                 $content['product_id_attribute_single'] = $productIdConfig['attribute'] ?? '';
                 unset($content['product_id_attribute_multiple']);
+            }
+        }
+    }
+
+    private function fixImageSelectors(array &$content): void
+    {
+        if (isset($content['selectors']['product_page']['image'])) {
+            $imageConfig = &$content['selectors']['product_page']['image'];
+
+            if (isset($imageConfig['selector']) && is_array($imageConfig['selector'])) {
+                if (count($imageConfig['selector']) === 1) {
+                    $content['image_selector_single'] = $imageConfig['selector'][0];
+                    unset($content['image_selector_multiple']);
+                } else {
+                    $content['image_selector_multiple'] = $imageConfig['selector'];
+                    unset($content['image_selector_single']);
+                }
+            } else {
+                $content['image_selector_single'] = $imageConfig['selector'] ?? '';
+                unset($content['image_selector_multiple']);
+            }
+
+            if (isset($imageConfig['attribute']) && is_array($imageConfig['attribute'])) {
+                if (count($imageConfig['attribute']) === 1) {
+                    $content['image_attribute_single'] = $imageConfig['attribute'][0];
+                    unset($content['image_attribute_multiple']);
+                } else {
+                    $content['image_attribute_multiple'] = $imageConfig['attribute'];
+                    unset($content['image_attribute_single']);
+                }
+            } else {
+                $content['image_attribute_single'] = $imageConfig['attribute'] ?? '';
+                unset($content['image_attribute_multiple']);
             }
         }
     }
@@ -654,8 +725,8 @@ class ConfigBuilderService
                     ],
                     'image' => [
                         'type' => 'css',
-                        'selector' => $request->input('image_selector') ?: null,
-                        'attribute' => $request->input('image_attribute', 'href'),
+                        'selector' => $this->processMultipleSelectors($request->input('image_selector', [])),
+                        'attribute' => $this->processMultipleSelectors($request->input('image_attribute', ['value'])),
                     ],
                     'off' => [
                         'type' => 'css',

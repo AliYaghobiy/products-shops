@@ -54,9 +54,9 @@ class ConfigValidationService
             'selectors.main_page.product_links.selector' => 'required|string',
             'selectors.main_page.product_links.attribute' => 'required|string',
             'out_of_stock_button' => 'boolean',
-            'selectors.product_page.out_of_stock.type' => 'required_if:out_of_stock_button,1|string|in:css,xpath',
-            'selectors.product_page.out_of_stock.selector' => 'required_if:out_of_stock_button,1|array|min:1',
-            'selectors.product_page.out_of_stock.selector.*' => 'required_if:out_of_stock_button,1|string',
+            'selectors.product_page.out_of_stock.type' => 'nullable:out_of_stock_button,1|string|in:css,xpath',
+            'selectors.product_page.out_of_stock.selector' => 'nullable:out_of_stock_button,1|array|min:1',
+            'selectors.product_page.out_of_stock.selector.*' => 'nullable:out_of_stock_button,1|string',
             'category_method' => 'required|in:selector,title',
             'category_word_count' => 'nullable|array',
             'category_word_count.*' => 'required|integer|min:1',
@@ -68,6 +68,13 @@ class ConfigValidationService
             'selectors.product_page.description.selector' => 'nullable|array',
             'selectors.product_page.description.selector.*' => 'required|string',
             'selectors.product_page.description.selector_single' => 'nullable|string',
+
+            'selectors.product_page.image.selector' => 'nullable|array',
+            'selectors.product_page.image.selector.*' => 'required|string',
+            'selectors.product_page.image.selector_single' => 'nullable|string',
+            'selectors.product_page.image.attribute' => 'nullable|array',
+            'selectors.product_page.image.attribute.*' => 'required|string',
+            'selectors.product_page.image.attribute_single' => 'nullable|string',
 
             'selectors.product_page.product_id.selector' => 'nullable|array',
             'selectors.product_page.product_id.selector.*' => 'required|string',
@@ -200,9 +207,14 @@ class ConfigValidationService
             'product_id_attribute' => 'nullable|array',
             'product_id_attribute.*' => 'nullable|string',
 
+            'image_selector' => 'nullable|array',
+            'image_selector.*' => 'nullable|string',
+
+            'image_attribute' => 'nullable|array',
+            'image_attribute.*' => 'nullable|string',
+
             // سلکتورهای تکی
-            'image_selector' => 'nullable|string',
-            'image_attribute' => 'nullable|string',
+
             'off_selector' => 'nullable|string',
             'guarantee_selector' => 'nullable|string',
 

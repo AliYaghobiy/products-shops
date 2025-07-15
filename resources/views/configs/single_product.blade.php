@@ -647,26 +647,66 @@
 
                     <!-- Grid for other selectors -->
                     <div class="grid grid-cols-2">
-                        <!-- تصویر -->
+                        <!-- سلکتورهای تصاویر -->
                         <div class="form-group">
-                            <label for="image_selector">
-                                سلکتور تصویر
+                            <label>
+                                سلکتورهای تصاویر
                             </label>
-                            <input type="text" name="image_selector" id="image_selector"
-                                   value=".woocommerce-product-gallery__image > a"
-                                   class="input-field"
-                                   placeholder=".product-image">
+                            <div class="image-selectors-container space-y-3">
+                                <div class="selector-container">
+                                    <input type="text" name="image_selector[]"
+                                           value=".elementor-element-a9a2f64 > div:nth-child(1) > form:nth-child(2) > button:nth-child(2)"
+                                           class="input-field"
+                                           placeholder=".image">
+                                    <button type="button" class="btn btn-primary add-image-selector">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="btn btn-danger remove-image-selector">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- صفت تصویر -->
+                        <!-- صفت‌های تصاویر -->
                         <div class="form-group">
-                            <label for="image_attribute">
-                                صفت تصویر
+                            <label>
+                                صفت‌های تصاویر
                             </label>
-                            <input type="text" name="image_attribute" id="image_attribute"
-                                   value="href"
-                                   class="input-field"
-                                   placeholder="src">
+                            <div class="image-attributes-container space-y-3">
+                                <div class="selector-container">
+                                    <input type="text" name="image_attribute[]"
+                                           value="value"
+                                           class="input-field"
+                                           placeholder="data-id">
+                                    <button type="button" class="btn btn-primary add-image-attribute">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button" class="btn btn-danger remove-image-attribute">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- تخفیف -->
@@ -1120,6 +1160,8 @@
         attachHandlers('.add-price-unpriced', '.price-unpriced-container', 'price_keywords_unpriced[]', 'تماس بگیرید');
         attachHandlers('.add-product-id-selector', '.product-id-selectors-container', 'product_id_selector[]', '.product-id');
         attachHandlers('.add-product-id-attribute', '.product-id-attributes-container', 'product_id_attribute[]', 'data-id');
+        attachHandlers('.add-image-selector', '.image-selectors-container', 'product_id_selector[]', '.image');
+        attachHandlers('.add-image-attribute', '.image-attributes-container', 'product_id_attribute[]', 'data-id');
 
         // Sync product ID selectors and attributes
         function syncProductIdFields() {
@@ -1152,6 +1194,37 @@
 
         // Initial sync
         syncProductIdFields();
+
+        function syncImageFields() {
+            const selectorInputs = document.querySelectorAll('input[name="image_selector[]"]');
+            const attributeInputs = document.querySelectorAll('input[name="image_attribute[]"]');
+            const selectorContainer = document.querySelector('.image-selectors-container');
+            const attributeContainer = document.querySelector('.image-attributes-container');
+
+            if (!selectorContainer || !attributeContainer) {
+                console.error('image containers not found');
+                return;
+            }
+
+            const maxLength = Math.max(selectorInputs.length, attributeInputs.length);
+
+            // Add missing selector fields
+            while (selectorContainer.children.length < maxLength) {
+                const newField = createInputField('product_id_selector[]', '.image');
+                selectorContainer.appendChild(newField);
+            }
+
+            // Add missing attribute fields
+            while (attributeContainer.children.length < maxLength) {
+                const newField = createInputField('image_attribute[]', 'data-id');
+                attributeContainer.appendChild(newField);
+            }
+
+            console.log('image fields synced:', selectorInputs.length, attributeInputs.length);
+        }
+
+        // Initial sync
+        syncImageFields();
 
         // Handle form submission with AJAX
         const form = document.querySelector('#product-test-form');

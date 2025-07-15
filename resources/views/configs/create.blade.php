@@ -758,17 +758,6 @@
                                    placeholder=".product-brand">
                         </div>
                         <div class="form-group">
-                            <label class="label">سلکتور تصویر</label>
-                            <input type="hidden" name="selectors[product_page][image][type]" value="css">
-                            <input type="text" name="selectors[product_page][image][selector]" class="input"
-                                   placeholder=".product-image">
-                        </div>
-                        <div class="form-group">
-                            <label class="label">صفت تصویر</label>
-                            <input type="text" name="selectors[product_page][image][attribute]" value="src"
-                                   class="input">
-                        </div>
-                        <div class="form-group">
                             <label class="label">سلکتور تخفیف</label>
                             <input type="hidden" name="selectors[product_page][off][type]" value="css">
                             <input type="text" name="selectors[product_page][off][selector]" class="input"
@@ -839,6 +828,35 @@
                             </div>
                         </div>
 
+                        <div class="grid-2">
+                            <!-- سلکتورهای تصاویر -->
+                            <div class="form-group">
+                                <label class="label">سلکتورهای تصاویر <span class="required">*</span></label>
+                                <div id="image-selectors" class="space-y-2">
+                                    <div class="flex-row">
+                                        <input type="hidden" name="selectors[product_page][image][type]" value="css">
+                                        <input type="text" name="selectors[product_page][image][selector][]"
+                                               class="input" placeholder=".image" required>
+                                        <button type="button" class="btn btn-primary add-image-selector">+</button>
+                                        <button type="button" class="btn btn-danger remove-image-selector">−</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Attributes تصاویر -->
+                            <div class="form-group">
+                                <label class="label">صفت‌های تصاویر <span class="required">*</span></label>
+                                <div id="image-attributes" class="space-y-2">
+                                    <div class="flex-row">
+                                        <input type="text" name="selectors[product_page][image][attribute][]"
+                                               class="input" placeholder="src" required>
+                                        <button type="button" class="btn btn-primary add-image-attribute">+</button>
+                                        <button type="button" class="btn btn-danger remove-image-attribute">−</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Out of Stock Selectors -->
                         <div class="form-group">
                             <label class="flex items-center gap-3">
@@ -869,12 +887,11 @@
                                 <label class="label">سلکتورهای شناسه محصول <span class="required">*</span></label>
                                 <div id="product-id-selectors" class="space-y-2">
                                     <div class="flex-row">
-                                        <input type="hidden" name="selectors[product_page][product_id][type]"
-                                               value="css">
+                                        <input type="hidden" name="selectors[product_page][product_id][type]" value="css">
                                         <input type="text" name="selectors[product_page][product_id][selector][]"
                                                class="input" placeholder=".product-id" required>
-                                        <button type="button" class="btn btn-primary add-product-id">+</button>
-                                        <button type="button" class="btn btn-danger remove-product-id">−</button>
+                                        <button type="button" class="btn btn-primary add-product-id-selector">+</button>
+                                        <button type="button" class="btn btn-danger remove-product-id-selector">−</button>
                                     </div>
                                 </div>
                             </div>
@@ -885,8 +902,8 @@
                                     <div class="flex-row">
                                         <input type="text" name="selectors[product_page][product_id][attribute][]"
                                                class="input" placeholder="data-id" required>
-                                        <button type="button" class="btn btn-primary add-product-id-attr">+</button>
-                                        <button type="button" class="btn btn-danger remove-product-id-attr">−</button>
+                                        <button type="button" class="btn btn-primary add-product-id-attribute">+</button>
+                                        <button type="button" class="btn btn-danger remove-product-id-attribute">−</button>
                                     </div>
                                 </div>
                             </div>
@@ -1083,6 +1100,8 @@
                 target.classList.contains('add-out-of-stock') ||
                 target.classList.contains('add-product-id') ||
                 target.classList.contains('add-product-id-attr') ||
+                target.classList.contains('add-image') ||
+                target.classList.contains('add-image-attr') ||
                 target.classList.contains('add-guarantee') ||
                 target.classList.contains('add-positive') ||
                 target.classList.contains('add-negative') ||
@@ -1113,6 +1132,8 @@
                 target.classList.contains('remove-out-of-stock') ||
                 target.classList.contains('remove-product-id') ||
                 target.classList.contains('remove-product-id-attr') ||
+                target.classList.contains('remove-image') ||
+                target.classList.contains('remove-image-attr') ||
                 target.classList.contains('remove-guarantee') ||
                 target.classList.contains('remove-positive') ||
                 target.classList.contains('remove-negative') ||
@@ -1136,6 +1157,8 @@
     createFieldManager('out-of-stock-selectors', 'selectors[product_page][out_of_stock][selector][]', '.out-of-stock');
     createFieldManager('product-id-selectors', 'selectors[product_page][product_id][selector][]', '.product-id', true);
     createFieldManager('product-id-attributes', 'selectors[product_page][product_id][attribute][]', 'data-id', true);
+    createFieldManager('image-selectors', 'selectors[product_page][image][selector][]', '.image', true);
+    createFieldManager('image-attributes', 'selectors[product_page][image][attribute][]', 'image', true);
     createFieldManager('guarantee-keywords', 'guarantee_keywords[]', '', true);
     createFieldManager('availability-positive', 'availability_keywords[positive][]', '', true);
     createFieldManager('availability-negative', 'availability_keywords[negative][]', '', true);
