@@ -127,7 +127,7 @@ class ProductDataProcessor
             'off' => 0,
             'guarantee' => '',
             'brand' => '',
-            'description' => '' // اضافه کردن فیلد جدید
+            'description' => ''
         ];
 
         if ($body === null) {
@@ -172,7 +172,6 @@ class ProductDataProcessor
                     }
                 }
                 elseif ($field === 'description') {
-                    // پردازش فیلد description جدید
                     $data[$field] = $this->processDescriptionField($crawler, $selector);
                 }
                 elseif ($field === 'availability') {
@@ -199,13 +198,13 @@ class ProductDataProcessor
                 } elseif ($field === 'guarantee') {
                     $data[$field] = $this->extractGuaranteeFromSelector($crawler, $selector, $data['title']);
                 } elseif ($field === 'image') {
-                    $data[$field] = $this->makeAbsoluteUrl($value);
+                    // **تغییر اصلی در اینجا**
+                    $data[$field] = $this->processImageField($crawler, $selector);
                 } elseif ($field === 'category' && ($this->config['category_method'] ?? 'selector') === 'selector' && !isset($this->config['set_category'])) {
                     $extractedCategory = $this->extractCategoriesFromSelectors($crawler, $selector);
                     $cleanCategory = $this->fixCorruptedText($extractedCategory);
                     $data[$field] = $this->filterUnwantedCategories($cleanCategory);
                 } elseif ($field === 'brand') {
-                    // پردازش فیلد brand جدید
                     $data[$field] = $this->processBrandField($crawler, $selector, $data['title']);
                 } else {
                     $transform = $this->config['data_transformers'][$field] ?? null;
@@ -227,6 +226,7 @@ class ProductDataProcessor
                 $this->log("❌ No brand detected from title", self::COLOR_YELLOW);
             }
         }
+
         if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
             $wordCount = $this->config['category_word_count'] ?? 1;
             $extractedCategory = $this->extractCategoryFromTitle($data['title'], $wordCount);
@@ -252,7 +252,8 @@ class ProductDataProcessor
             $this->saveFailedLink($url, "No valid data extracted");
             return null;
         }
-// تصحیح نهایی category فقط
+
+        // تصحیح نهایی category فقط
         $data['category'] = $this->fixCorruptedText($data['category']);
         return $data;
     }
@@ -275,7 +276,58 @@ class ProductDataProcessor
             return '';
         }
     }
+    private function processImageField(Crawler $crawler, array $selector): string
+    {
+        $images = [];
+        $selectors = is_array($selector['selector']) ? $selector['selector'] : [$selector['selector']];
+        $attributes = isset($selector['attribute'])
+            ? (is_array($selector['attribute']) ? $selector['attribute'] : [$selector['attribute']])
+            : ['src']; // پیش‌فرض src
 
+        foreach ($selectors as $index => $selectorString) {
+            if (empty($selectorString)) {
+                continue;
+            }
+
+            try {
+                $elements = $selector['type'] === 'css'
+                    ? $crawler->filter($selectorString)
+                    : $crawler->filterXPath($selectorString);
+
+                if ($elements->count() > 0) {
+                    $currentAttribute = $attributes[$index] ?? $attributes[0] ?? 'src';
+
+                    $elements->each(function (Crawler $element) use (&$images, $currentAttribute) {
+                        $imageUrl = $element->attr($currentAttribute) ?? '';
+
+                        if (!empty($imageUrl)) {
+                            // تبدیل به URL مطلق
+                            $absoluteUrl = $this->makeAbsoluteUrl($imageUrl);
+
+                            if (!empty($absoluteUrl) && !in_array($absoluteUrl, $images)) {
+                                $images[] = $absoluteUrl;
+                            }
+                        }
+                    });
+                }
+            } catch (\Exception $e) {
+                $this->log("خطا در استخراج تصویر از سلکتور '$selectorString': " . $e->getMessage(), self::COLOR_RED);
+            }
+        }
+
+        // حذف تصاویر تکراری و خالی
+        $images = array_filter(array_unique($images), function ($img) {
+            return !empty(trim($img));
+        });
+
+        $result = implode(',', $images);
+
+        if (!empty($result)) {
+            $this->log("تصاویر استخراج شده: " . count($images) . " عدد", self::COLOR_GREEN);
+        }
+
+        return $result;
+    }
     private function processDescriptionField(Crawler $crawler, array $selector): string
     {
         $descriptions = [];
@@ -1077,7 +1129,6 @@ class ProductDataProcessor
     public function logProduct(array $product, string $action = 'PROCESSED', array $extraInfo = []): void
     {
         $availability = (int)($product['availability'] ?? 0) ? 'موجود' : 'ناموجود';
-        $imageStatus = empty($product['image']) ? 'ناموجود' : 'موجود';
         $guaranteeStatus = empty($product['guarantee']) ? 'ندارد' : $product['guarantee'];
         $discount = (int)($product['off'] ?? 0) > 0 ? $product['off'] . '%' : '0%';
         $productId = $product['product_id'] ?? 'N/A';
@@ -1086,6 +1137,10 @@ class ProductDataProcessor
         $category = $product['category'] ?? 'N/A';
         $brand = $product['brand'] ?? 'N/A';
         $description = $product['description'] ?? 'N/A';
+
+        // محاسبه تعداد تصاویر
+        $imageCount = empty($product['image']) ? 0 : count(explode(',', $product['image']));
+        $imageStatus = $imageCount > 0 ? "$imageCount تصویر" : 'ناموجود';
 
         $actionConfig = $this->getActionConfig($action);
 
@@ -1097,8 +1152,7 @@ class ProductDataProcessor
             }
         }
 
-        // اگر می‌خواهید description را در جدول نمایش دهید
-        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Brand', 'Availability', 'Discount', 'Image', 'Guarantee', 'Description'];
+        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Brand', 'Availability', 'Discount', 'Images', 'Guarantee', 'Description'];
         $rows = [[
             $productId,
             mb_substr($title, 0, 30) . (mb_strlen($title) > 30 ? '...' : ''),
@@ -1116,7 +1170,6 @@ class ProductDataProcessor
         $this->log($table, null);
         $this->log("", null);
     }
-
     private function getActionConfig(string $action): array
     {
         $configs = [
