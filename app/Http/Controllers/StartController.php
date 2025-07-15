@@ -80,7 +80,7 @@ class StartController
         }
 
         $this->httpClient = new Client([
-            'proxy' => 'socks5://localhost:8899',
+            //'proxy' => 'socks5://localhost:8899',
             'timeout' => $this->config['timeout'] ?? 120,
             'verify' => $this->config['verify_ssl'] ?? false,
             'headers' => [

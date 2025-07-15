@@ -126,7 +126,8 @@ class ProductDataProcessor
             'category' => '',
             'off' => 0,
             'guarantee' => '',
-            'brand' => '' // اضافه کردن فیلد جدید
+            'brand' => '',
+            'description' => '' // اضافه کردن فیلد جدید
         ];
 
         if ($body === null) {
@@ -169,6 +170,10 @@ class ProductDataProcessor
                     if (empty($data[$field]) && !($this->config['keep_price_format'] ?? false)) {
                         $data[$field] = '0';
                     }
+                }
+                elseif ($field === 'description') {
+                    // پردازش فیلد description جدید
+                    $data[$field] = $this->processDescriptionField($crawler, $selector);
                 }
                 elseif ($field === 'availability') {
                     $outOfStockButton = $this->config['out_of_stock_button'] ?? false;
@@ -271,6 +276,69 @@ class ProductDataProcessor
         }
     }
 
+    private function processDescriptionField(Crawler $crawler, array $selector): string
+    {
+        $descriptions = [];
+        $selectors = is_array($selector['selector']) ? $selector['selector'] : [$selector['selector']];
+
+        foreach ($selectors as $index => $selectorString) {
+            if (empty($selectorString)) {
+                continue;
+            }
+
+            try {
+                $elements = $selector['type'] === 'css'
+                    ? $crawler->filter($selectorString)
+                    : $crawler->filterXPath($selectorString);
+
+                if ($elements->count() > 0) {
+                    $elements->each(function (Crawler $element) use (&$descriptions, $selector) {
+                        $descriptionText = $selector['attribute'] ?? false
+                            ? ($element->attr($selector['attribute']) ?? '')
+                            : trim($element->text());
+
+                        if (!empty($descriptionText)) {
+                            // تصحیح متن خراب شده
+                            $descriptionText = $this->fixCorruptedText($descriptionText);
+                            // پاکسازی HTML tags اضافی
+                            $descriptionText = $this->cleanDescriptionText($descriptionText);
+                            if (!empty($descriptionText)) {
+                                $descriptions[] = $descriptionText;
+                            }
+                        }
+                    });
+                }
+            } catch (\Exception $e) {
+                $this->log("Error extracting description from selector '$selectorString': " . $e->getMessage(), self::COLOR_RED);
+            }
+        }
+
+        // حذف توضیحات تکراری و ترکیب آنها
+        $descriptions = array_filter(array_unique($descriptions), function ($desc) {
+            return !empty(trim($desc));
+        });
+
+        return implode(' ', $descriptions);
+    }
+
+// 3. متد جدید برای پاکسازی متن توضیحات
+    private function cleanDescriptionText(string $text): string
+    {
+        // حذف HTML tags
+        $text = strip_tags($text);
+
+        // حذف کاراکترهای اضافی
+        $text = preg_replace('/\s+/', ' ', $text);
+
+        // حذف فاصله‌های اضافی از ابتدا و انتها
+        $text = trim($text);
+
+        // حذف کاراکترهای کنترلی
+        $text = preg_replace('/[\x00-\x1F\x7F]/', '', $text);
+
+        return $text;
+    }
+
     private function processBrandField(Crawler $crawler, array $selector, ?string $title = null): string
     {
         $brandMethod = $this->config['brand_method'] ?? 'selector';
@@ -342,7 +410,8 @@ class ProductDataProcessor
                 'image' => $productData['image'] ?? '',
                 'guarantee' => $productData['guarantee'] ?? '',
                 'category' => $productData['category'] ?? '',
-                'brand' => $productData['brand'] ?? '', // اضافه کردن فیلد جدید
+                'brand' => $productData['brand'] ?? '',
+                'description' => $productData['description'] ?? '', // اضافه کردن فیلد جدید
                 'updated_at' => now(),
             ];
 
@@ -990,7 +1059,7 @@ class ProductDataProcessor
     private function detectProductChanges($existingProduct, array $newData): array
     {
         $changes = [];
-        $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category', 'brand'];
+        $fieldsToCheck = ['title', 'price', 'availability', 'off', 'image', 'guarantee', 'category', 'brand', 'description'];
 
         foreach ($fieldsToCheck as $field) {
             $oldValue = $existingProduct->$field;
@@ -1004,6 +1073,7 @@ class ProductDataProcessor
         return $changes;
     }
 
+// 6. تغییر در متد logProduct - اضافه کردن description به لاگ (اختیاری)
     public function logProduct(array $product, string $action = 'PROCESSED', array $extraInfo = []): void
     {
         $availability = (int)($product['availability'] ?? 0) ? 'موجود' : 'ناموجود';
@@ -1015,6 +1085,7 @@ class ProductDataProcessor
         $title = $product['title'] ?? 'N/A';
         $category = $product['category'] ?? 'N/A';
         $brand = $product['brand'] ?? 'N/A';
+        $description = $product['description'] ?? 'N/A';
 
         $actionConfig = $this->getActionConfig($action);
 
@@ -1026,8 +1097,8 @@ class ProductDataProcessor
             }
         }
 
-        // Generate table with brand field
-        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Brand', 'Availability', 'Discount', 'Image', 'Guarantee'];
+        // اگر می‌خواهید description را در جدول نمایش دهید
+        $headers = ['Product ID', 'Title', 'Price', 'Category', 'Brand', 'Availability', 'Discount', 'Image', 'Guarantee', 'Description'];
         $rows = [[
             $productId,
             mb_substr($title, 0, 30) . (mb_strlen($title) > 30 ? '...' : ''),
@@ -1037,7 +1108,8 @@ class ProductDataProcessor
             $availability,
             $discount,
             $imageStatus,
-            mb_substr($guaranteeStatus, 0, 15) . (mb_strlen($guaranteeStatus) > 15 ? '...' : '')
+            mb_substr($guaranteeStatus, 0, 15) . (mb_strlen($guaranteeStatus) > 15 ? '...' : ''),
+            mb_substr($description, 0, 30) . (mb_strlen($description) > 30 ? '...' : '')
         ]];
 
         $table = $this->generateAsciiTable($headers, $rows);

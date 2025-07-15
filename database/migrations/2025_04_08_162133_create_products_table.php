@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
             $table->integer('availability')->default(0);
             $table->string('image')->nullable();
             $table->string('category')->nullable();
+            $table->text('description')->nullable();
             $table->string('brand')->nullable(); // اضافه کردن فیلد جدید
             $table->float('off')->default(0);
             $table->string('guarantee')->nullable();

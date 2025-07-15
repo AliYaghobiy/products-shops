@@ -16,6 +16,7 @@ class Product extends Model
         'availability',
         'image',
         'category',
+        'description',
         'off',
         'guarantee',
         'brand', // اضافه کردن فیلد جدید
