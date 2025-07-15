@@ -931,6 +931,31 @@
                             </div>
                         </div>
 
+                        <!-- description Selectors -->
+                        <div class="form-group">
+                            <label class="label">سلکتورهای توضیحات <span class="required">*</span></label>
+                            <div id="description-selectors" class="space-y-2">
+                                @php
+                                    $descriptionSelectors = old('selectors.product_page.description.selector',
+                                        isset($content['selectors']['product_page']['description']['selector']) && is_array($content['selectors']['product_page']['description']['selector'])
+                                        ? $content['selectors']['product_page']['description']['selector']
+                                        : (isset($content['selectors']['product_page']['description']['selector']) ? [$content['selectors']['product_page']['description']['selector']] : [''])
+                                    );
+                                    if (empty($descriptionSelectors)) $descriptionSelectors = [''];
+                                @endphp
+                                @foreach ($descriptionSelectors as $selector)
+                                    <div class="flex-row">
+                                        <input type="hidden" name="selectors[product_page][description][type]" value="css">
+                                        <input type="text" name="selectors[product_page][description][selector][]"
+                                               class="input" placeholder=".product-description" required
+                                               value="{{ $selector }}">
+                                        <button type="button" class="btn btn-primary add-description">+</button>
+                                        <button type="button" class="btn btn-danger remove-description">−</button>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+
                         <!-- Price Selectors -->
                         <div class="form-group">
                             <label class="label">سلکتورهای قیمت <span class="required">*</span></label>
@@ -1263,6 +1288,7 @@
             if (target.classList.contains('add-url') ||
                 target.classList.contains('add-product-url') ||
                 target.classList.contains('add-category') ||
+                target.classList.contains('add-description') ||
                 target.classList.contains('add-price') ||
                 target.classList.contains('add-availability') ||
                 target.classList.contains('add-out-of-stock') ||
@@ -1294,6 +1320,7 @@
                 target.classList.contains('remove-url') ||
                 target.classList.contains('remove-product-url') ||
                 target.classList.contains('remove-category') ||
+                target.classList.contains('remove-description') ||
                 target.classList.contains('remove-price') ||
                 target.classList.contains('remove-availability') ||
                 target.classList.contains('remove-out-of-stock') ||
@@ -1316,6 +1343,7 @@
     createFieldManager('base-urls', 'base_urls[]', 'https://example.com', true);
     createFieldManager('product-urls', 'products_urls[]', 'https://example.com/product/123', true);
     createFieldManager('category-selectors', 'selectors[product_page][category][selector][]', '.product-category', true);
+    createFieldManager('description-selectors', 'selectors[product_page][description][selector][]', '.product-description', true);
     createFieldManager('price-selectors', 'selectors[product_page][price][selector][]', '.product-price', true);
     createFieldManager('availability-selectors', 'selectors[product_page][availability][selector][]', '.product-availability', true);
     createFieldManager('out-of-stock-selectors', 'selectors[product_page][out_of_stock][selector][]', '.out-of-stock');

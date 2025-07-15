@@ -552,6 +552,37 @@
                         </div>
                     </div>
 
+                    <!-- سلکتورهای توضیحات -->
+                    <div class="form-group">
+                        <label>
+                            سلکتورهای توضیحات <span class="required">*</span>
+                        </label>
+                        <div class="description-selectors-container space-y-3">
+                            <div class="selector-container">
+                                <input type="text" name="description_selector[]"
+                                       value=".posted_in > a:nth-child(2)"
+                                       class="input-field"
+                                       placeholder=".product-description">
+                                <button type="button" class="btn btn-primary add-description-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
+                                         fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                                <button type="button" class="btn btn-danger remove-description-selector">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 20 20"
+                                         fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- سلکتورهای موجودی -->
                     <div class="form-group">
                         <label>
@@ -926,6 +957,12 @@
                                             <span class="text-purple-600">{{ $product['category'] }}</span>
                                         </div>
                                     @endif
+                                        @if(!empty($product['description']))
+                                            <div>
+                                                <strong>توضیحات:</strong>
+                                                <span class="text-purple-600">{{ $product['description'] }}</span>
+                                            </div>
+                                        @endif
                                     @if(!empty($product['product_id']))
                                         <div>
                                             <strong>شناسه محصول:</strong>
@@ -1074,6 +1111,7 @@
         // Initialize handlers for all dynamic fields
         attachHandlers('.add-price-selector', '.price-selectors-container', 'price_selector[]', '.product-price');
         attachHandlers('.add-category-selector', '.category-selectors-container', 'category_selector[]', '.product-category');
+        attachHandlers('.add-description-selector', '.description-selectors-container', 'description_selector[]', '.product-description');
         attachHandlers('.add-availability-selector', '.availability-selectors-container', 'availability_selector[]', '.product-availability');
         attachHandlers('.add-out-of-stock-selector', '.out-of-stock-selectors-container', 'out_of_stock_selector[]', '.out-of-stock');
         attachHandlers('.add-guarantee-keyword', '.guarantee-keywords-container', 'guarantee_keywords[]', 'گارانتی');
@@ -1246,6 +1284,7 @@
                                         </span>
                                     </div>` : ''}
                                 ${product.category ? `<div><strong>دسته‌بندی:</strong> <span class="text-purple-600">${product.category}</span></div>` : ''}
+                                ${product.description ? `<div><strong>توضیحات:</strong> <span class="text-purple-600">${product.description}</span></div>` : ''}
                                 ${product.product_id ? `<div><strong>شناسه محصول:</strong> <span class="text-indigo-600">${product.product_id}</span></div>` : ''}
                                 ${product.guarantee ? `<div><strong>گارانتی:</strong> <span class="text-orange-600">${product.guarantee}</span></div>` : ''}
                                 ${product.image ? `<div><strong>تصویر:</strong> <a href="${product.image}" target="_blank" class="text-blue-500 hover:underline">مشاهده تصویر</a></div>` : ''}

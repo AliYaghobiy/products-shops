@@ -55,8 +55,8 @@ class ConfigBuilderService
             'processing_method' => $method == 3 ? 3 : 1,
             'base_urls' => $request->input('base_urls'),
             'products_urls' => $request->input('products_urls'),
-            'request_delay_min' => (int)$request->input('request_delay_min', 1000),
-            'request_delay_max' => (int)$request->input('request_delay_max', 1000),
+            'request_delay_min' => (int)$request->input('request_delay_min', 2000),
+            'request_delay_max' => (int)$request->input('request_delay_max', 4000),
             'timeout' => (int)$request->input('timeout', 60),
             'max_retries' => (int)$request->input('max_retries', 2),
             'concurrency' => (int)$request->input('concurrency', 10),
@@ -115,6 +115,10 @@ class ConfigBuilderService
                     'type' => $request->input('selectors.product_page.category.type'),
                     'selector' => $this->processCategorySelectors($request),
                     'attribute' => $request->input('selectors.product_page.category.attribute'),
+                ],
+                'description' => [
+                    'type' => $request->input('selectors.product_page.description.type'),
+                    'selector' => $request->input('selectors.product_page.description.selector'),
                 ],
                 'availability' => [
                     'type' => $request->input('selectors.product_page.availability.type'),
@@ -635,6 +639,10 @@ class ConfigBuilderService
                         'type' => 'css',
                         'selector' => $this->processMultipleSelectors($request->input('category_selector', [])),
                         'attribute' => null,
+                    ],
+                    'description' => [
+                        'type' => 'css',
+                        'selector' => $this->processMultipleSelectors($request->input('description_selector', [])),
                     ],
                     'availability' => [
                         'type' => 'css',

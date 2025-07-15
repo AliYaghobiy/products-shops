@@ -64,6 +64,11 @@ class ConfigValidationService
             'selectors.product_page.category.selector' => 'nullable|array',
             'selectors.product_page.category.selector.*' => 'required|string',
             'selectors.product_page.category.selector_single' => 'nullable|string',
+
+            'selectors.product_page.description.selector' => 'nullable|array',
+            'selectors.product_page.description.selector.*' => 'required|string',
+            'selectors.product_page.description.selector_single' => 'nullable|string',
+
             'selectors.product_page.product_id.selector' => 'nullable|array',
             'selectors.product_page.product_id.selector.*' => 'required|string',
             'selectors.product_page.product_id.selector_single' => 'nullable|string',
@@ -179,6 +184,9 @@ class ConfigValidationService
 
             'category_selector' => 'nullable|array',
             'category_selector.*' => 'nullable|string',
+
+            'description_selector' => 'nullable|array',
+            'description_selector.*' => 'nullable|string',
 
             'availability_selector' => 'nullable|array',
             'availability_selector.*' => 'nullable|string',
