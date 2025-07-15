@@ -117,6 +117,7 @@ class TestDatabaseQuality extends Command
 
         // تست‌های کیفیت
         $this->testMissingTitles();
+        $this->testMissingDescription();
         $this->testMissingPrices();
         $this->testMissingProductIds();
         $this->testMissingImages();
@@ -156,6 +157,19 @@ class TestDatabaseQuality extends Command
             ->count();
 
         $this->displayTestResult('عنوان (Title)', $count);
+    }
+    private function testMissingDescription(): void
+    {
+        $count = DB::table('products')
+            ->where(function($query) {
+                $query->whereNull('description')
+                    ->orWhere('description', '')
+                    ->orWhere('description', 'like', '%null%')
+                    ->orWhere('description', 'like', '%undefined%');
+            })
+            ->count();
+
+        $this->displayTestResult('توضیحات (description)', $count);
     }
 
     private function testMissingPrices(): void
