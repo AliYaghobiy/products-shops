@@ -21,10 +21,16 @@ class BrandDetectionService
     private string $brandConnection = 'mysql';
 
     // تنظیمات حساسیت
-    private const EXACT_MATCH_THRESHOLD = 0.7;      // آستانه برای تطابق دقیق
-    private const PARTIAL_MATCH_THRESHOLD = 0.6;    // آستانه برای تطابق جزئی
-    private const FUZZY_MATCH_THRESHOLD = 0.9;      // آستانه برای تطابق فازی
-    private const MIN_WORD_LENGTH = 3;              // حداقل طول کلمه برای بررسی
+    private const EXACT_MATCH_THRESHOLD = 0.7;
+    private const PARTIAL_MATCH_THRESHOLD = 0.6;
+    private const FUZZY_MATCH_THRESHOLD = 0.9;
+    private const MIN_WORD_LENGTH = 3;
+
+    // کش برای نتایج محاسبات پرهزینه
+    private array $normalizedTextCache = [];
+    private array $similarityCache = [];
+    private array $wordExtractionCache = [];
+    private ?array $stopWordsCache = null;
 
     public function setOutputCallback(callable $callback): void
     {
@@ -40,7 +46,6 @@ class BrandDetectionService
             return null;
         }
 
-
         try {
             if (!$this->checkDatabaseAvailability()) {
                 $this->log("⚠️ جدول brands در دسترس نیست - تشخیص برند غیرفعال شد", self::COLOR_YELLOW);
@@ -53,7 +58,7 @@ class BrandDetectionService
                 $this->log("⚠️ هیچ برندی در دیتابیس یافت نشد", self::COLOR_YELLOW);
                 return null;
             }
-            
+
             // ابتدا تطابق دقیق را بررسی کن
             $exactMatch = $this->findExactMatch($text, $brands);
             if ($exactMatch) {
@@ -63,11 +68,7 @@ class BrandDetectionService
             // در صورت عدم تطابق دقیق، تطابق فازی را بررسی کن
             $detectedBrand = $this->findBestMatchingBrand($text, $brands);
 
-            if ($detectedBrand) {
-                return $detectedBrand['name'];
-            } else {
-                return null;
-            }
+            return $detectedBrand ? $detectedBrand['name'] : null;
 
         } catch (\Exception $e) {
             return null;
@@ -84,42 +85,25 @@ class BrandDetectionService
 
         foreach ($brands as $brand) {
             // بررسی تطابق دقیق نام اصلی
-            if (!empty($brand['name'])) {
-                $brandName = $this->normalizeText($brand['name']);
-                $brandWords = $this->extractValidWords($brandName);
-
-                if ($this->isExactWordMatch($textWords, $brandWords)) {
-                    return $brand;
-                }
+            if (!empty($brand['name']) && $this->checkFieldMatch($textWords, $brand['name'])) {
+                return $brand;
             }
 
             // بررسی تطابق دقیق نام SEO
-            if (!empty($brand['nameSeo'])) {
-                $brandNameSeo = $this->normalizeText($brand['nameSeo']);
-                $brandSeoWords = $this->extractValidWords($brandNameSeo);
-
-                if ($this->isExactWordMatch($textWords, $brandSeoWords)) {
-                    return $brand;
-                }
+            if (!empty($brand['nameSeo']) && $this->checkFieldMatch($textWords, $brand['nameSeo'])) {
+                return $brand;
             }
 
             // بررسی تطابق دقیق slug
-            if (!empty($brand['slug'])) {
-                $brandSlug = $this->normalizeText($brand['slug']);
-                $brandSlugWords = $this->extractValidWords($brandSlug);
-
-                if ($this->isExactWordMatch($textWords, $brandSlugWords)) {
-                    return $brand;
-                }
+            if (!empty($brand['slug']) && $this->checkFieldMatch($textWords, $brand['slug'])) {
+                return $brand;
             }
 
             // بررسی تطابق کامل کلمه کلیدی
             if (!empty($brand['keyword'])) {
                 $keywords = array_filter(array_map('trim', explode(',', $brand['keyword'])));
                 foreach ($keywords as $keyword) {
-                    $normalizedKeyword = $this->normalizeText($keyword);
-                    $keywordWords = $this->extractValidWords($normalizedKeyword);
-                    if ($this->isExactWordMatch($textWords, $keywordWords)) {
+                    if ($this->checkFieldMatch($textWords, $keyword)) {
                         return $brand;
                     }
                 }
@@ -130,178 +114,63 @@ class BrandDetectionService
     }
 
     /**
-     * بررسی تطابق دقیق کلمات
+     * بررسی تطابق فیلد (بهینه‌شده)
      */
-    private function isExactWordMatch(array $textWords, array $brandWords): bool
+    private function checkFieldMatch(array $textWords, string $fieldValue): bool
     {
-        if (empty($brandWords)) {
+        $normalizedField = $this->normalizeText($fieldValue);
+        $fieldWords = $this->extractValidWords($normalizedField);
+
+        if (empty($fieldWords)) {
             return false;
         }
 
-        $brandWords = array_filter($brandWords, function ($word) {
-            return strlen($word) >= self::MIN_WORD_LENGTH;
-        });
+        $fieldWords = array_values(array_filter($fieldWords, fn($word) => strlen($word) >= self::MIN_WORD_LENGTH));
 
-        if (empty($brandWords)) {
+        if (empty($fieldWords)) {
             return false;
         }
 
-        // بازسازی اندیس‌های آرایه بعد از فیلتر کردن
-        $brandWords = array_values($brandWords);
-
-        // اگر برند فقط یک کلمه دارد، روش قبلی را استفاده کن
-        if (count($brandWords) == 1) {
-            return $this->hasSingleWordMatch($textWords, $brandWords[0]);
-        }
-
-        // برای برندهای چندکلمه‌ای، فقط دنباله کاملاً پیوسته و به ترتیب پذیرفته می‌شود
-        $sequentialMatch = $this->hasSequentialMatch($textWords, $brandWords);
-        if ($sequentialMatch) {
-            return true;
-        }
-
-        return false;
+        return count($fieldWords) === 1
+            ? $this->hasSingleWordMatch($textWords, $fieldWords[0])
+            : $this->hasSequentialMatch($textWords, $fieldWords);
     }
 
     /**
-     * بررسی اینکه آیا کلمات برند در متن نسبتاً نزدیک هم قرار دارند
-     * این تابع جدید اضافه شده است
-     */
-    private function areWordsReasonablyClose(array $textWords, array $brandWords): bool
-    {
-        $brandPositions = [];
-
-        // یافتن موقعیت‌های هر کلمه برند در متن
-        foreach ($brandWords as $brandWord) {
-            foreach ($textWords as $index => $textWord) {
-                if ($brandWord === $textWord) {
-                    $brandPositions[$brandWord] = $index;
-                    break;
-                }
-            }
-        }
-
-        // اگر تمام کلمات برند یافت نشدند
-        if (count($brandPositions) !== count($brandWords)) {
-            return false;
-        }
-
-        $positions = array_values($brandPositions);
-        sort($positions);
-
-        // محاسبه حداکثر فاصله بین کلمات برند
-        $maxDistance = max($positions) - min($positions);
-
-        // اگر کلمات برند در بیش از 5 کلمه فاصله باشند، رد شود
-        // این عدد قابل تنظیم است و بر اساس نیاز می‌توان آن را تغییر داد
-        $maxAllowedDistance = 5;
-
-        $isClose = $maxDistance <= $maxAllowedDistance;
-
-        return $isClose;
-    }
-
-    /**
-     * بررسی تطابق دنباله‌ای کلمات برند در متن (بهبود یافته برای جلوگیری از فاصله غیرمجاز)
+     * بررسی تطابق دنباله‌ای کلمات برند در متن (بهینه‌شده)
      */
     private function hasSequentialMatch(array $textWords, array $brandWords): bool
     {
-        $textWordsCount = count($textWords);
-        $brandWordsCount = count($brandWords);
+        $textCount = count($textWords);
+        $brandCount = count($brandWords);
 
-        if ($brandWordsCount > $textWordsCount) {
+        if ($brandCount > $textCount) {
             return false;
         }
 
         // جستجوی دنباله کاملاً پیوسته و به ترتیب
-        for ($i = 0; $i <= $textWordsCount - $brandWordsCount; $i++) {
-            $isSequentialMatch = true;
-
-            for ($j = 0; $j < $brandWordsCount; $j++) {
+        for ($i = 0; $i <= $textCount - $brandCount; $i++) {
+            $match = true;
+            for ($j = 0; $j < $brandCount; $j++) {
                 if ($textWords[$i + $j] !== $brandWords[$j]) {
-                    $isSequentialMatch = false;
+                    $match = false;
                     break;
                 }
             }
-
-        }
-
-        return false;
-    }
-
-    /**
-     * بررسی تطابق یک کلمه
-     */
-    private function hasSingleWordMatch(array $textWords, string $brandWord): bool
-    {
-        foreach ($textWords as $textWord) {
-            if ($brandWord === $textWord) {
+            if ($match) {
                 return true;
             }
         }
-        return false;
-    }
-
-    /**
-     * بررسی تطابق دنباله‌ای با حداکثر یک کلمه فاصله
-     */
-    private function hasSequentialMatchWithGap(array $textWords, array $brandWords): bool
-    {
-        $textWordsCount = count($textWords);
-        $brandWordsCount = count($brandWords);
-
-        if ($brandWordsCount < 2) {
-            return false; // برای کلمات تکی این بررسی لازم نیست
-        }
-
-        // جستجوی اولین کلمه برند
-        for ($i = 0; $i < $textWordsCount; $i++) {
-            if ($textWords[$i] === $brandWords[0]) {
-                // بررسی ادامه دنباله با حداکثر یک فاصله
-                if ($this->checkSequenceWithGap($textWords, $brandWords, $i)) {
-                    return true;
-                }
-            }
-        }
 
         return false;
     }
 
     /**
-     * بررسی دنباله از موقعیت مشخص با در نظر گیری فاصله
+     * بررسی تطابق یک کلمه (بهینه‌شده)
      */
-    private function checkSequenceWithGap(array $textWords, array $brandWords, int $startIndex): bool
+    private function hasSingleWordMatch(array $textWords, string $brandWord): bool
     {
-        $textWordsCount = count($textWords);
-        $brandWordsCount = count($brandWords);
-        $currentTextIndex = $startIndex;
-        $foundWords = [$brandWords[0]]; // اولین کلمه پیدا شده
-
-        // جستجوی کلمات بعدی برند
-        for ($brandIndex = 1; $brandIndex < $brandWordsCount; $brandIndex++) {
-            $wordFound = false;
-
-            // جستجو در حداکثر 3 کلمه بعدی (1 کلمه فاصله + کلمه هدف + 1 کلمه اضافی)
-            for ($gap = 1; $gap <= 3 && ($currentTextIndex + $gap) < $textWordsCount; $gap++) {
-                if ($textWords[$currentTextIndex + $gap] === $brandWords[$brandIndex]) {
-                    $currentTextIndex = $currentTextIndex + $gap;
-                    $foundWords[] = $brandWords[$brandIndex];
-                    $wordFound = true;
-                    break;
-                }
-            }
-
-            if (!$wordFound) {
-                return false;
-            }
-        }
-
-        // اگر همه کلمات برند یافت شدند
-        if (count($foundWords) === $brandWordsCount) {
-            return true;
-        }
-
-        return false;
+        return in_array($brandWord, $textWords, true);
     }
 
     /**
@@ -353,13 +222,10 @@ class BrandDetectionService
             $brands = DB::connection($this->brandConnection)->table('brands')
                 ->select('id', 'name', 'nameSeo', 'slug', 'body', 'bodySeo', 'keyword')
                 ->get()
-                ->map(function ($brand) {
-                    return (array)$brand;
-                })
+                ->map(fn($brand) => (array)$brand)
                 ->toArray();
 
             $this->brandsCache = $brands;
-
             return $brands;
 
         } catch (\Exception $e) {
@@ -377,16 +243,9 @@ class BrandDetectionService
         $text = $this->normalizeText($text);
         $bestMatch = null;
         $highestScore = 0;
-        $detailedScores = [];
 
         foreach ($brands as $brand) {
             $score = $this->calculateAdvancedBrandScore($text, $brand);
-
-            $detailedScores[] = [
-                'brand' => $brand['name'],
-                'score' => round($score, 4),
-                'brand_data' => $brand
-            ];
 
             if ($score > $highestScore) {
                 $highestScore = $score;
@@ -394,158 +253,106 @@ class BrandDetectionService
             }
         }
 
-        // مرتب‌سازی و نمایش بهترین نتایج
-        usort($detailedScores, function ($a, $b) {
-            return $b['score'] <=> $a['score'];
-        });
-        
         // آستانه تطابق متحرک یا پذیرش تطابق کامل
         $dynamicThreshold = $this->calculateDynamicThreshold($highestScore);
-        if ($highestScore >= 1.0 || $highestScore >= $dynamicThreshold) {
-            return $bestMatch;
-        }
 
-        return null;
+        return ($highestScore >= 1.0 || $highestScore >= $dynamicThreshold) ? $bestMatch : null;
     }
 
     /**
-     * محاسبه آستانه متحرک
+     * محاسبه آستانه متحرک (بهینه‌شده)
      */
     private function calculateDynamicThreshold(float $highestScore): float
     {
-        if ($highestScore >= 0.8) {
-            return 0.8;
-        } elseif ($highestScore >= 0.6) {
-            return 0.6;
-        } elseif ($highestScore >= 0.4) {
-            return 0.4;
-        } elseif ($highestScore >= 0.2) {
-            return 0.2;
-        }
-
-        return 0.1; // حداقل آستانه
+        return match (true) {
+            $highestScore >= 0.8 => 0.8,
+            $highestScore >= 0.6 => 0.6,
+            $highestScore >= 0.4 => 0.4,
+            $highestScore >= 0.2 => 0.2,
+            default => 0.1
+        };
     }
 
     /**
-     * محاسبه امتیاز پیشرفته برند
+     * محاسبه امتیاز پیشرفته برند (بهینه‌شده)
      */
     private function calculateAdvancedBrandScore(string $text, array $brand): float
     {
         $totalScore = 0;
         $maxPossibleScore = 0;
 
-        // امتیاز نام اصلی (وزن: 4)
-        if (!empty($brand['name'])) {
-            $nameScore = $this->calculatePreciseMatch($text, $brand['name'], 'name');
-            $weightedScore = $nameScore * 4;
-            $totalScore += $weightedScore;
-            $maxPossibleScore += 4;
+        // تعریف وزن‌ها و فیلدها
+        $fields = [
+            'name' => 4,
+            'nameSeo' => 3.5,
+            'slug' => 3,
+            'keyword' => 2,
+            'body' => 1,
+            'bodySeo' => 0.5
+        ];
 
+        foreach ($fields as $field => $weight) {
+            if (empty($brand[$field])) {
+                continue;
+            }
+
+            $score = match ($field) {
+                'keyword' => $this->calculateKeywordMatch($text, $brand[$field]),
+                'body', 'bodySeo' => $this->calculateContextMatch($text, $brand[$field]),
+                default => $this->calculatePreciseMatch($text, $brand[$field], $field)
+            };
+
+            $totalScore += $score * $weight;
+            $maxPossibleScore += $weight;
         }
 
-        // امتیاز نام SEO (وزن: 3.5)
-        if (!empty($brand['nameSeo'])) {
-            $nameSeoScore = $this->calculatePreciseMatch($text, $brand['nameSeo'], 'nameSeo');
-            $weightedScore = $nameSeoScore * 3.5;
-            $totalScore += $weightedScore;
-            $maxPossibleScore += 3.5;
-        }
-
-        // امتیاز slug (وزن: 3)
-        if (!empty($brand['slug'])) {
-            $slugScore = $this->calculatePreciseMatch($text, $brand['slug'], 'slug');
-            $weightedScore = $slugScore * 3;
-            $totalScore += $weightedScore;
-            $maxPossibleScore += 3;
-        }
-
-        // امتیاز کلمات کلیدی (وزن: 2)
-        if (!empty($brand['keyword'])) {
-            $keywordScore = $this->calculateKeywordMatch($text, $brand['keyword']);
-            $weightedScore = $keywordScore * 2;
-            $totalScore += $weightedScore;
-            $maxPossibleScore += 2;
-        }
-
-        // امتیاز توضیحات (وزن: 1)
-        if (!empty($brand['body'])) {
-            $bodyScore = $this->calculateContextMatch($text, $brand['body']);
-            $weightedScore = $bodyScore * 1;
-            $totalScore += $weightedScore;
-            $maxPossibleScore += 1;
-        }
-
-        // امتیاز توضیحات SEO (وزن: 0.5)
-        if (!empty($brand['bodySeo'])) {
-            $bodySeoScore = $this->calculateContextMatch($text, $brand['bodySeo']);
-            $weightedScore = $bodySeoScore * 0.5;
-            $totalScore += $weightedScore;
-            $maxPossibleScore += 0.5;
-        }
-
-        // نرمال‌سازی امتیاز
-        $finalScore = $maxPossibleScore > 0 ? $totalScore / $maxPossibleScore : 0;
-
-
-        return $finalScore;
+        return $maxPossibleScore > 0 ? $totalScore / $maxPossibleScore : 0;
     }
 
     /**
-     * محاسبه تطابق دقیق بهبود یافته
+     * محاسبه تطابق دقیق بهبود یافته (بهینه‌شده)
      */
     private function calculatePreciseMatch(string $text, string $brandValue, string $fieldType): float
     {
-        $normalizedText = $this->normalizeText($text);
         $normalizedBrand = $this->normalizeText($brandValue);
-
-        $textWords = $this->extractValidWords($normalizedText);
         $brandWords = $this->extractValidWords($normalizedBrand);
 
         if (empty($brandWords)) {
             return 0;
         }
 
-        // اگر برند تک‌کلمه‌ای است، منطق قبلی را اجرا کن
-        if (count($brandWords) == 1) {
+        $textWords = $this->extractValidWords($text);
+
+        // اگر برند تک‌کلمه‌ای است
+        if (count($brandWords) === 1) {
             $brandWord = $brandWords[0];
-            $bestWordScore = 0;
-            $bestMatchWord = '';
 
             foreach ($textWords as $textWord) {
-                // تطابق کامل (امتیاز 1)
+                // تطابق کامل
                 if ($brandWord === $textWord) {
-                    $bestWordScore = 1.0;
-                    $bestMatchWord = $textWord;
-                    break;
+                    return 1.0;
                 }
 
                 // تطابق فازی برای کلمات طولانی
                 if (strlen($brandWord) >= 4 && strlen($textWord) >= 4) {
                     $similarity = $this->calculateSimilarity($brandWord, $textWord);
-                    if ($similarity >= self::FUZZY_MATCH_THRESHOLD && $similarity > $bestWordScore) {
-                        $bestWordScore = $similarity;
-                        $bestMatchWord = $textWord;
+                    if ($similarity >= self::FUZZY_MATCH_THRESHOLD) {
+                        return $similarity;
                     }
                 }
             }
-
-            return $bestWordScore;
+            return 0;
         }
 
-        // برای برندهای چندکلمه‌ای، فقط دنباله پیوسته و به ترتیب پذیرفته می‌شود
-        if ($this->hasSequentialMatch($textWords, $brandWords)) {
-            return 1.0;
-        }
-
-        return 0;
+        // برای برندهای چندکلمه‌ای، فقط دنباله پیوسته و به ترتیب
+        return $this->hasSequentialMatch($textWords, $brandWords) ? 1.0 : 0;
     }
 
     /**
-     * محاسبه تطابق کلمات کلیدی بهبود یافته
+     * محاسبه تطابق کلمات کلیدی بهبود یافته (بهینه‌شده)
      */
     private function calculateKeywordMatch(string $text, string $keywords): float
     {
-        $normalizedText = $this->normalizeText($text);
         $keywordList = array_filter(array_map('trim', explode(',', $keywords)));
 
         if (empty($keywordList)) {
@@ -553,64 +360,59 @@ class BrandDetectionService
         }
 
         $matches = 0;
-        $totalKeywords = count($keywordList);
-        $textWords = $this->extractValidWords($normalizedText);
+        $totalKeywords = 0;
+        $textWords = $this->extractValidWords($text);
 
         foreach ($keywordList as $keyword) {
             $normalizedKeyword = $this->normalizeText($keyword);
 
             if (strlen($normalizedKeyword) < 3) {
-                $totalKeywords--; // کلمات کوتاه را نادیده بگیر
                 continue;
             }
 
-            $keywordFound = false;
+            $totalKeywords++;
 
             // جستجوی تطابق کامل در متن
-            if ($this->isCompleteWordMatch($normalizedText, $normalizedKeyword)) {
-                $matches += 1.0;
-                $keywordFound = true;
-            } else {
-                // جستجوی تطابق در کلمات جداگانه
-                foreach ($textWords as $textWord) {
-                    if ($normalizedKeyword === $textWord) {
-                        $matches += 1.0;
-                        $keywordFound = true;
-                        break;
-                    }
+            if ($this->isCompleteWordMatch($text, $normalizedKeyword)) {
+                $matches++;
+                continue;
+            }
 
-                    // تطابق فازی برای کلمات طولانی
-                    if (strlen($normalizedKeyword) >= 4 && strlen($textWord) >= 4) {
-                        $similarity = $this->calculateSimilarity($normalizedKeyword, $textWord);
-                        if ($similarity >= self::FUZZY_MATCH_THRESHOLD) {
-                            $matches += $similarity;
-                            $keywordFound = true;
-                            break;
-                        }
+            // جستجوی تطابق در کلمات جداگانه
+            foreach ($textWords as $textWord) {
+                if ($normalizedKeyword === $textWord) {
+                    $matches++;
+                    break;
+                }
+
+                // تطابق فازی برای کلمات طولانی
+                if (strlen($normalizedKeyword) >= 4 && strlen($textWord) >= 4) {
+                    $similarity = $this->calculateSimilarity($normalizedKeyword, $textWord);
+                    if ($similarity >= self::FUZZY_MATCH_THRESHOLD) {
+                        $matches += $similarity;
+                        break;
                     }
                 }
             }
-
         }
 
         return $totalKeywords > 0 ? min($matches / $totalKeywords, 1.0) : 0;
     }
 
     /**
-     * محاسبه تطابق متنی (برای توضیحات)
+     * محاسبه تطابق متنی (بهینه‌شده)
      */
     private function calculateContextMatch(string $text, string $context): float
     {
-        $normalizedText = $this->normalizeText($text);
-        $normalizedContext = $this->normalizeText($context);
+        $textWords = array_filter(
+            $this->extractValidWords($text),
+            fn($word) => strlen($word) >= 4
+        );
 
-        $textWords = array_filter($this->extractValidWords($normalizedText), function ($word) {
-            return strlen($word) >= 4; // فقط کلمات طولانی
-        });
-
-        $contextWords = array_filter($this->extractValidWords($normalizedContext), function ($word) {
-            return strlen($word) >= 4; // فقط کلمات طولانی
-        });
+        $contextWords = array_filter(
+            $this->extractValidWords($context),
+            fn($word) => strlen($word) >= 4
+        );
 
         if (empty($textWords) || empty($contextWords)) {
             return 0;
@@ -620,7 +422,7 @@ class BrandDetectionService
         foreach ($textWords as $textWord) {
             foreach ($contextWords as $contextWord) {
                 $similarity = $this->calculateSimilarity($textWord, $contextWord);
-                if ($similarity >= 0.85) { // آستانه بالاتر برای متن
+                if ($similarity >= 0.85) {
                     $matches += $similarity;
                     break;
                 }
@@ -631,10 +433,16 @@ class BrandDetectionService
     }
 
     /**
-     * استخراج کلمات معتبر بهبود یافته
+     * استخراج کلمات معتبر بهبود یافته (بهینه‌شده با کش)
      */
     private function extractValidWords(string $text): array
     {
+        $cacheKey = md5($text);
+
+        if (isset($this->wordExtractionCache[$cacheKey])) {
+            return $this->wordExtractionCache[$cacheKey];
+        }
+
         // تقسیم با جداکننده‌های مختلف
         $words = preg_split('/[\s\-_\.\/\|\(\)\[\]]+/', trim($text), -1, PREG_SPLIT_NO_EMPTY);
 
@@ -652,43 +460,55 @@ class BrandDetectionService
             }
         }
 
-        return array_unique($validWords);
+        $result = array_unique($validWords);
+
+        // کش کردن نتیجه (محدود کردن اندازه کش)
+        if (count($this->wordExtractionCache) < 1000) {
+            $this->wordExtractionCache[$cacheKey] = $result;
+        }
+
+        return $result;
     }
 
     /**
-     * بررسی کلمات توقف
+     * بررسی کلمات توقف (بهینه‌شده با کش)
      */
     private function isStopWord(string $word): bool
     {
-        $word = mb_strtolower($word, 'UTF-8');
+        if ($this->stopWordsCache === null) {
+            $this->stopWordsCache = array_flip([
+                // کلمات فارسی
+                'مدل', 'نوع', 'برند', 'محصول', 'کیفیت', 'بالا', 'پایین', 'بزرگ', 'کوچک',
+                'قرمز', 'آبی', 'سفید', 'سیاه', 'رنگ', 'اندازه', 'سایز', 'عدد', 'تعداد',
+                'برای', 'مخصوص', 'ویژه', 'خاص', 'مناسب', 'بهترین', 'ارزان', 'گران',
+                'جدید', 'قدیمی', 'اصل', 'اصلی', 'تقلبی', 'اورجینال', 'چینی', 'ایرانی',
+                // کلمات انگلیسی
+                'model', 'type', 'brand', 'product', 'quality', 'high', 'low', 'big', 'small',
+                'red', 'blue', 'white', 'black', 'color', 'size', 'new', 'old', 'original',
+                'for', 'special', 'best', 'cheap', 'expensive', 'chinese', 'iranian',
+                // کلمات فنی
+                'port', 'cable', 'meter', 'cm', 'mm', 'kg', 'gram', 'console', 'system',
+                'device', 'tool', 'equipment', 'wifi', 'bluetooth', 'usb', 'hdmi'
+            ]);
+        }
 
-        $stopWords = [
-            // کلمات فارسی
-            'مدل', 'نوع', 'برند', 'محصول', 'کیفیت', 'بالا', 'پایین', 'بزرگ', 'کوچک',
-            'قرمز', 'آبی', 'سفید', 'سیاه', 'رنگ', 'اندازه', 'سایز', 'عدد', 'تعداد',
-            'برای', 'مخصوص', 'ویژه', 'خاص', 'مناسب', 'بهترین', 'ارزان', 'گران',
-            'جدید', 'قدیمی', 'اصل', 'اصلی', 'تقلبی', 'اورجینال', 'چینی', 'ایرانی',
-
-            // کلمات انگلیسی
-            'model', 'type', 'brand', 'product', 'quality', 'high', 'low', 'big', 'small',
-            'red', 'blue', 'white', 'black', 'color', 'size', 'new', 'old', 'original',
-            'for', 'special', 'best', 'cheap', 'expensive', 'chinese', 'iranian',
-
-            // کلمات فنی
-            'port', 'cable', 'meter', 'cm', 'mm', 'kg', 'gram', 'console', 'system',
-            'device', 'tool', 'equipment', 'wifi', 'bluetooth', 'usb', 'hdmi'
-        ];
-
-        return in_array($word, $stopWords);
+        return isset($this->stopWordsCache[mb_strtolower($word, 'UTF-8')]);
     }
 
     /**
-     * محاسبه شباهت بین دو کلمه
+     * محاسبه شباهت بین دو کلمه (بهینه‌شده با کش)
      */
     private function calculateSimilarity(string $word1, string $word2): float
     {
         if ($word1 === $word2) {
             return 1.0;
+        }
+
+        // ایجاد کلید کش
+        $cacheKey = $word1 < $word2 ? $word1 . '|' . $word2 : $word2 . '|' . $word1;
+
+        if (isset($this->similarityCache[$cacheKey])) {
+            return $this->similarityCache[$cacheKey];
         }
 
         $maxLength = max(strlen($word1), strlen($word2));
@@ -697,33 +517,51 @@ class BrandDetectionService
         }
 
         $distance = levenshtein($word1, $word2);
-        return 1 - ($distance / $maxLength);
+        $similarity = 1 - ($distance / $maxLength);
+
+        // کش کردن نتیجه (محدود کردن اندازه کش)
+        if (count($this->similarityCache) < 10000) {
+            $this->similarityCache[$cacheKey] = $similarity;
+        }
+
+        return $similarity;
     }
 
     /**
-     * بررسی تطابق کلمه کامل
+     * بررسی تطابق کلمه کامل (بهینه‌شده)
      */
     private function isCompleteWordMatch(string $text, string $keyword): bool
     {
-        $pattern = '/\b' . preg_quote($keyword, '/') . '\b/u';
-        return preg_match($pattern, $text) === 1;
+        return str_contains($text, $keyword) &&
+            preg_match('/\b' . preg_quote($keyword, '/') . '\b/u', $text) === 1;
     }
 
     /**
-     * نرمال‌سازی متن
+     * نرمال‌سازی متن (بهینه‌شده با کش)
      */
     private function normalizeText(string $text): string
     {
+        $cacheKey = md5($text);
+
+        if (isset($this->normalizedTextCache[$cacheKey])) {
+            return $this->normalizedTextCache[$cacheKey];
+        }
+
         // تبدیل به حروف کوچک
-        $text = mb_strtolower($text, 'UTF-8');
+        $normalized = mb_strtolower($text, 'UTF-8');
 
         // حذف کاراکترهای خاص اما حفظ حروف و اعداد
-        $text = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $text);
+        $normalized = preg_replace('/[^\p{L}\p{N}\s]/u', ' ', $normalized);
 
         // جایگزینی چندین فاصله با یک فاصله
-        $text = preg_replace('/\s+/', ' ', $text);
+        $normalized = preg_replace('/\s+/', ' ', trim($normalized));
 
-        return trim($text);
+        // کش کردن نتیجه (محدود کردن اندازه کش)
+        if (count($this->normalizedTextCache) < 1000) {
+            $this->normalizedTextCache[$cacheKey] = $normalized;
+        }
+
+        return $normalized;
     }
 
     /**
@@ -787,9 +625,7 @@ class BrandDetectionService
         }
 
         // مرتب‌سازی بر اساس امتیاز
-        usort($detailedScores, function ($a, $b) {
-            return $b['score'] <=> $a['score'];
-        });
+        usort($detailedScores, fn($a, $b) => $b['score'] <=> $a['score']);
 
         $result['detailed_scores'] = $detailedScores;
 
@@ -807,9 +643,7 @@ class BrandDetectionService
         // آمار تفصیلی
         $result['statistics'] = [
             'total_brands_checked' => count($brands),
-            'scores_above_threshold' => count(array_filter($detailedScores, function ($item) {
-                return $item['score'] >= 0.2;
-            })),
+            'scores_above_threshold' => count(array_filter($detailedScores, fn($item) => $item['score'] >= 0.2)),
             'highest_score' => !empty($detailedScores) ? $detailedScores[0]['score'] : 0,
             'average_score' => !empty($detailedScores) ? array_sum(array_column($detailedScores, 'score')) / count($detailedScores) : 0,
             'dynamic_threshold' => !empty($detailedScores) ? $this->calculateDynamicThreshold($detailedScores[0]['score']) : 0
@@ -826,51 +660,33 @@ class BrandDetectionService
     {
         $scores = [];
 
-        if (!empty($brand['name'])) {
-            $scores['name'] = [
-                'value' => $brand['name'],
-                'score' => round($this->calculatePreciseMatch($text, $brand['name'], 'name'), 4),
-                'weight' => 4.0
-            ];
-        }
+        $fields = [
+            'name' => ['weight' => 4.0, 'method' => 'precise'],
+            'nameSeo' => ['weight' => 3.5, 'method' => 'precise'],
+            'slug' => ['weight' => 3.0, 'method' => 'precise'],
+            'keyword' => ['weight' => 2.0, 'method' => 'keyword'],
+            'body' => ['weight' => 1.0, 'method' => 'context'],
+            'bodySeo' => ['weight' => 0.5, 'method' => 'context']
+        ];
 
-        if (!empty($brand['nameSeo'])) {
-            $scores['nameSeo'] = [
-                'value' => $brand['nameSeo'],
-                'score' => round($this->calculatePreciseMatch($text, $brand['nameSeo'], 'nameSeo'), 4),
-                'weight' => 3.5
-            ];
-        }
+        foreach ($fields as $field => $config) {
+            if (empty($brand[$field])) {
+                continue;
+            }
 
-        if (!empty($brand['slug'])) {
-            $scores['slug'] = [
-                'value' => $brand['slug'],
-                'score' => round($this->calculatePreciseMatch($text, $brand['slug'], 'slug'), 4),
-                'weight' => 3.0
-            ];
-        }
+            $value = $brand[$field];
+            $score = match ($config['method']) {
+                'keyword' => $this->calculateKeywordMatch($text, $value),
+                'context' => $this->calculateContextMatch($text, $value),
+                default => $this->calculatePreciseMatch($text, $value, $field)
+            };
 
-        if (!empty($brand['keyword'])) {
-            $scores['keyword'] = [
-                'value' => $brand['keyword'],
-                'score' => round($this->calculateKeywordMatch($text, $brand['keyword']), 4),
-                'weight' => 2.0
-            ];
-        }
-
-        if (!empty($brand['body'])) {
-            $scores['body'] = [
-                'value' => mb_substr($brand['body'], 0, 100) . '...',
-                'score' => round($this->calculateContextMatch($text, $brand['body']), 4),
-                'weight' => 1.0
-            ];
-        }
-
-        if (!empty($brand['bodySeo'])) {
-            $scores['bodySeo'] = [
-                'value' => mb_substr($brand['bodySeo'], 0, 100) . '...',
-                'score' => round($this->calculateContextMatch($text, $brand['bodySeo']), 4),
-                'weight' => 0.5
+            $scores[$field] = [
+                'value' => $field === 'body' || $field === 'bodySeo'
+                    ? mb_substr($value, 0, 100) . '...'
+                    : $value,
+                'score' => round($score, 4),
+                'weight' => $config['weight']
             ];
         }
 
@@ -882,8 +698,7 @@ class BrandDetectionService
      */
     private function log(string $message, ?string $color = null): void
     {
-        $colorReset = "\033[0m";
-        $formattedMessage = $color ? $color . $message . $colorReset : $message;
+        $formattedMessage = $color ? $color . $message . "\033[0m" : $message;
 
         if ($this->outputCallback) {
             call_user_func($this->outputCallback, $formattedMessage);

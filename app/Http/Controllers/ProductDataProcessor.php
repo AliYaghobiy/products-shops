@@ -19,6 +19,9 @@ class ProductDataProcessor
 
     private BrandDetectionService $brandDetectionService;
     private array $config;
+
+    private array $textFixCache = [];
+
     private $outputCallback = null;
 
     public function __construct(array $config)
@@ -46,38 +49,37 @@ class ProductDataProcessor
             return $text;
         }
 
-        // تشخیص متن خراب شده - الگوهای بیشتر
-        if (strpos($text, 'Ø') !== false || strpos($text, 'Û') !== false ||
-            strpos($text, 'Ù') !== false || strpos($text, 'Ú') !== false ||
-            strpos($text, 'ÃÂ') !== false || preg_match('/Ù[Ø-Û]/', $text)) {
+        // بررسی کش
+        $cacheKey = md5($text);
+        if (isset($this->textFixCache[$cacheKey])) {
+            return $this->textFixCache[$cacheKey];
+        }
 
-            // روش‌های مختلف تصحیح
-            $methods = [
-                // روش 1: فقط utf8_decode
-                function($t) { return @utf8_decode($t); },
+        // تشخیص متن خراب شده - الگوهای بهینه‌شده
+        if (!preg_match('/[ØÛÙÚÃÂÙØ-Û]/', $text)) {
+            $this->textFixCache[$cacheKey] = $text;
+            return $text;
+        }
 
-                // روش 2: دوبار decode
-                function($t) { return @utf8_decode(utf8_decode($t)); },
+        // روش‌های مختلف تصحیح - ترتیب بهینه‌شده
+        $methods = [
+            fn($t) => @utf8_decode($t),
+            fn($t) => @iconv('UTF-8', 'ISO-8859-1//IGNORE', $t),
+            fn($t) => @mb_convert_encoding($t, 'ISO-8859-1', 'UTF-8'),
+            fn($t) => @utf8_decode(utf8_decode($t)),
+            fn($t) => @iconv('ISO-8859-1', 'UTF-8', utf8_decode($t)),
+        ];
 
-                // روش 3: با iconv
-                function($t) { return @iconv('UTF-8', 'ISO-8859-1//IGNORE', $t); },
-
-                // روش 4: با mb_convert
-                function($t) { return @mb_convert_encoding($t, 'ISO-8859-1', 'UTF-8'); },
-
-                // روش 5: برای دسته‌بندی خاص
-                function($t) { return @iconv('ISO-8859-1', 'UTF-8', utf8_decode($t)); },
-            ];
-
-            foreach ($methods as $method) {
-                $result = $method($text);
-                if ($result && $this->isPersianText($result)) {
-                    $this->log("🔧 Fixed corrupted text: '{$text}' → '{$result}'", self::COLOR_PURPLE);
-                    return $result;
-                }
+        foreach ($methods as $method) {
+            $result = $method($text);
+            if ($result && $this->isPersianText($result)) {
+                $this->log("🔧 Fixed corrupted text: '{$text}' → '{$result}'", self::COLOR_PURPLE);
+                $this->textFixCache[$cacheKey] = $result;
+                return $result;
             }
         }
 
+        $this->textFixCache[$cacheKey] = $text;
         return $text;
     }
 
@@ -86,11 +88,9 @@ class ProductDataProcessor
      */
     private function isPersianText(string $text): bool
     {
-        // اگر شامل حروف فارسی باشد و شامل کاراکترهای خراب نباشد
-        return preg_match('/[\x{0600}-\x{06FF}]/u', $text) &&
-            strpos($text, 'Ø') === false &&
-            strpos($text, 'ÃÂ') === false;
+        return preg_match('/[\x{0600}-\x{06FF}]/u', $text) && !preg_match('/[ØÃÂ]/', $text);
     }
+
 
     private function filterUnwantedCategories(string $category): string
     {
@@ -278,56 +278,99 @@ class ProductDataProcessor
     }
     private function processImageField(Crawler $crawler, array $selector): string
     {
+        // دریافت محدودیت از تنظیمات
+        $maxCharacterLimit = $this->getImageFieldLimit();
+
         $images = [];
-        $selectors = is_array($selector['selector']) ? $selector['selector'] : [$selector['selector']];
-        $attributes = isset($selector['attribute'])
-            ? (is_array($selector['attribute']) ? $selector['attribute'] : [$selector['attribute']])
-            : ['src']; // پیش‌فرض src
+        $selectors = (array)($selector['selector'] ?? []);
+        $attributes = (array)($selector['attribute'] ?? ['src']);
 
         foreach ($selectors as $index => $selectorString) {
-            if (empty($selectorString)) {
-                continue;
-            }
+            if (empty($selectorString)) continue;
 
             try {
                 $elements = $selector['type'] === 'css'
                     ? $crawler->filter($selectorString)
                     : $crawler->filterXPath($selectorString);
 
-                if ($elements->count() > 0) {
-                    $currentAttribute = $attributes[$index] ?? $attributes[0] ?? 'src';
+                if ($elements->count() === 0) continue;
 
-                    $elements->each(function (Crawler $element) use (&$images, $currentAttribute) {
-                        $imageUrl = $element->attr($currentAttribute) ?? '';
+                $currentAttribute = $attributes[$index] ?? $attributes[0] ?? 'src';
 
-                        if (!empty($imageUrl)) {
-                            // تبدیل به URL مطلق
-                            $absoluteUrl = $this->makeAbsoluteUrl($imageUrl);
+                $shouldBreak = false;
+                $elements->each(function (Crawler $element) use (&$images, $currentAttribute, $maxCharacterLimit, &$shouldBreak) {
+                    $imageUrl = $element->attr($currentAttribute);
+                    if ($imageUrl && ($absoluteUrl = $this->makeAbsoluteUrl($imageUrl))) {
 
-                            if (!empty($absoluteUrl) && !in_array($absoluteUrl, $images)) {
-                                $images[] = $absoluteUrl;
-                            }
+                        // بررسی امکان اضافه کردن URL جدید
+                        if ($this->canAddImageUrl($images, $absoluteUrl, $maxCharacterLimit)) {
+                            $images[$absoluteUrl] = true;
+
+                            $currentLength = strlen(implode(',', array_keys($images)));
+                            $this->log("🖼️ تصویر اضافه شد: " . substr($absoluteUrl, 0, 50) . "... (طول فعلی: {$currentLength})", self::COLOR_GREEN);
+                        } else {
+                            $this->log("⚠️ تصویر نادیده گرفته شد (تجاوز از حد مجاز): " . substr($absoluteUrl, 0, 50) . "...", self::COLOR_YELLOW);
+                            $shouldBreak = true;
+                            return false; // توقف each loop
                         }
-                    });
+                    }
+                });
+
+                // اگر نیاز به توقف است، از حلقه اصلی خارج شو
+                if ($shouldBreak) {
+                    break;
                 }
+
             } catch (\Exception $e) {
-                $this->log("خطا در استخراج تصویر از سلکتور '$selectorString': " . $e->getMessage(), self::COLOR_RED);
+                $this->log("خطا در استخراج تصویر: " . $e->getMessage(), self::COLOR_RED);
             }
         }
 
-        // حذف تصاویر تکراری و خالی
-        $images = array_filter(array_unique($images), function ($img) {
-            return !empty(trim($img));
-        });
+        $result = implode(',', array_keys($images));
+        $finalLength = strlen($result);
 
-        $result = implode(',', $images);
-
-        if (!empty($result)) {
-            $this->log("تصاویر استخراج شده: " . count($images) . " عدد", self::COLOR_GREEN);
+        if ($result) {
+            $imageCount = count($images);
+            $this->log("✅ تصاویر نهایی: {$imageCount} عدد، طول کل: {$finalLength} کاراکتر (حد مجاز: {$maxCharacterLimit})", self::COLOR_GREEN);
+        } else {
+            $this->log("❌ هیچ تصویری یافت نشد", self::COLOR_RED);
         }
 
         return $result;
     }
+
+    /**
+     * محاسبه طول امن برای اضافه کردن URL جدید
+     * @param array $existingImages
+     * @param string $newUrl
+     * @param int $maxLimit
+     * @return bool
+     */
+    private function canAddImageUrl(array $existingImages, string $newUrl, int $maxLimit = 1024): bool
+    {
+        $currentImagesString = implode(',', array_keys($existingImages));
+        $currentLength = strlen($currentImagesString);
+
+        // اگر آرایه خالی است
+        if (empty($existingImages)) {
+            return strlen($newUrl) <= $maxLimit;
+        }
+
+        // طول با اضافه کردن کاما و URL جدید
+        $newLength = $currentLength + 1 + strlen($newUrl); // +1 برای کاما
+
+        return $newLength <= $maxLimit;
+    }
+
+    /**
+     * تنظیمات قابل تغییر برای محدودیت تصاویر
+     */
+    private function getImageFieldLimit(): int
+    {
+        // می‌توانید این مقدار را از config بخوانید
+        return $this->config['image_field_max_length'] ?? 1024;
+    }
+
     private function processDescriptionField(Crawler $crawler, array $selector): string
     {
         $descriptions = [];
@@ -491,60 +534,46 @@ class ProductDataProcessor
     // باقی متدها یکسان باقی می‌مانند...
     public function cleanPrice(string $price): int
     {
-        if (empty(trim($price))) {
-            return 0;
-        }
-
-        // حذف تمام کلمات واحد پولی (فارسی و انگلیسی)
-        $price = preg_replace('/\b(تومان|ریال|درهم|دینار|toman|rial|dirham|dinar)\b/ui', '', $price);
-
-        // تبدیل اعداد فارسی به انگلیسی
-        $persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-        $englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        $price = str_replace($persianNumbers, $englishNumbers, $price);
-
-        // تبدیل اعداد عربی به انگلیسی
-        $arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-        $price = str_replace($arabicNumbers, $englishNumbers, $price);
-
-        // حذف تمام کاراکترهای غیرضروری و نگهداری فقط اعداد و جداکننده‌ها
-        $price = preg_replace('/[^\d.,٫]/u', '', $price);
-
-        // حذف فاصله‌های اضافی
         $price = trim($price);
-
-        // اگر خالی شد، صفر برگردان
         if (empty($price)) {
             return 0;
         }
 
-        // تشخیص الگوی قیمت
-        // اگر فقط یک نقطه یا کاما در انتها وجود دارد و بعدش سه رقم یا کمتر -> جداکننده هزارگان
-        // اگر نقطه یا کاما در وسط و بعدش بیش از سه رقم -> احتمالاً اعشار
+        // یک regex برای همه تبدیلات
+        $price = preg_replace([
+            '/\b(?:تومان|ریال|درهم|دینار|toman|rial|dirham|dinar)\b/ui',
+            '/[^\d.,٫]/u'
+        ], ['', ''], $price);
 
-        // ابتدا تمام نقاط و کاماها را پیدا کنیم
-        $lastDotPos = strrpos($price, '.');
-        $lastCommaPos = strrpos($price, ',');
-        $lastSeparatorPos = max($lastDotPos, $lastCommaPos);
+        // تبدیل سریع اعداد
+        $price = strtr($price, [
+            '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4',
+            '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
+            '٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4',
+            '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9',
+            '٫' => ','
+        ]);
+
+        if (empty($price)) {
+            return 0;
+        }
+
+        // تشخیص و پردازش جداکننده‌ها
+        $lastSeparatorPos = max(strrpos($price, '.'), strrpos($price, ','));
 
         if ($lastSeparatorPos !== false) {
             $afterSeparator = substr($price, $lastSeparatorPos + 1);
-            $beforeSeparator = substr($price, 0, $lastSeparatorPos);
-
-            // اگر بعد از آخرین جداکننده 3 رقم یا کمتر باشد، احتمالاً جداکننده هزارگان است
             if (strlen($afterSeparator) <= 3) {
-                // حذف تمام جداکننده‌های هزارگان
-                $price = str_replace([',', '.', '٫'], '', $price);
+                $price = str_replace([',', '.'], '', $price);
             } else {
-                // احتمالاً اعشار است - فقط آخرین جداکننده را حفظ می‌کنیم
-                $beforeSeparator = str_replace([',', '.', '٫'], '', $beforeSeparator);
+                $beforeSeparator = str_replace([',', '.'], '', substr($price, 0, $lastSeparatorPos));
                 $price = $beforeSeparator . '.' . $afterSeparator;
             }
         }
 
-        // تبدیل به عدد صحیح
         return (int)floatval($price);
     }
+
 
     public function cleanPriceWithFormat(string $price): string
     {
@@ -583,54 +612,36 @@ class ProductDataProcessor
 
     private function cleanSinglePriceWithFormat(string $price): string
     {
-        if (empty(trim($price))) {
-            return '';
-        }
-
-        // حذف واحدهای پولی
-        $price = preg_replace('/\b(تومان|ریال|درهم|دینار|toman|rial|dirham|dinar)\b/ui', '', $price);
-
-        // تبدیل اعداد فارسی و عربی به انگلیسی
-        $persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-        $englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        $arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-
-        $price = str_replace($persianNumbers, $englishNumbers, $price);
-        $price = str_replace($arabicNumbers, $englishNumbers, $price);
-
-        // حذف کاراکترهای اضافی ولی حفظ جداکننده‌ها برای فرمت
-        $price = preg_replace('/[^\d.,٫\s]/u', '', $price);
-
-        // حذف فاصله‌های اضافی
-        $price = preg_replace('/\s+/', '', trim($price));
-
-        // اگر فقط جداکننده باشد، خالی برگردان
-        if (preg_match('/^[.,٫\s]*$/', $price)) {
-            return '';
-        }
-
-        // حذف جداکننده‌های ابتدا و انتها
-        $price = trim($price, '.,٫ ');
-
-        // اگر خالی شد، خالی برگردان
+        $price = trim($price);
         if (empty($price)) {
             return '';
         }
 
-        // برای حفظ فرمت، فقط اعداد را تمیز می‌کنیم و جداکننده‌ها را حفظ می‌کنیم
-        // اما اگر pattern مشخص هزارگان باشد (مثل 281.000) آن را اصلاح می‌کنیم
+        // تبدیلات موثرتر
+        $price = preg_replace('/\b(?:تومان|ریال|درهم|دینار|toman|rial|dirham|dinar)\b/ui', '', $price);
 
-        // تشخیص الگوی هزارگان (عددی که هر سه رقم یک جداکننده دارد)
+        $price = strtr($price, [
+            '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4',
+            '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
+            '٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4',
+            '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9'
+        ]);
+
+        $price = preg_replace(['/[^\d.,٫\s]/u', '/\s+/'], ['', ''], $price);
+        $price = trim($price, '.,٫ ');
+
+        if (empty($price) || preg_match('/^[.,٫\s]*$/', $price)) {
+            return '';
+        }
+
+        // بررسی الگوی هزارگان
         if (preg_match('/^\d{1,3}([.,٫]\d{3})+$/', $price)) {
-            // این یک عدد با فرمت هزارگان است - جداکننده‌ها را حذف می‌کنیم
-            $price = str_replace([',', '.', '٫'], '', $price);
-
-            // دوباره فرمت هزارگان اضافه می‌کنیم
-            return number_format((int)$price);
+            return number_format((int)str_replace([',', '.', '٫'], '', $price));
         }
 
         return $price;
     }
+
 
     public function parseAvailability(string $value, Crawler $crawler): int
     {
@@ -737,41 +748,37 @@ class ProductDataProcessor
 
     private function extractData(Crawler $crawler, array $selector, ?string $field = null): string
     {
-        $selectors = is_array($selector['selector']) ? $selector['selector'] : [$selector['selector']];
-        $attributes = isset($selector['attribute'])
-            ? (is_array($selector['attribute']) ? $selector['attribute'] : [$selector['attribute']])
-            : [null];
-
-        $value = '';
+        $selectors = (array)($selector['selector'] ?? []);
+        $attributes = (array)($selector['attribute'] ?? [null]);
 
         foreach ($selectors as $index => $sel) {
-            // بررسی نوع selector
-            if (isset($selector['type']) && $selector['type'] === 'xml') {
-                // برای XML sitemap
-                $elements = $crawler->filterXPath($sel);
-            } elseif ($selector['type'] === 'css') {
-                $elements = $crawler->filter($sel);
-            } else {
-                $elements = $crawler->filterXPath($sel);
-            }
+            if (empty($sel)) continue;
 
-            if ($elements->count() > 0) {
+            try {
+                $elements = match($selector['type'] ?? 'css') {
+                    'xml' => $crawler->filterXPath($sel),
+                    'css' => $crawler->filter($sel),
+                    default => $crawler->filterXPath($sel)
+                };
+
+                if ($elements->count() === 0) continue;
+
                 $currentAttribute = $attributes[$index] ?? $attributes[0] ?? null;
+                $value = $currentAttribute
+                    ? ($elements->attr($currentAttribute) ?? '')
+                    : trim($elements->text());
 
-                if ($currentAttribute) {
-                    $value = $elements->attr($currentAttribute) ?? '';
-                } else {
-                    $value = trim($elements->text());
+                if ($value !== '') {
+                    return $value;
                 }
-
-                if (!empty($value)) {
-                    break;
-                }
+            } catch (\Exception $e) {
+                continue;
             }
         }
 
-        return $value;
+        return '';
     }
+
 
     private function makeAbsoluteUrl(string $href): string
     {
@@ -1225,44 +1232,37 @@ class ProductDataProcessor
 
     private function generateAsciiTable(array $headers, array $rows): string
     {
-        $widths = [];
-        foreach ($headers as $header) {
-            $widths[] = max(mb_strwidth($header, 'UTF-8'), 10);
-        }
+        // محاسبه عرض ستون‌ها
+        $widths = array_map(fn($h) => max(mb_strwidth($h, 'UTF-8'), 10), $headers);
+
         foreach ($rows as $row) {
             foreach ($row as $i => $cell) {
-                $cellWidth = mb_strwidth((string)$cell, 'UTF-8');
-                $widths[$i] = max($widths[$i], $cellWidth);
+                $widths[$i] = max($widths[$i], mb_strwidth((string)$cell, 'UTF-8'));
             }
         }
 
-        $widths[1] = max($widths[1], 40);
+        $widths[1] = max($widths[1], 40); // عرض ثابت برای عنوان
 
-        $separator = '+';
-        foreach ($widths as $width) {
-            $separator .= str_repeat('-', $width + 2) . '+';
-        }
-        $separator .= "\n";
+        // ساخت جداکننده
+        $separator = '+' . implode('+', array_map(fn($w) => str_repeat('-', $w + 2), $widths)) . "+\n";
 
-        $table = $separator;
-        $table .= '|';
-        foreach ($headers as $i => $header) {
-            $table .= ' ' . str_pad($header, $widths[$i], ' ', STR_PAD_BOTH) . ' |';
-        }
-        $table .= "\n" . $separator;
+        // ساخت هدر
+        $table = $separator . '|' . implode('|', array_map(
+                fn($h, $w) => ' ' . str_pad($h, $w, ' ', STR_PAD_BOTH) . ' ',
+                $headers, $widths
+            )) . "|\n" . $separator;
 
+        // ساخت ردیف‌ها
         foreach ($rows as $row) {
-            $table .= '|';
-            foreach ($row as $i => $cell) {
-                $paddedCell = $this->mb_str_pad((string)$cell, $widths[$i], ' ', STR_PAD_BOTH);
-                $table .= ' ' . $paddedCell . ' |';
-            }
-            $table .= "\n";
+            $table .= '|' . implode('|', array_map(
+                    fn($cell, $w) => ' ' . $this->mb_str_pad((string)$cell, $w, ' ', STR_PAD_BOTH) . ' ',
+                    $row, $widths
+                )) . "|\n";
         }
-        $table .= $separator;
 
-        return $table;
+        return $table . $separator;
     }
+
 
     private function mb_str_pad(string $input, int $pad_length, string $pad_string = ' ', int $pad_type = STR_PAD_RIGHT): string
     {
@@ -1271,20 +1271,17 @@ class ProductDataProcessor
             return $input;
         }
 
-        $padding = str_repeat($pad_string, $pad_length - $input_length);
-        switch ($pad_type) {
-            case STR_PAD_LEFT:
-                return $padding . $input;
-            case STR_PAD_RIGHT:
-                return $input . $padding;
-            case STR_PAD_BOTH:
-                $left_padding = str_repeat($pad_string, floor(($pad_length - $input_length) / 2));
-                $right_padding = str_repeat($pad_string, ceil(($pad_length - $input_length) / 2));
-                return $left_padding . $input . $right_padding;
-            default:
-                return $input;
-        }
+        $pad_needed = $pad_length - $input_length;
+
+        return match($pad_type) {
+            STR_PAD_LEFT => str_repeat($pad_string, $pad_needed) . $input,
+            STR_PAD_BOTH => str_repeat($pad_string, intval($pad_needed / 2))
+                . $input
+                . str_repeat($pad_string, intval(ceil($pad_needed / 2))),
+            default => $input . str_repeat($pad_string, $pad_needed)
+        };
     }
+
 
     private function saveFailedLink(string $url, string $errorMessage): void
     {
@@ -1334,18 +1331,18 @@ class ProductDataProcessor
 
     private function shouldDisplayLog(string $cleanMessage): bool
     {
-        $displayConditions = [
-            str_contains($cleanMessage, '🆕') || str_contains($cleanMessage, '🔄') ||
-            str_contains($cleanMessage, '✅') || str_contains($cleanMessage, '❌'),
-            str_starts_with($cleanMessage, '+') && str_contains($cleanMessage, '|'),
-            str_starts_with($cleanMessage, 'Extracted product_id') ||
+        // بررسی سریع با strpbrk
+        if (strpbrk($cleanMessage, '🆕🔄✅❌+')) {
+            return str_contains($cleanMessage, '🆕') || str_contains($cleanMessage, '🔄') ||
+                str_contains($cleanMessage, '✅') || str_contains($cleanMessage, '❌') ||
+                (str_starts_with($cleanMessage, '+') && str_contains($cleanMessage, '|'));
+        }
+
+        // بررسی الگوهای خاص
+        return str_starts_with($cleanMessage, 'Extracted product_id') ||
             str_contains($cleanMessage, 'failed_links') ||
             str_contains($cleanMessage, 'Failed to extract') ||
-            str_contains($cleanMessage, '═══') || str_contains($cleanMessage, '───'),
-        ];
-
-        return array_reduce($displayConditions, function ($carry, $condition) {
-            return $carry || $condition;
-        }, false);
+            strpbrk($cleanMessage, '═─') !== false;
     }
+
 }
