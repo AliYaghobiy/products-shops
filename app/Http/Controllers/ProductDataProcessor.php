@@ -6,6 +6,7 @@ use App\Models\FailedLink;
 use App\Models\Product;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Services\BrandDetectionService;
+use App\Services\CategoryDetectionService;
 
 class ProductDataProcessor
 {
@@ -18,6 +19,7 @@ class ProductDataProcessor
     private const COLOR_GRAY = "\033[1;90m";
 
     private BrandDetectionService $brandDetectionService;
+    private CategoryDetectionService $categoryDetectionService;
     private array $config;
 
     private array $textFixCache = [];
@@ -28,18 +30,22 @@ class ProductDataProcessor
     {
         $this->config = $config;
 
-        // ایجاد سرویس تشخیص برند و تنظیم callback
+        // ایجاد سرویس‌های تشخیص
         $this->brandDetectionService = new BrandDetectionService();
+        $this->categoryDetectionService = new CategoryDetectionService();
         $this->brandDetectionService->setOutputCallback([$this, 'log']);
+        $this->categoryDetectionService->setOutputCallback([$this, 'log']);
     }
 
     public function setOutputCallback(callable $callback): void
     {
         $this->outputCallback = $callback;
 
-        // اطمینان از تنظیم callback برای BrandDetectionService نیز
         if (isset($this->brandDetectionService)) {
             $this->brandDetectionService->setOutputCallback([$this, 'log']);
+        }
+        if (isset($this->categoryDetectionService)) {
+            $this->categoryDetectionService->setOutputCallback([$this, 'log']);
         }
     }
 
@@ -49,19 +55,16 @@ class ProductDataProcessor
             return $text;
         }
 
-        // بررسی کش
         $cacheKey = md5($text);
         if (isset($this->textFixCache[$cacheKey])) {
             return $this->textFixCache[$cacheKey];
         }
 
-        // تشخیص متن خراب شده - الگوهای بهینه‌شده
         if (!preg_match('/[ØÛÙÚÃÂÙØ-Û]/', $text)) {
             $this->textFixCache[$cacheKey] = $text;
             return $text;
         }
 
-        // روش‌های مختلف تصحیح - ترتیب بهینه‌شده
         $methods = [
             fn($t) => @utf8_decode($t),
             fn($t) => @iconv('UTF-8', 'ISO-8859-1//IGNORE', $t),
@@ -83,14 +86,10 @@ class ProductDataProcessor
         return $text;
     }
 
-    /**
-     * بررسی اینکه آیا متن فارسی معتبر است
-     */
     private function isPersianText(string $text): bool
     {
         return preg_match('/[\x{0600}-\x{06FF}]/u', $text) && !preg_match('/[ØÃÂ]/', $text);
     }
-
 
     private function filterUnwantedCategories(string $category): string
     {
@@ -100,20 +99,18 @@ class ProductDataProcessor
             'بدون دستهبندی'
         ];
 
-        // تبدیل به حروف کوچک برای مقایسه دقیق‌تر
         $categoryLower = mb_strtolower(trim($category));
 
         foreach ($unwantedCategories as $unwanted) {
             if ($categoryLower === mb_strtolower($unwanted)) {
                 $this->log("Category '$category' filtered out as unwanted", self::COLOR_YELLOW);
-                return ''; // برگردان رشته خالی
+                return '';
             }
         }
 
-        return $category; // اگر مشکلی نبود همون دسته‌بندی رو برگردان
+        return $category;
     }
 
-    // تغییرات در متد extractProductData
     public function extractProductData(string $url, ?string $body = null, ?string $mainPageImage = null, ?string $mainPageProductId = null): ?array
     {
         $data = [
@@ -145,7 +142,7 @@ class ProductDataProcessor
         $productSelectors = $this->config['selectors']['product_page'] ?? [];
 
         if (isset($this->config['set_category']) && !empty($this->config['set_category'])) {
-            $data['category'] = $this->filterUnwantedCategories($this->config['set_category']);
+            $data['category'] = $this->processCategoryField($this->config['set_category']);
             $this->log("Using preset category from config: {$data['category']}", self::COLOR_GREEN);
         }
 
@@ -157,8 +154,7 @@ class ProductDataProcessor
                 if ($field === 'title') {
                     $cleanTitle = $this->fixCorruptedText($value);
                     $data[$field] = $this->applyTitlePrefix($cleanTitle, $url);
-                }
-                elseif ($field === 'price') {
+                } elseif ($field === 'price') {
                     $rawPrice = $this->extractPriceWithPriority($crawler, $selector);
 
                     if ($this->config['keep_price_format'] ?? false) {
@@ -170,11 +166,9 @@ class ProductDataProcessor
                     if (empty($data[$field]) && !($this->config['keep_price_format'] ?? false)) {
                         $data[$field] = '0';
                     }
-                }
-                elseif ($field === 'description') {
+                } elseif ($field === 'description') {
                     $data[$field] = $this->processDescriptionField($crawler, $selector);
-                }
-                elseif ($field === 'availability') {
+                } elseif ($field === 'availability') {
                     $outOfStockButton = $this->config['out_of_stock_button'] ?? false;
                     $outOfStockSelector = $this->config['selectors']['product_page']['out_of_stock'] ?? null;
 
@@ -198,12 +192,9 @@ class ProductDataProcessor
                 } elseif ($field === 'guarantee') {
                     $data[$field] = $this->extractGuaranteeFromSelector($crawler, $selector, $data['title']);
                 } elseif ($field === 'image') {
-                    // **تغییر اصلی در اینجا**
                     $data[$field] = $this->processImageField($crawler, $selector);
                 } elseif ($field === 'category' && ($this->config['category_method'] ?? 'selector') === 'selector' && !isset($this->config['set_category'])) {
-                    $extractedCategory = $this->extractCategoriesFromSelectors($crawler, $selector);
-                    $cleanCategory = $this->fixCorruptedText($extractedCategory);
-                    $data[$field] = $this->filterUnwantedCategories($cleanCategory);
+                    $data[$field] = $this->processCategoryField($this->extractCategoriesFromSelectors($crawler, $selector));
                 } elseif ($field === 'brand') {
                     $data[$field] = $this->processBrandField($crawler, $selector, $data['title']);
                 } else {
@@ -215,7 +206,6 @@ class ProductDataProcessor
             }
         }
 
-        // تشخیص برند از عنوان محصول (اگر هنوز پیدا نشده)
         if (empty($data['brand']) && !empty($data['title'])) {
             $this->log("🔍 No brand found in selectors, attempting to detect from title", self::COLOR_BLUE);
             $detectedBrand = $this->detectBrandFromTitle($data['title']);
@@ -230,11 +220,9 @@ class ProductDataProcessor
         if (!isset($this->config['set_category']) && ($this->config['category_method'] ?? 'selector') === 'title' && !empty($data['title'])) {
             $wordCount = $this->config['category_word_count'] ?? 1;
             $extractedCategory = $this->extractCategoryFromTitle($data['title'], $wordCount);
-            $cleanCategory = $this->fixCorruptedText($extractedCategory);
-            $data['category'] = $this->filterUnwantedCategories($cleanCategory);
+            $data['category'] = $this->processCategoryField($extractedCategory);
         }
 
-        // اگر availability هنوز null است، fallback را اجرا کن
         if ($data['availability'] === null) {
             $data['availability'] = $this->processAvailabilityFallback($crawler, $data);
         }
@@ -253,7 +241,6 @@ class ProductDataProcessor
             return null;
         }
 
-        // تصحیح نهایی category فقط
         $data['category'] = $this->fixCorruptedText($data['category']);
         return $data;
     }
@@ -276,9 +263,32 @@ class ProductDataProcessor
             return '';
         }
     }
+
+    private function processCategoryField(string $categoryText): string
+    {
+        if (empty($categoryText)) {
+            return '';
+        }
+
+        $this->log("🔍 Processing category field: " . substr($categoryText, 0, 50) . "...", self::COLOR_BLUE);
+
+        $cleanCategory = $this->fixCorruptedText($categoryText);
+        $detectedCategories = $this->categoryDetectionService->detectCategoriesFromText($cleanCategory);
+
+        if ($detectedCategories) {
+            $filteredCategories = array_map([$this, 'filterUnwantedCategories'], $detectedCategories);
+            $filteredCategories = array_filter($filteredCategories, fn($cat) => !empty($cat));
+            $result = implode(',', $filteredCategories);
+            $this->log("✅ Categories detected: $result", self::COLOR_GREEN);
+            return $result;
+        } else {
+            $this->log("❌ No categories detected", self::COLOR_YELLOW);
+            return $this->filterUnwantedCategories($cleanCategory);
+        }
+    }
+
     private function processImageField(Crawler $crawler, array $selector): string
     {
-        // دریافت محدودیت از تنظیمات
         $maxCharacterLimit = $this->getImageFieldLimit();
 
         $images = [];
@@ -301,22 +311,18 @@ class ProductDataProcessor
                 $elements->each(function (Crawler $element) use (&$images, $currentAttribute, $maxCharacterLimit, &$shouldBreak) {
                     $imageUrl = $element->attr($currentAttribute);
                     if ($imageUrl && ($absoluteUrl = $this->makeAbsoluteUrl($imageUrl))) {
-
-                        // بررسی امکان اضافه کردن URL جدید
                         if ($this->canAddImageUrl($images, $absoluteUrl, $maxCharacterLimit)) {
                             $images[$absoluteUrl] = true;
-
                             $currentLength = strlen(implode(',', array_keys($images)));
                             $this->log("🖼️ تصویر اضافه شد: " . substr($absoluteUrl, 0, 50) . "... (طول فعلی: {$currentLength})", self::COLOR_GREEN);
                         } else {
                             $this->log("⚠️ تصویر نادیده گرفته شد (تجاوز از حد مجاز): " . substr($absoluteUrl, 0, 50) . "...", self::COLOR_YELLOW);
                             $shouldBreak = true;
-                            return false; // توقف each loop
+                            return false;
                         }
                     }
                 });
 
-                // اگر نیاز به توقف است، از حلقه اصلی خارج شو
                 if ($shouldBreak) {
                     break;
                 }
@@ -339,35 +345,21 @@ class ProductDataProcessor
         return $result;
     }
 
-    /**
-     * محاسبه طول امن برای اضافه کردن URL جدید
-     * @param array $existingImages
-     * @param string $newUrl
-     * @param int $maxLimit
-     * @return bool
-     */
     private function canAddImageUrl(array $existingImages, string $newUrl, int $maxLimit = 1024): bool
     {
         $currentImagesString = implode(',', array_keys($existingImages));
         $currentLength = strlen($currentImagesString);
 
-        // اگر آرایه خالی است
         if (empty($existingImages)) {
             return strlen($newUrl) <= $maxLimit;
         }
 
-        // طول با اضافه کردن کاما و URL جدید
-        $newLength = $currentLength + 1 + strlen($newUrl); // +1 برای کاما
-
+        $newLength = $currentLength + 1 + strlen($newUrl);
         return $newLength <= $maxLimit;
     }
 
-    /**
-     * تنظیمات قابل تغییر برای محدودیت تصاویر
-     */
     private function getImageFieldLimit(): int
     {
-        // می‌توانید این مقدار را از config بخوانید
         return $this->config['image_field_max_length'] ?? 1024;
     }
 
@@ -393,9 +385,7 @@ class ProductDataProcessor
                             : trim($element->text());
 
                         if (!empty($descriptionText)) {
-                            // تصحیح متن خراب شده
                             $descriptionText = $this->fixCorruptedText($descriptionText);
-                            // پاکسازی HTML tags اضافی
                             $descriptionText = $this->cleanDescriptionText($descriptionText);
                             if (!empty($descriptionText)) {
                                 $descriptions[] = $descriptionText;
@@ -408,7 +398,6 @@ class ProductDataProcessor
             }
         }
 
-        // حذف توضیحات تکراری و ترکیب آنها
         $descriptions = array_filter(array_unique($descriptions), function ($desc) {
             return !empty(trim($desc));
         });
@@ -416,21 +405,12 @@ class ProductDataProcessor
         return implode(' ', $descriptions);
     }
 
-// 3. متد جدید برای پاکسازی متن توضیحات
     private function cleanDescriptionText(string $text): string
     {
-        // حذف HTML tags
         $text = strip_tags($text);
-
-        // حذف کاراکترهای اضافی
         $text = preg_replace('/\s+/', ' ', $text);
-
-        // حذف فاصله‌های اضافی از ابتدا و انتها
         $text = trim($text);
-
-        // حذف کاراکترهای کنترلی
         $text = preg_replace('/[\x00-\x1F\x7F]/', '', $text);
-
         return $text;
     }
 
@@ -439,12 +419,10 @@ class ProductDataProcessor
         $brandMethod = $this->config['brand_method'] ?? 'selector';
 
         if ($brandMethod === 'selector' && !empty($selector['selector'])) {
-            // استخراج برند از سلکتور
             $elements = $this->getElements($crawler, $selector);
             if ($elements->count() > 0) {
                 $brandText = trim($elements->text());
                 if (!empty($brandText)) {
-                    // تشخیص برند از متن استخراج شده
                     $detectedBrand = $this->brandDetectionService->detectBrandFromText($brandText);
                     if ($detectedBrand) {
                         $this->log("🏷️ Brand detected from selector: $detectedBrand", self::COLOR_GREEN);
@@ -454,14 +432,12 @@ class ProductDataProcessor
                 }
             }
         } elseif ($brandMethod === 'title' && $title) {
-            // استخراج برند از عنوان محصول
             return $this->detectBrandFromTitle($title);
         }
 
         return '';
     }
 
-    // باقی متدها بدون تغییر...
     public function validateProductData(array $productData): bool
     {
         if (empty($productData['title'])) {
@@ -506,7 +482,7 @@ class ProductDataProcessor
                 'guarantee' => $productData['guarantee'] ?? '',
                 'category' => $productData['category'] ?? '',
                 'brand' => $productData['brand'] ?? '',
-                'description' => $productData['description'] ?? '', // اضافه کردن فیلد جدید
+                'description' => $productData['description'] ?? '',
                 'updated_at' => now(),
             ];
 
@@ -531,7 +507,6 @@ class ProductDataProcessor
         }
     }
 
-    // باقی متدها یکسان باقی می‌مانند...
     public function cleanPrice(string $price): int
     {
         $price = trim($price);
@@ -539,13 +514,11 @@ class ProductDataProcessor
             return 0;
         }
 
-        // یک regex برای همه تبدیلات
         $price = preg_replace([
             '/\b(?:تومان|ریال|درهم|دینار|toman|rial|dirham|dinar)\b/ui',
             '/[^\d.,٫]/u'
         ], ['', ''], $price);
 
-        // تبدیل سریع اعداد
         $price = strtr($price, [
             '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4',
             '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
@@ -558,7 +531,6 @@ class ProductDataProcessor
             return 0;
         }
 
-        // تشخیص و پردازش جداکننده‌ها
         $lastSeparatorPos = max(strrpos($price, '.'), strrpos($price, ','));
 
         if ($lastSeparatorPos !== false) {
@@ -574,14 +546,12 @@ class ProductDataProcessor
         return (int)floatval($price);
     }
 
-
     public function cleanPriceWithFormat(string $price): string
     {
         if (empty(trim($price))) {
             return '';
         }
 
-        // تشخیص و تقسیم قیمت‌های محدوده‌ای (مثل: ۱۲۰۰۰ - ۱۵۰۰۰ تومان)
         $rangeSeparators = ['–', '-', 'تا', 'الی', 'to'];
         $foundSeparator = null;
 
@@ -617,7 +587,6 @@ class ProductDataProcessor
             return '';
         }
 
-        // تبدیلات موثرتر
         $price = preg_replace('/\b(?:تومان|ریال|درهم|دینار|toman|rial|dirham|dinar)\b/ui', '', $price);
 
         $price = strtr($price, [
@@ -634,14 +603,12 @@ class ProductDataProcessor
             return '';
         }
 
-        // بررسی الگوی هزارگان
         if (preg_match('/^\d{1,3}([.,٫]\d{3})+$/', $price)) {
             return number_format((int)str_replace([',', '.', '٫'], '', $price));
         }
 
         return $price;
     }
-
 
     public function parseAvailability(string $value, Crawler $crawler): int
     {
@@ -654,7 +621,6 @@ class ProductDataProcessor
 
         $this->log("Starting availability detection with value: '$value'", self::COLOR_CYAN);
 
-        // Priority 0: Check unpriced keywords
         if (!empty($value)) {
             foreach ($unpricedKeywords as $keyword) {
                 if (stripos($value, $keyword) !== false) {
@@ -664,7 +630,6 @@ class ProductDataProcessor
             }
         }
 
-        // Priority 1: Check out-of-stock selector
         if ($outOfStockButton) {
             $outOfStockResult = $this->checkOutOfStockWithPriority($crawler, $outOfStockSelector);
             if ($outOfStockResult === 0) {
@@ -673,7 +638,6 @@ class ProductDataProcessor
             }
         }
 
-        // Priority 2: Check availability selectors
         $availabilityStatus = $this->checkMultipleAvailabilitySelectors($crawler, $availabilitySelector, $positiveKeywords, $negativeKeywords, $unpricedKeywords);
         if ($availabilityStatus !== null) {
             $this->log("Final decision: Product availability set to " . ($availabilityStatus ? 'Available' : 'Unavailable'), $availabilityStatus ? self::COLOR_GREEN : self::COLOR_RED);
@@ -779,7 +743,6 @@ class ProductDataProcessor
         return '';
     }
 
-
     private function makeAbsoluteUrl(string $href): string
     {
         if (empty($href) || $href === '#' || stripos($href, 'javascript:') === 0) {
@@ -837,7 +800,7 @@ class ProductDataProcessor
             return !empty(trim($cat));
         });
 
-        return implode(', ', $categories);
+        return implode(',', $categories);
     }
 
     private function cleanCategoryText(string $text): string
@@ -894,7 +857,6 @@ class ProductDataProcessor
                             : trim($element->text());
 
                         if (!empty($categoryText)) {
-                            // اینجا فیلتر اضافه کن!
                             $categoryText = $this->fixCorruptedText($categoryText);
                             $categoryText = $this->cleanCategoryText($categoryText);
                             if (!empty($categoryText)) {
@@ -912,7 +874,7 @@ class ProductDataProcessor
             return !empty(trim($cat));
         });
 
-        return implode(', ', $categories);
+        return implode(',', $categories);
     }
 
     private function extractProductIdFromUrl(string $url, string $title, Crawler $crawler): string
@@ -1092,7 +1054,7 @@ class ProductDataProcessor
             $elements = $this->getElements($crawler, ['selector' => $selector, 'type' => $outOfStockSelector['type'] ?? 'css']);
 
             if ($elements->count() > 0) {
-                return 0; // Product is unavailable
+                return 0;
             }
         }
 
@@ -1132,7 +1094,6 @@ class ProductDataProcessor
         return $changes;
     }
 
-// 6. تغییر در متد logProduct - اضافه کردن description به لاگ (اختیاری)
     public function logProduct(array $product, string $action = 'PROCESSED', array $extraInfo = []): void
     {
         $availability = (int)($product['availability'] ?? 0) ? 'موجود' : 'ناموجود';
@@ -1145,7 +1106,6 @@ class ProductDataProcessor
         $brand = $product['brand'] ?? 'N/A';
         $description = $product['description'] ?? 'N/A';
 
-        // محاسبه تعداد تصاویر
         $imageCount = empty($product['image']) ? 0 : count(explode(',', $product['image']));
         $imageStatus = $imageCount > 0 ? "$imageCount تصویر" : 'ناموجود';
 
@@ -1177,6 +1137,7 @@ class ProductDataProcessor
         $this->log($table, null);
         $this->log("", null);
     }
+
     private function getActionConfig(string $action): array
     {
         $configs = [
@@ -1232,117 +1193,73 @@ class ProductDataProcessor
 
     private function generateAsciiTable(array $headers, array $rows): string
     {
-        // محاسبه عرض ستون‌ها
-        $widths = array_map(fn($h) => max(mb_strwidth($h, 'UTF-8'), 10), $headers);
+        // محاسبه عرض هر ستون
+        $widths = [];
+        foreach ($headers as $i => $header) {
+            $widths[$i] = mb_strwidth($header, 'UTF-8');
+        }
 
         foreach ($rows as $row) {
             foreach ($row as $i => $cell) {
-                $widths[$i] = max($widths[$i], mb_strwidth((string)$cell, 'UTF-8'));
+                $widths[$i] = max($widths[$i], mb_strwidth($cell, 'UTF-8'));
             }
         }
 
-        $widths[1] = max($widths[1], 40); // عرض ثابت برای عنوان
+        // ساخت جدول
+        $table = [];
+        $separator = '+';
+        foreach ($widths as $width) {
+            $separator .= str_repeat('-', $width + 2) . '+';
+        }
+        $table[] = $separator;
 
-        // ساخت جداکننده
-        $separator = '+' . implode('+', array_map(fn($w) => str_repeat('-', $w + 2), $widths)) . "+\n";
+        // هدرها
+        $headerRow = '|';
+        foreach ($headers as $i => $header) {
+            $headerRow .= ' ' . str_pad($header, $widths[$i], ' ', STR_PAD_BOTH) . ' |';
+        }
+        $table[] = $headerRow;
+        $table[] = $separator;
 
-        // ساخت هدر
-        $table = $separator . '|' . implode('|', array_map(
-                fn($h, $w) => ' ' . str_pad($h, $w, ' ', STR_PAD_BOTH) . ' ',
-                $headers, $widths
-            )) . "|\n" . $separator;
-
-        // ساخت ردیف‌ها
+        // ردیف‌ها
         foreach ($rows as $row) {
-            $table .= '|' . implode('|', array_map(
-                    fn($cell, $w) => ' ' . $this->mb_str_pad((string)$cell, $w, ' ', STR_PAD_BOTH) . ' ',
-                    $row, $widths
-                )) . "|\n";
+            $rowLine = '|';
+            foreach ($row as $i => $cell) {
+                $rowLine .= ' ' . str_pad($cell, $widths[$i], ' ', STR_PAD_BOTH) . ' |';
+            }
+            $table[] = $rowLine;
         }
+        $table[] = $separator;
 
-        return $table . $separator;
+        return implode("\n", $table);
     }
 
-
-    private function mb_str_pad(string $input, int $pad_length, string $pad_string = ' ', int $pad_type = STR_PAD_RIGHT): string
-    {
-        $input_length = mb_strwidth($input, 'UTF-8');
-        if ($pad_length <= $input_length) {
-            return $input;
-        }
-
-        $pad_needed = $pad_length - $input_length;
-
-        return match($pad_type) {
-            STR_PAD_LEFT => str_repeat($pad_string, $pad_needed) . $input,
-            STR_PAD_BOTH => str_repeat($pad_string, intval($pad_needed / 2))
-                . $input
-                . str_repeat($pad_string, intval(ceil($pad_needed / 2))),
-            default => $input . str_repeat($pad_string, $pad_needed)
-        };
-    }
-
-
-    private function saveFailedLink(string $url, string $errorMessage): void
+    private function saveFailedLink(string $url, string $reason): void
     {
         try {
-            $existingFailedLink = FailedLink::where('url', $url)->first();
-
-            if ($existingFailedLink) {
-                $oldAttempts = $existingFailedLink->attempts;
-                $existingFailedLink->update([
-                    'attempts' => $oldAttempts + 1,
-                    'error_message' => $errorMessage,
-                    'updated_at' => now()
-                ]);
-            } else {
-                FailedLink::create([
-                    'url' => $url,
-                    'attempts' => 1,
-                    'error_message' => $errorMessage,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            }
+            FailedLink::updateOrCreate(
+                ['url' => $url],
+                [
+                    'reason' => $reason,
+                    'failed_at' => now(),
+                    'attempts' => \DB::raw('attempts + 1')
+                ]
+            );
+            $this->log("Failed link saved: $url (Reason: $reason)", self::COLOR_RED);
         } catch (\Exception $e) {
-            // Silently fail if we can't save failed link
+            $this->log("Error saving failed link: {$e->getMessage()}", self::COLOR_RED);
         }
     }
 
     public function log(string $message, ?string $color = null): void
     {
-        $colorReset = "\033[0m";
-        $formattedMessage = $color ? $color . $message . $colorReset : $message;
+        $formattedMessage = $color ? $color . $message . "\033[0m" : $message;
 
-        $logFile = storage_path('logs/scraper_' . date('Ymd') . '.log');
-        file_put_contents($logFile, "[" . date('Y-m-d H:i:s') . "] $message\n", FILE_APPEND);
-
-        $cleanMessage = preg_replace("/\033\[[0-9;]*m/", "", $message);
-        $shouldDisplay = $this->shouldDisplayLog($cleanMessage);
-
-        if ($shouldDisplay) {
-            if ($this->outputCallback) {
-                call_user_func($this->outputCallback, $formattedMessage);
-            } else {
-                echo $formattedMessage . PHP_EOL;
-            }
+        if ($this->outputCallback) {
+            call_user_func($this->outputCallback, $formattedMessage);
+        } else {
+            $logFile = storage_path('logs/product_data_processor_' . date('Ymd') . '.log');
+            file_put_contents($logFile, "[" . date('Y-m-d H:i:s') . "] $message\n", FILE_APPEND);
         }
     }
-
-    private function shouldDisplayLog(string $cleanMessage): bool
-    {
-        // بررسی سریع با strpbrk
-        if (strpbrk($cleanMessage, '🆕🔄✅❌+')) {
-            return str_contains($cleanMessage, '🆕') || str_contains($cleanMessage, '🔄') ||
-                str_contains($cleanMessage, '✅') || str_contains($cleanMessage, '❌') ||
-                (str_starts_with($cleanMessage, '+') && str_contains($cleanMessage, '|'));
-        }
-
-        // بررسی الگوهای خاص
-        return str_starts_with($cleanMessage, 'Extracted product_id') ||
-            str_contains($cleanMessage, 'failed_links') ||
-            str_contains($cleanMessage, 'Failed to extract') ||
-            strpbrk($cleanMessage, '═─') !== false;
-    }
-
 }
